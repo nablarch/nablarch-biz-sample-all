@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Nablarchタグのハンドラの設定ファイル
+-->
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  ../../component-configuration.xsd">
+    
+  <component name="nablarchTagHandler"
+      class="nablarch.common.web.handler.NablarchTagHandler">
+    <property name="path" value="/TAMPERING-DETECTED.jsp" />
+    <property name="statusCode" value="400" />
+  </component>
+
+  <component name="customTagConfig" class="nablarch.common.web.tag.CustomTagConfig">
+    <property name="noHiddenEncryptionRequestIds">
+      <list>
+        <value>RW11ZZ0101</value>
+        <value>RW11ZZ0102</value>
+        <value>RW11ZZ0103</value>
+      </list>
+    </property>
+  </component>
+
+</component-configuration>

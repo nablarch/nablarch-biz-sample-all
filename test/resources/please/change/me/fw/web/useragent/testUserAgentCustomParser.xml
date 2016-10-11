@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration xmlns="http://tis.co.jp/nablarch/component-configuration"
+                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <component name="userAgentParser" class="please.change.me.fw.web.useragent.RegexUserAgentParserTest$CustomUserAgentParser">
+    <property name="osSetting">
+      <component class="please.change.me.fw.web.useragent.UserAgentPatternSetting">
+        <property name="defaultType"    value="Unknown" />
+        <property name="defaultName"    value="Unknown" />
+        <property name="defaultVersion" value="Unknown" />
+      </component>
+    </property>
+    <property name="browserSetting">
+      <component class="please.change.me.fw.web.useragent.UserAgentPatternSetting">
+        <property name="defaultType"    value="Unknown" />
+        <property name="defaultName"    value="Unknown" />
+        <property name="defaultVersion" value="Unknown" />
+      </component>
+    </property>
+  </component>
+</component-configuration>

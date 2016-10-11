@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+2重起動を防止するためのハンドラ
+-->
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../component-configuration.xsd">
+
+  <component name="duplicateProcessCheckHandler"
+      class="nablarch.fw.handler.DuplicateProcessCheckHandler">
+    <property name="tableName" value="${requestTable}" />
+    <property name="requestIdColumnName" value="${requestIdColumnName}" />
+    <property name="processActiveFlgColumnName" value="PROCESS_ACTIVE_FLG" />
+    <property name="dbTransactionManager">
+      <component
+          class="nablarch.core.db.transaction.SimpleDbTransactionManager">
+        <property name="dbTransactionName" value="DuplicateProcessCheckHandler" />
+        <!-- トランザクションファクトリ -->
+        <property name="transactionFactory" ref="transactionFactory" />
+        <!-- コネクションファクトリ -->
+        <property name="connectionFactory" ref="connectionFactory" />
+      </component>
+    </property>
+  </component>
+</component-configuration>

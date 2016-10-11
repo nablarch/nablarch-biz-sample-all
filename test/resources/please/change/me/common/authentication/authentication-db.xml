@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../../Nablarch/resources/component-configuration.xsd">
+
+  <config-file file="db.config" />
+
+  <component class="nablarch.core.db.transaction.JdbcTransactionFactory" />
+  <component class="nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory" />
+  <component class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
+    <property name="dataSource">
+      <component class="oracle.jdbc.pool.OracleDataSource">
+        <property name="user" value="${db.user}" />
+        <property name="password" value="${db.password}" />
+        <property name="URL" value="${db.url}" />
+      </component>
+    </property>
+  </component>
+
+  <component name="statementFactory" class="nablarch.core.db.statement.BasicStatementFactory">
+    <property name="sqlLoader">
+      <component name="sqlLoader" class="nablarch.core.db.statement.BasicSqlLoader">
+        <property name="fileEncoding" value="utf-8" />
+        <property name="extension" value="sql" />
+      </component>
+    </property>
+  </component>
+
+  <component name="dbManager" class="nablarch.core.db.transaction.SimpleDbTransactionManager"/>
+
+</component-configuration>

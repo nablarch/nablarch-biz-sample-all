@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration xmlns="http://tis.co.jp/nablarch/component-configuration"
+                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                         xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ./component-configuration.xsd">
+
+  <!-- テスト用設定値 -->
+  <config-file file="unit-test.config"/>
+  <config-file file="db.config"/>
+
+  <!-- システム日付、業務日付を固定値に設定 -->
+  <component name="dateProvider" class="nablarch.test.FixedSystemTimeProvider">
+    <property name="fixedDate" value="20100914123456"/>
+  </component>
+  
+  <component name="sqlLoader" class="nablarch.core.db.statement.BasicSqlLoader">
+    <property name="fileEncoding" value="utf-8"/>
+    <property name="extension" value="sql"/>
+  </component>
+
+  <!-- TransactionFactoryの設定 -->
+  <component name="transactionFactory" class="nablarch.core.db.transaction.JdbcTransactionFactory">
+    <property name="isolationLevel" value="READ_COMMITTED"/>
+  </component>
+
+  <component name="dbExceptionFactory" class="nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory">
+  </component>
+
+  <!-- フィールド情報ローダーの設定 -->
+  <component name="fieldAnnotationCache" class="nablarch.core.cache.BasicStaticDataCache">
+    <property name="loader">
+      <component class="nablarch.core.db.statement.autoproperty.FieldAndAnnotationLoader"/>
+    </property>
+    <property name="loadOnStartup" value="false"/>
+  </component>
+  
+  <!-- StatementFactoryの設定 -->
+  <component name="statementFactory" class="nablarch.core.db.statement.BasicStatementFactory">
+    <property name="fetchSize" value="500"/>
+    <property name="objectFieldCache" ref="fieldAnnotationCache"/>
+    <property name="updatePreHookObjectHandlerList">
+      <list>
+        <component
+                class="nablarch.core.db.statement.autoproperty.CurrentDateTimeAnnotationHandler">
+          <property name="dateProvider">
+            <component class="nablarch.core.date.BasicSystemTimeProvider"/>
+          </property>
+          <property name="dateFormat" value="yyyyMMdd"/>
+          <property name="fieldAnnotationCache" ref="fieldAnnotationCache"/>
+        </component>
+        <component
+                class="nablarch.core.db.statement.autoproperty.UserIdAnnotationHandler">
+          <property name="fieldAnnotationCache" ref="fieldAnnotationCache"/>
+        </component>
+      </list>
+    </property>
+    <property name="sqlParameterParserFactory">
+      <component class="nablarch.core.db.statement.BasicSqlParameterParserFactory"/>
+    </property>
+    <property name="sqlStatementExceptionFactory" ref="dbExceptionFactory"/>
+    <property name="sqlLoader" ref="sqlLoader"/>
+  </component>
+
+  <!-- ConnectionFactoryの設定 -->
+  <component name="connectionFactory"
+             class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
+    <property name="dataSource" ref="dataSource"/>
+    <property name="statementFactory" ref="statementFactory"/>
+  </component>
+  
+  <!-- データソース設定 -->
+  <component name="dataSource" class="oracle.ucp.jdbc.PoolDataSourceImpl">
+    <property name="connectionFactoryClassName"
+              value="oracle.jdbc.pool.OracleDataSource"/>
+    <property name="user" value="${db.user}"/>
+    <property name="password" value="${db.password}"/>
+    <property name="URL" value="${db.url}"/>
+    <property name="maxStatements" value="50"/>
+    <property name="maxPoolSize" value="10"/>
+    <property name="initialPoolSize" value="2"/>
+  </component>
+  
+  <!-- dbInfo -->
+  <component name="dbInfo" class="nablarch.test.core.db.GenericJdbcDbInfo">
+    <property name="dataSource" ref="dataSource"/>
+    <property name="schema" value="${db.user}"/>
+  </component>
+
+  <!-- テスト用DbManagerの設定 -->
+  <component name="dbManager" class="nablarch.core.db.transaction.SimpleDbTransactionManager"/>
+  <component name="testFwTran" class="nablarch.core.db.transaction.SimpleDbTransactionManager">
+    <property name="dbTransactionName" value="test-fw"/>
+  </component>
+
+  <component name="testTran" class="nablarch.core.db.transaction.SimpleDbTransactionManager">
+    <property name="dbTransactionName" value="test"/>
+  </component>
+
+  <!-- TestDataParser -->
+  <component name="testDataParser" class="nablarch.test.core.reader.BasicTestDataParser">
+    <property name="testDataReader">
+      <component name="xlsReaderForPoi" class="nablarch.test.core.reader.PoiXlsReader"/>
+    </property>
+    <property name="dbInfo" ref="dbInfo"/>
+    <property name="interpreters" ref="interpreters"/>
+  </component>
+
+    <!-- テストデータ記法の解釈を行うクラス群 -->
+    <list name="interpreters">
+        <!-- null変換 -->
+        <component class="nablarch.test.core.util.interpreter.NullInterpreter" />
+        <!-- 引用符を外す -->
+        <component
+            class="nablarch.test.core.util.interpreter.QuotationTrimmer" />
+        <!-- システム時刻記法 -->
+        <component
+            class="nablarch.test.core.util.interpreter.DateTimeInterpreter">
+            <property name="systemTimeProvider" ref="dateProvider" />
+        </component>
+        <!-- 文字列増幅 -->
+        <component
+            class="nablarch.test.core.util.interpreter.CompositeInterpreter">
+            <property name="interpreters">
+                <list>
+                    <component
+                        class="nablarch.test.core.util.interpreter.BasicJapaneseCharacterInterpreter" />
+                </list>
+            </property>
+        </component>
+    </list>
+
+</component-configuration>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../../Nablarch/resources/component-configuration.xsd">
+
+  <config-file file="db.config" />
+
+  <import file="please/change/me/common/captcha/message.xml" />
+  <import file="please/change/me/common/captcha/validation.xml" />
+
+  <component name="sqlLoader" class="nablarch.core.db.statement.BasicSqlLoader">
+    <property name="fileEncoding" value="utf-8"/>
+    <property name="extension" value="sql"/>
+  </component>
+
+  <!-- TransactionFactoryの設定 -->
+  <component name="transactionFactory" class="nablarch.core.db.transaction.JdbcTransactionFactory">
+    <property name="isolationLevel" value="READ_COMMITTED"/>
+  </component>
+
+  <component name="dbExceptionFactory" class="nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory">
+  </component>
+
+  <!-- フィールド情報ローダーの設定 -->
+  <component name="fieldAnnotationCache" class="nablarch.core.cache.BasicStaticDataCache">
+    <property name="loader">
+      <component class="nablarch.core.db.statement.autoproperty.FieldAndAnnotationLoader"/>
+    </property>
+    <property name="loadOnStartup" value="false"/>
+  </component>
+
+  <!-- StatementFactoryの設定 -->
+  <component name="statementFactory" class="nablarch.core.db.statement.BasicStatementFactory">
+    <property name="fetchSize" value="500"/>
+    <property name="objectFieldCache" ref="fieldAnnotationCache"/>
+    <property name="updatePreHookObjectHandlerList">
+      <list>
+        <component
+                class="nablarch.core.db.statement.autoproperty.CurrentDateTimeAnnotationHandler">
+          <property name="dateProvider">
+            <component class="nablarch.core.date.BasicSystemTimeProvider"/>
+          </property>
+          <property name="dateFormat" value="yyyyMMdd"/>
+          <property name="fieldAnnotationCache" ref="fieldAnnotationCache"/>
+        </component>
+        <component
+                class="nablarch.core.db.statement.autoproperty.UserIdAnnotationHandler">
+          <property name="fieldAnnotationCache" ref="fieldAnnotationCache"/>
+        </component>
+      </list>
+    </property>
+    <property name="sqlParameterParserFactory">
+      <component class="nablarch.core.db.statement.BasicSqlParameterParserFactory"/>
+    </property>
+    <property name="sqlStatementExceptionFactory" ref="dbExceptionFactory"/>
+    <property name="sqlLoader" ref="sqlLoader"/>
+  </component>
+
+  <!-- ConnectionFactoryの設定 -->
+  <component name="connectionFactory"
+             class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
+    <property name="dialect">
+      <component class="please.change.me.common.mail.html.TestOracleDialect"/>
+    </property>
+    <property name="dataSource" ref="dataSource"/>
+    <property name="statementFactory" ref="statementFactory"/>
+  </component>
+  
+  <!-- データソース設定 -->
+  <component name="dataSource" class="oracle.ucp.jdbc.PoolDataSourceImpl">
+    <property name="connectionFactoryClassName"
+              value="oracle.jdbc.pool.OracleDataSource"/>
+    <property name="user" value="${db.user}"/>
+    <property name="password" value="${db.password}"/>
+    <property name="URL" value="${db.url}"/>
+    <property name="maxStatements" value="50"/>
+    <property name="maxPoolSize" value="10"/>
+    <property name="initialPoolSize" value="2"/>
+  </component>
+
+  <!-- デフォルトのデータベーストランザクション管理クラスの設定 -->
+  <component name="defaultDbTransactionManager"
+      class="nablarch.core.db.transaction.SimpleDbTransactionManager">
+    <property name="connectionFactory" ref="connectionFactory" />
+    <property name="transactionFactory" ref="transactionFactory" />
+  </component>
+
+  <!-- システム日付プロバイダ -->
+  <component name="systemTimeProvider" class="nablarch.test.FixedSystemTimeProvider">
+    <property name="fixedDate" value="20100913123456" />
+  </component>
+
+  <!-- ファイルパス -->
+  <component name="filePathSetting" class="nablarch.core.util.FilePathSetting">
+    <property name="basePathSettings">
+      <map>
+        <entry key="format" value="classpath:please/change/me/common/captcha/format" />
+      </map>
+    </property>
+    <property name="fileExtensions">
+      <map>
+        <entry key="format" value="fmt" />
+      </map>
+    </property>
+  </component>
+  
+    <!-- 初期化が必要なコンポーネント -->
+    <component name="initializer"
+        class="nablarch.core.repository.initialization.BasicApplicationInitializer">
+        <property name="initializeList">
+            <list>
+                <!-- common/message.xml:文字列リソースのキャッシュ -->
+                <component-ref name="stringResourceCache" />
+                <!-- common/validation.xml:バリデーション情報のキャッシュ -->
+                <component-ref name="formDefinitionCache" />
+                <!-- common/validation.xml:バリデーション -->
+                <component-ref name="validationManager" />
+            </list>
+        </property>
+    </component>
+</component-configuration>

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- バリデーション機能の設定ファイル -->
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../component-configuration.xsd">
+
+    <!-- バリデーション用設定値 -->
+    <config-file file="please/change/me/common/captcha/validation.config" />
+
+    <!-- バリデーションコンポーネントの設定 -->
+    <component name="validationManager" class="nablarch.core.validation.ValidationManager">
+        <property name="convertors">
+            <list>
+                <component class="nablarch.core.validation.convertor.StringConvertor">
+                    <property name="conversionFailedMessageId" value="MSG90001" />
+                    <property name="allowNullValue" value="${validationConvertorAllowNullValue}" />
+                    <property name="extendedStringConvertors">
+                        <list>
+                            <component class="nablarch.common.date.YYYYMMDDConvertor">
+                                <property name="parseFailedMessageId" value="MSG90003" />
+                            </component>
+                        </list>
+                    </property>
+                </component>
+                <component class="nablarch.core.validation.convertor.StringArrayConvertor">
+                </component>
+                <component class="nablarch.core.validation.convertor.IntegerConvertor">
+                    <property name="invalidDigitsIntegerMessageId" value="MSG00027" />
+                    <property name="multiInputMessageId" value="MSG90001" />
+                    <property name="allowNullValue" value="${validationConvertorAllowNullValue}" />
+                </component>
+                <component class="nablarch.core.validation.convertor.LongConvertor">
+                    <property name="invalidDigitsIntegerMessageId" value="MSG00027" />
+                    <property name="multiInputMessageId" value="MSG90001" />
+                    <property name="allowNullValue" value="${validationConvertorAllowNullValue}" />
+                </component>
+                <component class="nablarch.core.validation.convertor.BigDecimalConvertor">
+                    <property name="invalidDigitsIntegerMessageId" value="MSG00027" />
+                    <property name="invalidDigitsFractionMessageId" value="MSG00028" />
+                    <property name="multiInputMessageId" value="MSG90001" />
+                    <property name="allowNullValue" value="${validationConvertorAllowNullValue}" />
+                </component>
+                <component class="nablarch.core.validation.convertor.BooleanConvertor">
+                    <property name="conversionFailedMessageId" value="MSG90001" />
+                    <property name="allowNullValue" value="${validationConvertorAllowNullValue}" />
+                </component>
+            </list>
+        </property>
+        <property name="validators">
+            <list>
+                <component class="nablarch.core.validation.validator.RequiredValidator">
+                    <property name="messageId" value="MSG00010" />
+                </component>
+                <component class="nablarch.core.validation.validator.NumberRangeValidator">
+                    <property name="maxMessageId" value="MSG00025" />
+                    <property name="maxAndMinMessageId" value="MSG00021" />
+                    <property name="minMessageId" value="MSG00026" />
+                </component>
+                <component class="nablarch.core.validation.validator.LengthValidator">
+                    <property name="maxMessageId" value="MSG00024" />
+                    <property name="maxAndMinMessageId" value="MSG00011" />
+                    <property name="fixLengthMessageId" value="MSG00023" />
+                </component>
+                <component class="nablarch.common.code.validator.CodeValueValidator">
+                    <property name="messageId" value="MSG90002" />
+                </component>
+                <component class="please.change.me.core.validation.validator.MailAddressValidator">
+                    <property name="messageId" value="MSG90003" />
+                </component>
+                <component class="please.change.me.core.validation.validator.JapaneseTelNumberValidator">
+                    <property name="messageId" value="MSG90003" />
+                </component>
+                <component
+                    class="nablarch.core.validation.validator.unicode.SystemCharValidator">
+                    <property name="messageId" value="MSG90001" />
+                    <property name="defaultCharsetDef" ref="zenkakuAlphaCharsDef" />
+                </component>
+            </list>
+        </property>
+        <property name="formDefinitionCache" ref="formDefinitionCache">
+        </property>
+        <!-- サイズキーの設定が正しくなかった場合に表示されるメッセージ -->
+        <property name="invalidSizeKeyMessageId" value="MSG90001" />
+    </component>
+
+    <!-- システム許容文字集合の定義 -->
+    <!-- 全角文字 -->
+    <component name="zenkakuCharset"
+        class="nablarch.core.validation.validator.unicode.CompositeCharsetDef">
+        <property name="charsetDefList">
+            <list>
+                <component-ref name="level1KanjiDef" />
+                <component-ref name="zenkakuHiraganaCharsDef" />
+                <component-ref name="zenkakuKatakanaCharsDef" />
+                <component-ref name="zenkakuSpaceDef" />
+                <component-ref name="level2KanjiDef" />
+                <component-ref name="zenkakuAlphaCharsDef" />
+                <component-ref name="zenkakuNumCharsDef" />
+                <component-ref name="jisSymbolCharsDef" />
+                <component-ref name="zenkakuKeisenCharsDef" />
+                <component-ref name="zenkakuGreekCharsDef" />
+                <component-ref name="zenkakuRussianCharsDef" />
+            </list>
+        </property>
+        <property name="messageId" value="MSG00017" />
+    </component>
+    <!-- 全角カタカナ -->
+    <component name="zenkakuKatakanaCharset"
+        class="nablarch.core.validation.validator.unicode.CompositeCharsetDef">
+        <property name="charsetDefList">
+            <list>
+                <component-ref name="zenkakuKatakanaCharsDef" />
+                <component-ref name="zenkakuSpaceDef" />
+            </list>
+        </property>
+        <property name="messageId" value="MSG00020" />
+    </component>
+    <!-- 半角英数 -->
+    <component name="AlnumChar"
+        class="nablarch.core.validation.validator.unicode.CompositeCharsetDef">
+        <property name="charsetDefList">
+            <list>
+                <component-ref name="numericCharset" />
+                <component-ref name="lowerAlphabetDef" />
+                <component-ref name="upperAlphabetDef" />
+            </list>
+        </property>
+        <property name="messageId" value="MSG00014" />
+    </component>
+    <!-- ASCII文字 -->
+    <component name="asciiCharset"
+        class="nablarch.core.validation.validator.unicode.CompositeCharsetDef">
+        <property name="charsetDefList">
+            <list>
+                <component-ref name="numericCharset" />
+                <component-ref name="lowerAlphabetDef" />
+                <component-ref name="upperAlphabetDef" />
+                <component-ref name="asciiSymbolDef" />
+            </list>
+        </property>
+        <property name="messageId" value="MSG00012" />
+    </component>
+    <!-- 半角数字 -->
+    <component name="numericCharset"
+        class="nablarch.core.validation.validator.unicode.LiteralCharsetDef">
+        <property name="allowedCharacters" value="${numeric}" />
+        <property name="messageId" value="MSG00019" />
+    </component>
+    <!-- JIS第1水準に含まれる全角カタカナ -->
+    <component name="zenkakuKatakanaCharsDef"
+        class="nablarch.core.validation.validator.unicode.LiteralCharsetDef">
+        <property name="allowedCharacters" value="${zenkakuKatakanaChars}" />
+    </component>
+    <!-- JIS第1水準に含まれる全角英字 -->
+    <component name="zenkakuAlphaCharsDef"
+        class="nablarch.core.validation.validator.unicode.LiteralCharsetDef">
+        <property name="allowedCharacters" value="${zenkakuAlphaChars}" />
+    </component>
+    <!-- JIS第1水準に含まれる全角数字 -->
+    <component name="zenkakuNumCharsDef"
+        class="nablarch.core.validation.validator.unicode.LiteralCharsetDef">
+        <property name="allowedCharacters" value="${zenkakuNumChars}" />
+    </component>
+    <!-- JIS第1水準に含まれる全角ギリシャ文字 -->
+    <component name="zenkakuGreekCharsDef"
+        class="nablarch.core.validation.validator.unicode.LiteralCharsetDef">
+        <property name="allowedCharacters" value="${zenkakuGreekChars}" />
+    </component>
+    <!-- JIS第1水準に含まれる全角ロシア文字 -->
+    <component name="zenkakuRussianCharsDef"
+        class="nablarch.core.validation.validator.unicode.LiteralCharsetDef">
+        <property name="allowedCharacters" value="${zenkakuRussianChars}" />
+    </component>
+    <!-- JIS第1水準に含まれる全角ひらがな -->
+    <component name="zenkakuHiraganaCharsDef"
+        class="nablarch.core.validation.validator.unicode.LiteralCharsetDef">
+        <property name="allowedCharacters" value="${zenkakuHiraganaChars}" />
+    </component>
+    <!-- JIS第1水準に含まれる全角記号 -->
+    <component name="jisSymbolCharsDef"
+        class="nablarch.core.validation.validator.unicode.LiteralCharsetDef">
+        <property name="allowedCharacters" value="${jisSymbolChars}" />
+    </component>
+    <!-- JIS第1水準に含まれる全角罫線 -->
+    <component name="zenkakuKeisenCharsDef"
+        class="nablarch.core.validation.validator.unicode.LiteralCharsetDef">
+        <property name="allowedCharacters" value="${zenkakuKeisenChars}" />
+    </component>
+    <!-- JIS第1水準に含まれる漢字 -->
+    <component name="level1KanjiDef"
+        class="nablarch.core.validation.validator.unicode.LiteralCharsetDef">
+        <property name="allowedCharacters" value="${level1Kanji}" />
+    </component>
+    <!-- JIS第2水準に含まれる漢字 -->
+    <component name="level2KanjiDef"
+        class="nablarch.core.validation.validator.unicode.LiteralCharsetDef">
+        <property name="allowedCharacters" value="${level2Kanji}" />
+    </component>
+    <!-- 全角スペース -->
+    <component name="zenkakuSpaceDef"
+        class="nablarch.core.validation.validator.unicode.LiteralCharsetDef">
+        <property name="allowedCharacters" value="${zenkakuSpace}" />
+    </component>
+    <!-- 半角英小文字 -->
+    <component name="lowerAlphabetDef"
+        class="nablarch.core.validation.validator.unicode.LiteralCharsetDef">
+        <property name="allowedCharacters" value="${lowerAlphabet}" />
+    </component>
+    <!-- 半角英大文字 -->
+    <component name="upperAlphabetDef"
+        class="nablarch.core.validation.validator.unicode.LiteralCharsetDef">
+        <property name="allowedCharacters" value="${upperAlphabet}" />
+    </component>
+    <!-- ASCII記号 -->
+    <component name="asciiSymbolDef"
+        class="nablarch.core.validation.validator.unicode.LiteralCharsetDef">
+        <property name="allowedCharacters" value="${asciiSymbol}" />
+    </component>
+
+
+    <!-- 他の文字集合を追加したい場合は、ここに記述する。記載方法はアーキテクチャ解説書の
+        "システム許容文字のバリデーション"参照 -->
+
+    <!-- バリデーション情報のキャッシュ -->
+    <component name="formDefinitionCache" class="nablarch.core.cache.BasicStaticDataCache">
+        <property name="loader">
+            <component class="nablarch.core.validation.FormValidationDefinitionLoader" />
+        </property>
+    </component>
+</component-configuration>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+エラーハンドラの設定ファイル
+-->
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  ../../component-configuration.xsd">
+
+  <component name="errorHandler" class="nablarch.fw.web.handler.HttpErrorHandler">
+    <property name="defaultPages">
+      <map>
+        <entry key="403" value="/PERMISSION-ERROR.jsp" />
+        <entry key="404" value="/PAGE_NOT_FOUND_ERROR.jsp" />
+        <entry key="413" value="/REQUEST_ENTITY_TOO_LARGE.jsp"/>
+        <entry key="4.." value="/USER_ERROR.jsp" />
+        <entry key="503" value="/SERVICE-UNAVAILABLE-ERROR.jsp" />
+        <entry key="5.." value="/ERROR.jsp" />
+      </map>
+    </property>
+  </component>
+</component-configuration>

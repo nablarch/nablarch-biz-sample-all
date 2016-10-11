@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration xmlns="http://tis.co.jp/nablarch/component-configuration"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../../Nablarch/resources/component-configuration.xsd">
+
+	<component name="stringResourceHolder" class="please.change.me.core.message.MockStringResourceHolder">
+	</component>
+
+	<component name="validationManager" class="nablarch.core.validation.ValidationManager">
+		<property name="formDefinitionCache">
+			<component name="formDefinitionCache" class="nablarch.core.cache.BasicStaticDataCache">
+				<property name="loader">
+					<component class="nablarch.core.validation.FormValidationDefinitionLoader"/>
+				</property>
+			</component>
+		</property>
+	</component>
+
+</component-configuration>

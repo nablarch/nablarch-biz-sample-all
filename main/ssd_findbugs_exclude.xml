@@ -1,0 +1,184 @@
+<FindBugsFilter>
+    <!-- mutable object の参照受け、参照渡しチェックを除外対象 -->
+    <Match>
+      <Class name="nablarch.core.db.statement.BasicSqlPStatement" />
+      <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2" />
+    </Match>
+    <!-- mutable object の参照受け、参照渡しチェックを除外対象 -->
+    <Match>
+      <Class name="nablarch.core.log.basic.LogContext" />
+      <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2" />
+    </Match>
+    <!-- mutable object の参照受け、参照渡しチェックを除外対象 -->
+    <Match>
+      <Class name="nablarch.core.message.Message" />
+      <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2" />
+    </Match>
+    <!-- byte[] の参照受け、参照渡しチェックを除外対象 -->
+    <Match>
+      <Class name="please.change.me.common.captcha.Captcha" />
+      <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2" />
+    </Match>
+    <!-- batch パッケージ配下のチェックを除外対象（試行開発期間の暫定対応） -->
+    <Match>
+      <Package name="~nablarch\.fw\.batch.*" />
+    </Match>
+    <!-- メソッドが例外的な戻り値を無視しているチェックの除外対象 -->
+    <Match>
+      <Class name="nablarch.fw.web.HttpServer" />
+      <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE" />    
+    </Match>
+    <!-- mutable object の参照受け、参照渡しチェックを除外対象 -->
+    <Match>
+      <Class name="nablarch.common.encryption.AesEncryptor$AesContext" />
+      <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2" />
+    </Match>
+    <!-- mutable object の参照受け、参照渡しチェックを除外対象 -->
+    <Match>
+      <Class name="nablarch.core.log.app.FailureException" />
+      <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2" />
+    </Match>
+    <!-- 複数起動されない -->
+    <Match>
+      <Class name="nablarch.fw.web.HttpResponseSetting" />
+      <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
+    </Match>
+    <!-- 複数起動されない -->
+    <Match>
+      <Class name="nablarch.fw.web.servlet.ServletIOHandler" />
+      <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
+    </Match>
+    <!-- serialVersionUID確認(済み) -->
+    <Match>
+      <Class name="nablarch.core.util.map.CopyOnReadMap$Snapshot" />
+      <Bug pattern="SE_NO_SERIALVERSIONID" />
+    </Match>
+    <!-- ストリームのクローズ確認(済み) -->
+    <Match>
+      <Class name="nablarch.fw.web.ResponseBody" />
+      <Or>
+        <Method name="toString" />
+        <Method name="useTempFile" />
+      </Or>
+      <Bug pattern="UNSATISFIED_OBLIGATION" />
+    </Match>
+    <!-- キャストの妥当性確認(済み) -->
+    <Match>
+      <Class name="nablarch.fw.handler.GlobalErrorHandler" />
+      <Method name="handle" params="javax.servlet.http.HttpServletRequest,nablarch.fw.ExecutionContext" returns="java.lang.Object" />
+      <Bug pattern="BC_UNCONFIRMED_CAST" />
+    </Match>
+    <!-- キャストの妥当性確認(済み) -->
+    <Match>
+      <Class name="nablarch.fw.web.handler.HttpCharacterEncodingHandler" />
+      <Method name="handle" params="java.lang.Object,nablarch.fw.ExecutionContext" returns="java.lang.Object" />
+      <Bug pattern="BC_UNCONFIRMED_CAST" />
+    </Match>
+    <!-- キャストの妥当性確認(済み) -->
+    <Match>
+      <Class name="nablarch.fw.web.servlet.ServletIOHandler" />
+      <Method name="handle" params="javax.servlet.http.HttpServletRequest,nablarch.fw.ExecutionContext" returns="nablarch.fw.web.HttpResponse" />
+      <Bug pattern="BC_UNCONFIRMED_CAST" />
+    </Match>
+    <!-- Object.equals() -->
+    <Match>
+      <Class name="nablarch.common.date.JapaneseEraConvertorRule" />
+      <Method name="compareTo" params="nablarch.common.date.JapaneseEraConvertorRule" returns="int" />
+      <Bug pattern="EQ_COMPARETO_USE_OBJECT_EQUALS" />
+    </Match>
+    <!-- mutable object の参照受け、参照渡しチェックを除外対象 -->
+    <Match>
+      <Class name="nablarch.common.exclusivecontrol.ExclusiveControlContext" />
+      <Method name="getPrimaryKeyColumnNames" params="" returns="java.lang.Enum[]" />
+      <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP" />
+    </Match>
+    <!-- キャストの妥当性確認(済み) -->
+    <Match>
+      <Class name="nablarch.common.web.handler.HttpAccessLogHandler" />
+      <Method name="handle" params="nablarch.fw.web.HttpRequest,nablarch.fw.ExecutionContext" returns="nablarch.fw.web.HttpResponse" />
+      <Bug pattern="BC_UNCONFIRMED_CAST" />
+    </Match>
+    <!-- キャストの妥当性確認(済み) -->
+    <Match>
+      <Class name="nablarch.common.web.handler.threadcontext.HttpLanguageAttribute" />
+      <Method name="getValue" params="nablarch.fw.Request,nablarch.fw.ExecutionContext" returns="java.lang.Object" />
+      <Bug pattern="BC_UNCONFIRMED_CAST" />
+    </Match>
+    <!-- キャストの妥当性確認(済み) -->
+    <Match>
+      <Class name="nablarch.common.web.handler.threadcontext.LanguageAttributeInHttpUtil" />
+      <Method name="keepLanguage" params="nablarch.fw.web.HttpRequest,nablarch.fw.ExecutionContext,java.lang.String" returns="void" />
+      <Bug pattern="BC_UNCONFIRMED_CAST" />
+    </Match>
+    <!-- mutable object の参照受け、参照渡しチェックを除外対象 -->
+    <Match>
+      <Class name="nablarch.core.log.LogUtil$MaskingMapValueEditor" />
+      <Bug pattern="EI_EXPOSE_REP2" />
+    </Match>
+    <!-- キャストの妥当性確認(済み) -->
+    <Match>
+      <Class name="nablarch.common.web.handler.threadcontext.TimeZoneAttributeInHttpSupport" />
+      <Method name="getValue" params="nablarch.fw.Request,nablarch.fw.ExecutionContext" returns="java.lang.Object" />
+      <Bug pattern="BC_UNCONFIRMED_CAST" />
+    </Match>
+    <!-- キャストの妥当性確認(済み) -->
+    <Match>
+      <Class name="nablarch.common.web.handler.threadcontext.TimeZoneAttributeInHttpUtil" />
+      <Method name="keepTimeZone" params="nablarch.fw.web.HttpRequest,nablarch.fw.ExecutionContext,java.lang.String" returns="void" />
+      <Bug pattern="BC_UNCONFIRMED_CAST" />
+    </Match>
+    <!-- readメソッドの戻り値確認（済み） -->
+    <Match>
+      <Class name="nablarch.core.dataformat.FixedLengthDataRecordFormatter" />
+      <Method name="readRecordSeparator" params="java.io.InputStream,byte[]" returns="void" />
+      <Bug pattern="RR_NOT_CHECKED" />
+    </Match>
+    <!-- readメソッドの戻り値確認（済み） -->
+    <Match>
+      <Class name="nablarch.core.dataformat.VariableLengthDataRecordFormatter" />
+      <Method name="hasNextIgnoreBlankLines" params="" returns="boolean" />
+      <Bug pattern="RR_NOT_CHECKED" />
+    </Match>
+    <!-- 電文内容のバイト配列に対する参照受け、参照渡しチェックを除外対象 -->
+    <Match>
+      <Class name="nablarch.fw.messaging.ReceivedMessage" />
+      <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2" />
+    </Match>
+    <!-- マルチスレッド環境での正確性の除外対象 -->
+    <Match>
+      <Class name="nablarch.core.log.app.BasicCommitLogger"/>
+      <Bug pattern="IS2_INCONSISTENT_SYNC" />
+    </Match>
+    <!-- mutable object の参照渡しチェックを除外対象 -->
+    <Match>
+      <Class name="nablarch.fw.Result$ServiceError" />
+      <Method name="getMessageParams" params="" returns="java.lang.Object[]" />
+      <Bug pattern="EI_EXPOSE_REP" />
+    </Match>
+    <!-- リポジトリ上で初期化されるリストパラメータに対するアクセサを検査対象から除外 -->
+    <Match>
+      <Class name="nablarch.common.web.tag.CustomTagConfig" />
+      <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2" />
+    </Match>
+    <!-- キャストの妥当性確認(済み) -->
+    <Match>
+      <Class name="nablarch.fw.web.handler.HttpResponseHandler" />
+      <Method name="handle" params="nablarch.fw.web.HttpRequest,nablarch.fw.ExecutionContext" returns="nablarch.fw.web.HttpResponse" />
+      <Bug pattern="BC_UNCONFIRMED_CAST" />
+    </Match>
+    <!-- Streamのクローズ(閉じられることは、他の場所で保障している) -->
+    <Match>
+      <Class name="nablarch.fw.web.ResponseBody" />
+      <Method name="useTempFile" />
+      <Bug pattern="OBL_UNSATISFIED_OBLIGATION" />
+    </Match>
+    <!-- 妥当性確認済み -->
+    <Match>
+        <Class name="nablarch.fw.handler.DataReadHandler"/>
+        <Bug pattern="IS2_INCONSISTENT_SYNC" />
+    </Match>
+    <Match>
+        <Class name="nablarch.fw.messaging.StandardFwHeaderDefinition" />
+        <Bug pattern="IS2_INCONSISTENT_SYNC" />
+    </Match>
+</FindBugsFilter>

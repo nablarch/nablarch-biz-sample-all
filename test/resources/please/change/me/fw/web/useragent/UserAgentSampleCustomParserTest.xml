@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration">
+
+  <!-- UserAgent用コンバータの設定 -->
+  <component name="deviceNameConvertor" class="please.change.me.fw.web.useragent.UserAgentNameConvertor">
+    <property name="toLowerCase" value="true" />
+    <property name="replaceFrom" value=";" />
+    <property name="replaceTo"   value="" />
+  </component>
+  <component name="osNameConvertor" class="please.change.me.fw.web.useragent.UserAgentNameConvertor">
+    <property name="toLowerCase" value="true" />
+    <property name="replaceFrom" value=" " />
+    <property name="replaceTo"   value="_" />
+  </component>
+  <component name="deviceVersionConvertor" class="please.change.me.fw.web.useragent.UserAgentVersionConvertor">
+    <property name="padding" value="-" />
+  </component>
+  <component name="browserNameConvertor" class="please.change.me.fw.web.useragent.UserAgentNameConvertor">
+    <property name="toLowerCase" value="true" />
+  </component>
+  <component name="browserVersionConvertor" class="please.change.me.fw.web.useragent.UserAgentVersionConvertor">
+    <property name="padding" value="_" />
+  </component>
+
+  <!-- UserAgentParserの設定 -->
+  <component name="userAgentParser" class="please.change.me.fw.web.useragent.CustomUserAgentParser">
+    <!-- OSのパターンマッピング設定 -->
+    <property name="osSetting">
+      <component class="please.change.me.fw.web.useragent.UserAgentPatternSetting">
+        <property name="defaultType"    value="Unknown" />
+        <property name="defaultName"    value="Unknown" />
+        <property name="defaultVersion" value="" />
+        <property name="typePatternList">
+          <list>
+            <component class="please.change.me.fw.web.useragent.TypePattern">
+              <property name="name"             value="tablet" />
+              <property name="pattern"          value="(?i).*ipad;.*" />
+            </component>
+            <component class="please.change.me.fw.web.useragent.TypePattern">
+              <property name="name"             value="mobilePhone" />
+              <property name="pattern"          value="(?i).*iphone;.*" />
+            </component>
+            <component class="please.change.me.fw.web.useragent.TypePattern">
+              <property name="name"             value="tablet" />
+              <property name="pattern"          value="(?i).*android.*SC-01C.*Mobile.*" />
+            </component>
+            <component class="please.change.me.fw.web.useragent.TypePattern">
+              <property name="name"             value="mobilePhone" />
+              <property name="pattern"          value="(?i).*android.*Mobile.*" />
+            </component>
+            <component class="please.change.me.fw.web.useragent.TypePattern">
+              <property name="name"             value="tablet" />
+              <property name="pattern"          value="(?i).*android.*" />
+            </component>
+            <component class="please.change.me.fw.web.useragent.TypePattern">
+              <property name="name"             value="pc" />
+              <property name="pattern"          value="(?i).*(windows|mac os x).*" />
+            </component>
+          </list>
+        </property>
+        <property name="itemPatternList">
+          <list>
+            <component class="please.change.me.fw.web.useragent.ItemPattern">
+              <property name="pattern"          value="(?i).*(iphone;|ipad;|android)[\D+]*([\d\._]*).*" />
+              <property name="nameIndex"        value="1" />
+              <property name="versionIndex"     value="2" />
+              <property name="nameConvertor"    ref="deviceNameConvertor" />
+              <property name="versionConvertor" ref="deviceVersionConvertor" />
+            </component>
+            <component class="please.change.me.fw.web.useragent.ItemPattern">
+              <property name="pattern"          value="(?i).*(windows|mac os x)[\D+]*([\d\._]*).*" />
+              <property name="nameIndex"        value="1" />
+              <property name="versionIndex"     value="2" />
+              <property name="nameConvertor"    ref="osNameConvertor" />
+              <property name="versionConvertor" ref="deviceVersionConvertor" />
+            </component>
+          </list>
+        </property>
+      </component>
+    </property>
+  
+    <!-- ブラウザのパターンマッピング設定 -->
+    <property name="browserSetting">
+      <component class="please.change.me.fw.web.useragent.UserAgentPatternSetting">
+        <property name="defaultType"    value="Unknown" />
+        <property name="defaultName"    value="Unknown" />
+        <property name="defaultVersion" value="" />
+        <property name="typePatternList">
+          <list>
+            <component class="please.change.me.fw.web.useragent.TypePattern">
+              <property name="name"    value="MSIE" />
+              <property name="pattern" value=".*MSIE.*" />
+            </component>
+            <component class="please.change.me.fw.web.useragent.TypePattern">
+              <property name="name"    value="WebKit" />
+              <property name="pattern" value=".*WebKit.*" />
+            </component>
+            <component class="please.change.me.fw.web.useragent.TypePattern">
+              <property name="name"    value="Gecko" />
+              <property name="pattern" value=".*Gecko.*" />
+            </component>
+          </list>
+        </property>
+        <property name="itemPatternList">
+          <list>
+            <component class="please.change.me.fw.web.useragent.ItemPattern">
+              <property name="name"             value="ie" />
+              <property name="pattern"          value="(?i).*(msie\s|trident.+rv:)([\d\.]*).*" />
+              <property name="versionIndex"     value="2" />
+              <property name="versionConvertor" ref="browserVersionConvertor" />
+            </component>
+            <component class="please.change.me.fw.web.useragent.ItemPattern">
+              <property name="name"             value="android_browser" />
+              <property name="pattern"          value="(?i).*android.*version/([\d\.]*).+(mobile *?safari).*" />
+              <property name="versionIndex"     value="1" />
+              <property name="versionConvertor" ref="browserVersionConvertor" />
+            </component>
+            <component class="please.change.me.fw.web.useragent.ItemPattern">
+              <property name="name"             value="mobile_safari" />
+              <property name="pattern"          value="(?i).*version/([\d\.]*).+(mobile.*safari).*" />
+              <property name="versionIndex"     value="1" />
+              <property name="versionConvertor" ref="browserVersionConvertor" />
+            </component>
+            <component class="please.change.me.fw.web.useragent.ItemPattern">
+              <property name="name"             value="firefox_chrome" />
+              <property name="pattern"          value="(?i).*(firefox|chrome)[\s/]*([\d\.]*).*" />
+              <property name="nameIndex"        value="1" />
+              <property name="versionIndex"     value="2" />
+              <property name="nameConvertor"    ref="browserNameConvertor" />
+              <property name="versionConvertor" ref="browserVersionConvertor" />
+            </component>
+            <component class="please.change.me.fw.web.useragent.ItemPattern">
+              <property name="name"             value="safari" />
+              <property name="pattern"          value="(?i).*version/([\d\.]*).+(safari).*" />
+              <property name="versionIndex"     value="1" />
+              <property name="versionConvertor" ref="browserVersionConvertor" />
+            </component>
+          </list>
+        </property>
+      </component>
+    </property>
+  </component>
+</component-configuration>

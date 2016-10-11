@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration">
+
+  <!-- FormatterFactoryの設定 -->
+  <component name="formUrlEncodedDataConvertorSetting"
+      class="please.change.me.core.dataformat.convertor.FormUrlEncodedDataConvertorSetting">
+      <property name="convertorTable">
+	      <map>
+	          <entry key="Test" value="nablarch.core.dataformat.convertor.datatype.CharacterStreamDataString"/>
+	          <entry key="Hoge" value="nablarch.core.dataformat.convertor.datatype.Bytes"/>
+	          <entry key="Error" value="please.change.me.core.dataformat.FormUrlEncodedDataRecordFormatterTest$ErrorConverter"/>
+	      </map>
+      </property>
+  </component>
+  <component name="formatterFactory" class="please.change.me.core.dataformat.FormUrlEncodedDataFormatterFactory"/>
+</component-configuration>

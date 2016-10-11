@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../../Nablarch/resources/component-configuration.xsd">
+
+  <import file="please/change/me/common/captcha/CaptchaTest.xml" />
+  
+  <!-- キャプチャ生成 -->
+  <component name="captchaGenerator"
+      class="please.change.me.common.captcha.ErrorGenerator">
+      
+  </component>
+</component-configuration>

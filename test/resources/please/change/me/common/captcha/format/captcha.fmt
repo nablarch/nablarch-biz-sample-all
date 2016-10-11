@@ -1,0 +1,17 @@
+#
+# ディレクティブ定義部
+#
+file-type:     "JSON"   # JSON
+text-encoding: "UTF-8"  # 文字列型フィールドの文字エンコーディング
+
+#
+# データレコード定義部
+#
+[captcha]
+1 image OB
+2 key   X
+
+[image]
+1 data   X
+2 height X9
+3 width  X9

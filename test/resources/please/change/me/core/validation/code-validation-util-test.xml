@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration">
+
+  <config-file file="db.config" />
+
+  <component name="stringResourceHolder" class="please.change.me.core.validation.validator.CodeValidationUtilTest$MockStringResourceHolder">
+  </component>
+
+  <!-- 精査用の設定 -->
+  <component name="validationManager" class="nablarch.core.validation.ValidationManager">
+    <property name="convertors">
+      <list>
+        <component class="nablarch.core.validation.convertor.StringConvertor">
+          <property name="conversionFailedMessageId" value="MSG90001" />
+          <property name="allowNullValue" value="false" />
+        </component>
+      </list>
+    </property>
+    <property name="validators">
+      <list>
+        <component class="nablarch.core.validation.validator.RequiredValidator">
+          <property name="messageId" value="MSG00010" />
+        </component>
+        <component name="codeValidator" class="nablarch.common.code.validator.CodeValueValidator">
+          <property name="messageId" value="MSG90002" />
+        </component>
+      </list>
+    </property>
+    <!-- サイズキーの設定が正しくなかった場合に表示されるメッセージ -->
+    <property name="invalidSizeKeyMessageId" value="MSG90001" />
+    <property name="formDefinitionCache" ref="formDefinitionCache" />
+  </component>
+
+  <component name="formDefinitionCache" class="nablarch.core.cache.BasicStaticDataCache">
+    <property name="loader">
+      <component class="nablarch.core.validation.FormValidationDefinitionLoader" />
+    </property>
+  </component>
+
+  <!-- コード用の設定 -->
+  <component name="codeLoader"
+      class="nablarch.common.code.BasicCodeLoader">
+
+    <property name="dbManager">
+      <component class="nablarch.core.db.transaction.SimpleDbTransactionManager">
+        <property name="dbTransactionName" value="code" />
+        <!-- トランザクションファクトリ -->
+        <property name="transactionFactory" ref="transactionFactory" />
+        <!-- コネクションファクトリ -->
+        <property name="connectionFactory" ref="connectionFactory" />
+      </component>
+    </property>
+
+    <!-- コードパターンテーブルのスキーマ情報 -->
+    <property name="codePatternSchema">
+      <component class="nablarch.common.code.schema.CodePatternSchema">
+        <property name="tableName" value="CODE_PATTERN_TEST" />
+        <property name="idColumnName" value="ID" />
+        <property name="valueColumnName" value="VALUE" />
+        <property name="patternColumnNames" value="PATTERN01,PATTERN02,PATTERN03" />
+      </component>
+    </property>
+
+    <!-- コード名称テーブルのスキーマ情報 -->
+    <property name="codeNameSchema">
+      <component class="nablarch.common.code.schema.CodeNameSchema">
+        <property name="tableName" value="CODE_NAME_TEST" />
+        <property name="idColumnName" value="ID" />
+        <property name="valueColumnName" value="VALUE" />
+        <property name="langColumnName" value="LANG" />
+        <property name="sortOrderColumnName" value="SORT_ORDER" />
+        <property name="nameColumnName" value="NAME" />
+        <property name="shortNameColumnName" value="SHORT_NAME" />
+        <property name="optionNameColumnNames" value="OPTION01,OPTION02,OPTION03" />
+      </component>
+    </property>
+  </component>
+
+  <component name="codeCache"
+      class="nablarch.core.cache.BasicStaticDataCache">
+    <property name="loader" ref="codeLoader" />
+    <property name="loadOnStartup" value="false" />
+  </component>
+
+  <component name="codeManager"
+      class="nablarch.common.code.BasicCodeManager" autowireType="None">
+    <property name="codeDefinitionCache" ref="codeCache" />
+  </component>
+
+  <!-- データベース接続用設定 -->
+  <component name="connectionFactory"
+      class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
+    <property name="dataSource" ref="dataSource" />
+    <property name="statementFactory" ref="statementFactory" />
+    <property name="dbAccessExceptionFactory" ref="dbAccessExceptionFactory" />
+  </component>
+
+  <component name="dbAccessExceptionFactory"
+      class="nablarch.core.db.connection.exception.BasicDbAccessExceptionFactory">
+  </component>
+
+  <!-- データソース設定 -->
+  <component name="dataSource" class="oracle.ucp.jdbc.PoolDataSourceImpl">
+    <property name="connectionFactoryClassName"
+        value="oracle.jdbc.pool.OracleDataSource" />
+    <property name="user" value="${db.user}" />
+    <property name="password" value="${db.password}" />
+    <property name="URL" value="${db.url}" />
+    <property name="maxStatements" value="50" />
+    <property name="maxPoolSize" value="10" />
+    <property name="initialPoolSize" value="2" />
+  </component>
+
+  <!-- データベーストランザクション用設定 -->
+  <component name="transactionFactory"
+      class="nablarch.core.db.transaction.JdbcTransactionFactory" />
+
+  <!-- SQL文実行時例外用の設定 -->
+  <component name="statementExceptionFactory"
+      class="nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory">
+  </component>
+
+  <!-- ステートメントの設定 -->
+  <component name="statementFactory"
+      class="nablarch.core.db.statement.BasicStatementFactory">
+    <property name="fetchSize" value="50" />
+    <property name="queryTimeout" value="600" />
+    <property name="objectFieldCache" ref="statementValueObjectCache" />
+    <property name="updatePreHookObjectHandlerList"
+        ref="fieldAnnotationHandler" />
+    <property name="sqlParameterParserFactory">
+      <component
+          class="nablarch.core.db.statement.BasicSqlParameterParserFactory" />
+    </property>
+    <property name="sqlStatementExceptionFactory" ref="statementExceptionFactory" />
+    <property name="sqlLoader" ref="sqlLoader">
+    </property>
+  </component>
+
+  <!-- SQLLoaderの設定 -->
+  <component name="sqlLoader" class="nablarch.core.db.statement.BasicSqlLoader">
+    <property name="fileEncoding" value="utf-8" />
+    <property name="extension" value="sql" />
+  </component>
+
+  <!-- オブジェクトの情報のキャッシュ設定 -->
+  <component name="statementValueObjectCache"
+      class="nablarch.core.cache.BasicStaticDataCache">
+    <property name="loader">
+      <component
+          class="nablarch.core.db.statement.autoproperty.FieldAndAnnotationLoader" />
+    </property>
+    <property name="loadOnStartup" value="false" />
+  </component>
+
+  <!-- フィールドアノテーションハンドラの設定 -->
+  <list name="fieldAnnotationHandler">
+  </list>
+
+  <!-- デフォルトのデータベーストランザクション管理クラスの設定 -->
+  <component name="defaultDbTransactionManager"
+      class="nablarch.core.db.transaction.SimpleDbTransactionManager">
+    <property name="connectionFactory" ref="connectionFactory" />
+    <property name="transactionFactory" ref="transactionFactory" />
+  </component>
+
+  <component name="initializer"
+      class="nablarch.core.repository.initialization.BasicApplicationInitializer">
+    <property name="initializeList">
+      <list>
+        <component-ref name="codeLoader" />
+        <component-ref name="formDefinitionCache" />
+        <component-ref name="statementValueObjectCache" />
+        <component-ref name="codeCache" />
+        <component-ref name="validationManager" />
+      </list>
+    </property>
+  </component>
+
+</component-configuration>
