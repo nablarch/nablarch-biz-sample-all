@@ -35,6 +35,9 @@
         <property name="connectionFactory" ref="connectionFactory" />
     </component>
 
+    <!-- リクエストID抽出の実装 -->
+    <component name="requestIdExtractor" class="nablarch.common.util.ShortRequestIdExtractor" />
+
 
     <!--コミットログ実装 -->
     <component name="commitLogger" class="nablarch.core.log.app.BasicCommitLogger">
@@ -101,7 +104,7 @@
         class="nablarch.core.repository.initialization.BasicApplicationInitializer">
         <property name="initializeList">
             <list>
-                <component-ref name="duplicateProcessCheckHandler" />
+                <component-ref name="duplicateProcessChecker" />
                 <component-ref name="processStopHandler" />
                 <component-ref name="mailRequestTable" />
                 <component-ref name="mailRecipientTable" />

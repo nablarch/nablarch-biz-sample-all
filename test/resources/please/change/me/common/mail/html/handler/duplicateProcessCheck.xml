@@ -7,14 +7,12 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../component-configuration.xsd">
 
-  <component name="duplicateProcessCheckHandler"
-      class="nablarch.fw.handler.DuplicateProcessCheckHandler">
+  <component name="duplicateProcessChecker" class="nablarch.fw.handler.BasicDuplicateProcessChecker">
     <property name="tableName" value="${requestTable}" />
-    <property name="requestIdColumnName" value="${requestIdColumnName}" />
+    <property name="processIdentifierColumnName" value="${requestIdColumnName}" />
     <property name="processActiveFlgColumnName" value="PROCESS_ACTIVE_FLG" />
     <property name="dbTransactionManager">
-      <component
-          class="nablarch.core.db.transaction.SimpleDbTransactionManager">
+      <component class="nablarch.core.db.transaction.SimpleDbTransactionManager">
         <property name="dbTransactionName" value="DuplicateProcessCheckHandler" />
         <!-- トランザクションファクトリ -->
         <property name="transactionFactory" ref="transactionFactory" />
@@ -22,5 +20,10 @@
         <property name="connectionFactory" ref="connectionFactory" />
       </component>
     </property>
+  </component>
+
+  <component name="duplicateProcessCheckHandler"
+      class="nablarch.fw.handler.DuplicateProcessCheckHandler">
+    <property name="duplicateProcessChecker" ref="duplicateProcessChecker" />
   </component>
 </component-configuration>
