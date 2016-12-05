@@ -200,10 +200,10 @@ public class HtmlMailSenderSendMailTest {
 
     private Folder openFolder(Store store) throws Exception {
         Folder folder = null;
-        for (int i =0; i < 15; i++) {
-            Thread.sleep(3000);
+        for (int i =0; i < 20; i++) {
             folder = store.getFolder("INBOX");
             folder.open(Folder.READ_WRITE);
+            Thread.sleep(3000);
             if (folder.getMessageCount() > 0) {
                 break;
             }

@@ -15,8 +15,6 @@
     <import file="please/change/me/common/mail/html/common.xml" />
     <!-- スレッドコンテキストに保持される共通属性を管理するハンドラ -->
     <import file="please/change/me/common/mail/html/handler/threadcontext.xml" />
-    <!-- ２重起動防止ハンドラ -->
-    <import file="please/change/me/common/mail/html/handler/duplicateProcessCheck.xml" />
     <!-- 処理停止ハンドラ -->
     <import file="please/change/me/common/mail/html/handler/processStop.xml" />
     <!-- データベース接続ハンドラ -->
@@ -52,8 +50,6 @@
         <component class="nablarch.fw.handler.GlobalErrorHandler" />
         <!-- スレッドコンテキスト設定ハンドラ -->
         <component-ref name="threadContextHandler" />
-        <!-- ２重起動防止ハンドラ -->
-        <component-ref name="duplicateProcessCheckHandler" />
         <!-- 常駐化ハンドラはテスト時は戻ってこさせるために設定しない -->
         <!--処理停止ハンドラ -->
         <component-ref name="processStopHandler" />
@@ -104,7 +100,6 @@
         class="nablarch.core.repository.initialization.BasicApplicationInitializer">
         <property name="initializeList">
             <list>
-                <component-ref name="duplicateProcessChecker" />
                 <component-ref name="processStopHandler" />
                 <component-ref name="mailRequestTable" />
                 <component-ref name="mailRecipientTable" />
