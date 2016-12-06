@@ -200,7 +200,7 @@ public class HtmlMailSenderSendMailTest {
 
     private Folder openFolder(Store store) throws Exception {
         Folder folder = null;
-        for (int i =0; i < 15; i++) {
+        for (int i =0; i < 20; i++) {
             folder = store.getFolder("INBOX");
             folder.open(Folder.READ_WRITE);
             Thread.sleep(3000);

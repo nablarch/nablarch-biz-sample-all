@@ -8,7 +8,7 @@
     xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../component-configuration.xsd">
 
 
-  <component name="processStopHandler" class="nablarch.fw.handler.ProcessStopHandler">
+  <component name="processStopHandler" class="nablarch.fw.handler.BasicProcessStopHandler">
     <property name="checkInterval" value="10" />
     <property name="dbTransactionManager">
       <component

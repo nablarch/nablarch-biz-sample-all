@@ -87,6 +87,7 @@ dependencies {
   // mail
   compile 'javax.mail:mailapi:1.4.3'
   testRuntime 'com.sun.mail:pop3:1.4.4'
+  testRuntime 'com.sun.mail:smtp:1.4.4'
 
 }
 
@@ -98,10 +99,6 @@ test {
   classpath = files("${projectDir}/main/java") \
             + files("${projectDir}/test/java") \
             + project.sourceSets.test.runtimeClasspath
-            
-  // need install mail server in local, so want to test with mock.
-  exclude '**/*HtmlMailSenderSendMailTest*'
-
 }
 
 jar {
