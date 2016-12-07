@@ -377,7 +377,7 @@ public class FormUrlEncodedDataRecordFormatter extends DataRecordFormatterSuppor
                 throw e.setFieldName(fieldName);
             }
             
-            if (outData == null) {
+            if (obj == null) {
                 if (field.isRequired()) {
                     // 必須項目がnull
                     throw new InvalidDataFormatException(fieldName + " is required");
