@@ -93,7 +93,6 @@ dependencies {
 
 
 test {
-  ignoreFailures = true
   
   // find sql files
   classpath = files("${projectDir}/main/java") \
