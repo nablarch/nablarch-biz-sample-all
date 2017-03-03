@@ -42,16 +42,11 @@
         <property name="interval" value="500" />
     </component>
 
-    <!-- TransactionFactoryの設定 -->
-    <component name="jdbcTransactionFactory" class="nablarch.core.db.transaction.JdbcTransactionFactory">
-      <property name="isolationLevel" value="READ_COMMITTED" />
-    </component>
-
     <!-- ステータス更新用のトランザクション -->
     <component name="statusUpdateTransaction" class="nablarch.core.db.transaction.SimpleDbTransactionManager">
       <property name="dbTransactionName" value="statusUpdateTransaction" />
       <property name="connectionFactory" ref="connectionFactory" />
-      <property name="transactionFactory" ref="jdbcTransactionFactory" />
+      <property name="transactionFactory" ref="transactionFactory" />
     </component>
 
     <!-- ハンドラキュー構成 -->
