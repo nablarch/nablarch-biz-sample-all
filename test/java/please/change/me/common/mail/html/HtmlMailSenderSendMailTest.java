@@ -1,12 +1,12 @@
 package please.change.me.common.mail.html;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.containsString;
 
 import java.util.Properties;
 
@@ -32,11 +32,14 @@ import nablarch.core.repository.SystemRepository;
 import nablarch.fw.launcher.CommandLine;
 import nablarch.fw.launcher.Main;
 import nablarch.test.RepositoryInitializer;
+import nablarch.test.support.db.helper.DatabaseTestRunner;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * {@link HtmlMailSender}のテスト。<br />
@@ -62,6 +65,7 @@ import org.junit.Test;
  *
  * @author tani takanori
  */
+@RunWith(DatabaseTestRunner.class)
 public class HtmlMailSenderSendMailTest {
 
     private HtmlMailTestDbSupport db;
@@ -176,16 +180,24 @@ public class HtmlMailSenderSendMailTest {
      */
     @BeforeClass
     public static void setupClass() throws Exception {
+        HtmlMailTestDbSupport.initDB();
         RepositoryInitializer.reInitializeRepository("please/change/me/common/mail/html/mailSenderTest.xml");
         HtmlMailTestDbSupport db = new HtmlMailTestDbSupport("mailtest");
-        db.initDB();
         db.insertMessage("SEND_FAIL0", "メール送信に失敗しました。 mailRequestId=[{0}]", "send mail failed. mailRequestId=[{0}]");
         db.insertMessage("SEND_OK000", "メールを送信しました。 mailRequestId=[{0}]", "send mail. mailRequestId=[{0}]");
         db.insertMessage("REQ_COUNT0", "メール送信要求が {0} 件あります。", "{0} records of mail request selected.");
     }
 
     /**
-     * 要求テーブルを削除する。
+     * テーブルの削除を行う。
+     */
+    @AfterClass
+    public static void tearDownClass() {
+        HtmlMailTestDbSupport.clearDb();
+    }
+
+    /**
+     * 要求テーブルのレコードを削除する。
      *
      * @throws Exception Sql実行時の例外
      */
@@ -223,9 +235,8 @@ public class HtmlMailSenderSendMailTest {
     /**
      * コミットする。
      *
-     * @throws Exception SQL実行時の例外
      */
-    private void commit() throws Exception {
+    private void commit() {
         transactionManager.commitTransaction();
     }
 

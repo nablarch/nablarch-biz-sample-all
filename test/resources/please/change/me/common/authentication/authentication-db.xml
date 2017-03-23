@@ -4,19 +4,13 @@
     xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../../Nablarch/resources/component-configuration.xsd">
 
   <config-file file="db.config" />
+  <import file="db-default.xml" />
 
   <component class="nablarch.core.db.transaction.JdbcTransactionFactory" />
   <component class="nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory" />
   <component class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
-    <property name="dataSource">
-      <component class="oracle.jdbc.pool.OracleDataSource">
-        <property name="user" value="${db.user}" />
-        <property name="password" value="${db.password}" />
-        <property name="URL" value="${db.url}" />
-      </component>
-    </property>
+      <property name="dataSource" ref="dataSource"/>
   </component>
-
   <component name="statementFactory" class="nablarch.core.db.statement.BasicStatementFactory">
     <property name="sqlLoader">
       <component name="sqlLoader" class="nablarch.core.db.statement.BasicSqlLoader">
@@ -25,7 +19,9 @@
       </component>
     </property>
   </component>
-
-  <component name="dbManager" class="nablarch.core.db.transaction.SimpleDbTransactionManager"/>
+  <component name="dbManager" class="nablarch.core.db.transaction.SimpleDbTransactionManager">
+    <property name="connectionFactory" ref="connectionFactory" />
+    <property name="transactionFactory" ref="jdbcTransactionFactory" />
+  </component>
 
 </component-configuration>

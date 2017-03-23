@@ -4,6 +4,7 @@
     xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration">
 
   <config-file file="db.config" />
+  <import file="db-default.xml" />
 
   <component name="stringResourceHolder" class="please.change.me.core.validation.validator.CodeValidationUtilTest$MockStringResourceHolder">
   </component>
@@ -47,7 +48,7 @@
       <component class="nablarch.core.db.transaction.SimpleDbTransactionManager">
         <property name="dbTransactionName" value="code" />
         <!-- トランザクションファクトリ -->
-        <property name="transactionFactory" ref="transactionFactory" />
+        <property name="transactionFactory" ref="jdbcTransactionFactory" />
         <!-- コネクションファクトリ -->
         <property name="connectionFactory" ref="connectionFactory" />
       </component>
@@ -89,54 +90,13 @@
     <property name="codeDefinitionCache" ref="codeCache" />
   </component>
 
-  <!-- データベース接続用設定 -->
-  <component name="connectionFactory"
-      class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
-    <property name="dataSource" ref="dataSource" />
-    <property name="statementFactory" ref="statementFactory" />
-    <property name="dbAccessExceptionFactory" ref="dbAccessExceptionFactory" />
-  </component>
-
   <component name="dbAccessExceptionFactory"
       class="nablarch.core.db.connection.exception.BasicDbAccessExceptionFactory">
   </component>
 
-  <!-- データソース設定 -->
-  <component name="dataSource" class="oracle.ucp.jdbc.PoolDataSourceImpl">
-    <property name="connectionFactoryClassName"
-        value="oracle.jdbc.pool.OracleDataSource" />
-    <property name="user" value="${db.user}" />
-    <property name="password" value="${db.password}" />
-    <property name="URL" value="${db.url}" />
-    <property name="maxStatements" value="50" />
-    <property name="maxPoolSize" value="10" />
-    <property name="initialPoolSize" value="2" />
-  </component>
-
-  <!-- データベーストランザクション用設定 -->
-  <component name="transactionFactory"
-      class="nablarch.core.db.transaction.JdbcTransactionFactory" />
-
   <!-- SQL文実行時例外用の設定 -->
   <component name="statementExceptionFactory"
       class="nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory">
-  </component>
-
-  <!-- ステートメントの設定 -->
-  <component name="statementFactory"
-      class="nablarch.core.db.statement.BasicStatementFactory">
-    <property name="fetchSize" value="50" />
-    <property name="queryTimeout" value="600" />
-    <property name="objectFieldCache" ref="statementValueObjectCache" />
-    <property name="updatePreHookObjectHandlerList"
-        ref="fieldAnnotationHandler" />
-    <property name="sqlParameterParserFactory">
-      <component
-          class="nablarch.core.db.statement.BasicSqlParameterParserFactory" />
-    </property>
-    <property name="sqlStatementExceptionFactory" ref="statementExceptionFactory" />
-    <property name="sqlLoader" ref="sqlLoader">
-    </property>
   </component>
 
   <!-- SQLLoaderの設定 -->
@@ -163,7 +123,7 @@
   <component name="defaultDbTransactionManager"
       class="nablarch.core.db.transaction.SimpleDbTransactionManager">
     <property name="connectionFactory" ref="connectionFactory" />
-    <property name="transactionFactory" ref="transactionFactory" />
+    <property name="transactionFactory" ref="jdbcTransactionFactory" />
   </component>
 
   <component name="initializer"

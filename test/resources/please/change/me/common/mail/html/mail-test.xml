@@ -4,6 +4,8 @@
     xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../../Nablarch/resources/component-configuration.xsd">
 
     <config-file file="db.config" />
+    <import file="db-default.xml" />
+
     <!-- テスト時のDBの設定 -->
     <import file="please/change/me/common/mail/html/db.xml" />
     <!-- メール関連テーブルスキーマ情報の定義ファイル -->
@@ -13,7 +15,7 @@
 
     <!-- DbManagerの設定  -->
     <component name="dbManager-default" class="nablarch.core.db.transaction.SimpleDbTransactionManager">
-        <property name="transactionFactory" ref="transactionFactory" />
+        <property name="transactionFactory" ref="jdbcTransactionFactory" />
     </component>
 
     <!-- メール送信要求API -->

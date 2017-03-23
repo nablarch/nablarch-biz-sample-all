@@ -6,11 +6,13 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import nablarch.core.db.statement.SqlResultSet;
 import nablarch.core.db.statement.SqlRow;
+import nablarch.test.support.db.helper.DatabaseTestRunner;
 
-import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
-import please.change.me.common.mail.html.HtmlMailTestDbSupport.MailTemplate;
+import please.change.me.common.mail.html.HtmlMailTestDbSupport.HtmlMailTemplate;
 
 /**
  * {@link HtmlMailTable}の単体テストクラス。
@@ -18,6 +20,7 @@ import please.change.me.common.mail.html.HtmlMailTestDbSupport.MailTemplate;
  * @author tani takanori
  *
  */
+@RunWith(DatabaseTestRunner.class)
 public class HtmlMailTableTest extends HtmlMailTestSupport {
     private final HtmlMailTestDbSupport db = new HtmlMailTestDbSupport();
 
@@ -25,23 +28,24 @@ public class HtmlMailTableTest extends HtmlMailTestSupport {
 
 
     /**
-     * メールリクエスト、テンプレートを初期化する。
+     * メールリクエスト、テンプレートを削除する。
      *
-     * @throws Exception SQL実行時のエラー
      */
-    @Before
-    public void setupDb() throws Exception {
+    @Override
+    @After
+    public void tearDown() {
+        super.tearDown();
         db.delete();
     }
+
     /**
      * HtmlMailTableAccessor#getTemplate(String, String) のテスト。
      *
-     * @throws Exception 想定外の例外が発生した場合。
      */
     @Test
-    public void testGetTemplate() throws Exception {
-        db.insertTemplate(new MailTemplate("1", "ja", "件名", "本文", "代替テキスト"));
-        db.insertTemplate(new MailTemplate("1", "en", "subject", "body", "alter text"));
+    public void testGetTemplate() {
+        db.insertTemplate(new HtmlMailTemplate("1", "ja", "件名", "本文", "代替テキスト"));
+        db.insertTemplate(new HtmlMailTemplate("1", "en", "subject", "body", "alter text"));
 
         assertThat("KEYが違えばnull[ID]", target.findAlternativeTextTemplate("2", "ja"), is(nullValue()));
         assertThat("KEYが違えばnull[LANG]", target.findAlternativeTextTemplate("1", "ea"), is(nullValue()));

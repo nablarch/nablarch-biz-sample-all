@@ -29,16 +29,23 @@ public class HtmlMailTestSupport {
 
     /**
      * コンポーネント定義で定義した情報を基に、{@link RepositoryInitializer#reInitializeRepository(String)}を行う。<br>
-     * 初回の場合はテーブルの初期化も行う。
+     * テーブルの初期化も行う。
      *
      * @throws Exception 想定外の例外
      */
     @BeforeClass
     public static void setupRepository() throws Exception {
         RepositoryInitializer.reInitializeRepository(COMPORNENT_DEFINITION);
-        new HtmlMailTestDbSupport().initDB();
+        HtmlMailTestDbSupport.initDB();
     }
 
+    /**
+     * テーブルの削除を行う。
+     */
+    @AfterClass
+    public static void tearDownClass() {
+        HtmlMailTestDbSupport.clearDb();
+    }
 
     /**
      * トランザクションを開始する。

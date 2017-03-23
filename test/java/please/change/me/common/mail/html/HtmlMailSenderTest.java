@@ -1,15 +1,14 @@
 package please.change.me.common.mail.html;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static org.junit.matchers.JUnitMatchers.containsString;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -28,11 +27,13 @@ import nablarch.common.mail.MailRequestTable.MailRequest;
 import nablarch.core.db.statement.SqlResultSet;
 import nablarch.core.repository.SystemRepository;
 import nablarch.fw.ExecutionContext;
+import nablarch.test.support.db.helper.DatabaseTestRunner;
 
-import org.junit.Before;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
 
 import please.change.me.common.mail.html.HtmlMailTestDbSupport.FileData;
 
@@ -41,6 +42,7 @@ import please.change.me.common.mail.html.HtmlMailTestDbSupport.FileData;
  *
  * @author tani takanori
  */
+@RunWith(DatabaseTestRunner.class)
 public class HtmlMailSenderTest extends HtmlMailTestSupport {
 
     private final HtmlMailTestDbSupport db = new HtmlMailTestDbSupport();
@@ -63,12 +65,13 @@ public class HtmlMailSenderTest extends HtmlMailTestSupport {
     public TemporaryFolder folder = new TemporaryFolder();
 
     /**
-     * データベースとインスタンス変数を初期化する。
+     * データベースのレコードを削除する。
      *
-     * @throws SQLException SQL実行時の例外
      */
-    @Before
-    public void setUpData() throws SQLException {
+    @Override
+    @After
+    public void tearDown() {
+        super.tearDown();
         db.delete();
     }
 

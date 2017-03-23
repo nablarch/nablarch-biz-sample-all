@@ -2,17 +2,16 @@ package please.change.me.common.captcha;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.ResourceBundle;
+
+import please.change.me.common.captcha.entity.CaptchaManage;
+import please.change.me.common.captcha.entity.CaptchaMessage;
 
 import nablarch.core.db.connection.ConnectionFactory;
-import nablarch.core.db.connection.DbConnectionContext;
 import nablarch.core.db.connection.TransactionManagerConnection;
 import nablarch.core.repository.SystemRepository;
-import oracle.jdbc.pool.OracleDataSource;
+import nablarch.test.support.db.helper.VariousDbTestHelper;
 
 /**
  * DBがカラムテストのサポートクラス
@@ -23,9 +22,17 @@ public class CaptchaDbTestSupport {
 
     /**テスト対象が使用するコネクション*/
     private static TransactionManagerConnection tmConn;
-    
+
     /** テストデータのセットアップや検証を行うためのコネクション */
     private static Connection con;
+
+    /**
+     * テスト対象が使用するコネクションを取得する。
+     * @return
+     */
+    public static TransactionManagerConnection getTmConn() {
+        return tmConn;
+    }
 
     /**
      * DB関係セットアップ。
@@ -35,111 +42,26 @@ public class CaptchaDbTestSupport {
      * @throws SQLException 例外
      */
     protected static void setupDb() throws SQLException {
-        initTestConnection();
-        dropManageTable();
-        createManageTable();
-        
-        dropMessageTable();
-        createMessageTable();
-        insertIntoMessageTable("MSG90001", "ja", "{0}が正しくありません。");
-        commitTestTran();
-        
+        VariousDbTestHelper.createTable(CaptchaManage.class);
+        VariousDbTestHelper.createTable(CaptchaMessage.class);
+
+        VariousDbTestHelper.insert(new CaptchaMessage("MSG90001", "ja", "{0}が正しくありません。"));
+
         ConnectionFactory factory = SystemRepository.get("connectionFactory");
         tmConn = factory.getConnection("test");
-        DbConnectionContext.setConnection(tmConn);
+        con = VariousDbTestHelper.getNativeConnection();
+        con.setAutoCommit(false);
     }
     
     /**
      * DB関係終了処理。
      *
-     * @throws Exception 例外
      */
-    protected static void teardownDb() throws Exception {
-        DbConnectionContext.removeConnection();
-        if (con != null) {
-            con.close();
-        }
+    protected static void teardownDb() {
+        VariousDbTestHelper.dropTable(CaptchaManage.class);
+        VariousDbTestHelper.dropTable(CaptchaMessage.class);
     }
 
-    /**
-     * テスト用コネクションの初期化
-     * 
-     * @throws SQLException 例外
-     */
-    protected static void initTestConnection() throws SQLException {
-        ResourceBundle rb = ResourceBundle.getBundle("db-config");
-        OracleDataSource ds = new OracleDataSource();
-        ds.setURL(rb.getString("db.url"));
-        ds.setUser(rb.getString("db.user"));
-        ds.setPassword(rb.getString("db.password"));
-        con = ds.getConnection();
-        con.setAutoCommit(false);
-    }
-    
-    /**
-     * 管理テーブルの作成
-     * 
-     * @throws SQLException 例外
-     */
-    protected static void createManageTable() throws SQLException {
-        Statement statement = con.createStatement();
-        try {
-            statement.execute("CREATE TABLE CAPTCHA_MANAGE (CAPTCHA_KEY VARCHAR2(40) PRIMARY KEY, CAPTCHA_TEXT VARCHAR2(10), GENERATE_DATE_TIME TIMESTAMP)");
-        } catch (Exception e) {
-            // nop
-        } finally {
-            statement.close();
-        }
-    }
-    
-    /**
-     * 管理テーブルの削除
-     * 
-     * @throws SQLException 例外
-     */
-    protected static void dropManageTable() throws SQLException {
-        Statement statement = con.createStatement();
-        try {
-            statement.execute("DROP TABLE CAPTCHA_MANAGE PURGE");
-        } catch (Exception e) {
-            // nop
-        } finally {
-            statement.close();
-        }
-    }
-    
-    /**
-     * メッセージテーブルの作成
-     * 
-     * @throws SQLException 例外
-     */
-    protected static void createMessageTable() throws SQLException {
-        Statement statement = con.createStatement();
-        try {
-            statement.execute("CREATE TABLE MESSAGE (MESSAGE_ID VARCHAR2(10) PRIMARY KEY, LANG CHAR(2), MESSAGE NVARCHAR2(200))");
-        } catch (Exception e) {
-            // nop
-        } finally {
-            statement.close();
-        }
-    }
-    
-    /**
-     * メッセージテーブルの削除
-     * 
-     * @throws SQLException 例外
-     */
-    protected static void dropMessageTable() throws SQLException {
-        Statement statement = con.createStatement();
-        try {
-            statement.execute("DROP TABLE MESSAGE PURGE");
-        } catch (Exception e) {
-            // nop
-        } finally {
-            statement.close();
-        }
-    }
-    
     /**
      * テスト対象が使用するトランザクションのコミット
      */
@@ -153,7 +75,7 @@ public class CaptchaDbTestSupport {
     protected static void rollbackBizTran() {
         tmConn.rollback();
     }
-    
+
     /**
      * テストデータのセットアップや検証を行うトランザクションのコミット
      */
@@ -164,7 +86,7 @@ public class CaptchaDbTestSupport {
             throw new RuntimeException(e);
         }
     }
-    
+
     /**
      * テストデータのセットアップや検証を行うトランザクションのロールバック
      */
@@ -175,39 +97,15 @@ public class CaptchaDbTestSupport {
             throw new RuntimeException(e);
         }
     }
-    
-    /**
-     * テストデータのセットアップや検証を行うコネクションの取得
-     * @return コネクション
-     */
-    protected static Connection getTestConnection() {
-        return con;
-    }
-    
+
     /**
      * キー指定でCAPTCHA情報の件数を取得する。
      * 
      * @param key 識別キー
      * @return CAPTCHA情報の件数
-     * @throws SQLException 例外
      */
-    protected int countManageTableByKey(String key) throws SQLException {
-        PreparedStatement pstmt = con.prepareStatement("SELECT COUNT(*) FROM CAPTCHA_MANAGE WHERE CAPTCHA_KEY = ?");
-        ResultSet rs = null;
-        int count = 0;
-        try {
-            pstmt.setString(1, key);
-            rs = pstmt.executeQuery();
-            if (rs.next()) {
-                count = rs.getInt(1);
-            }
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            pstmt.close();
-        }
-        return count;
+    protected int countManageTableByKey(String key) {
+        return (VariousDbTestHelper.findById(CaptchaManage.class, key) != null) ? 1 : 0;
     }
     
     /**
@@ -215,25 +113,14 @@ public class CaptchaDbTestSupport {
      * 
      * @param key 識別キー
      * @return CAPTCHA情報
-     * @throws SQLException 例外
      */
-    protected Captcha getFromManageTableByKey(String key) throws SQLException {
-        PreparedStatement pstmt = con.prepareStatement("SELECT CAPTCHA_KEY, CAPTCHA_TEXT, GENERATE_DATE_TIME FROM CAPTCHA_MANAGE WHERE CAPTCHA_KEY = ?");
-        ResultSet rs = null;
+    protected Captcha getFromManageTableByKey(String key) {
+        CaptchaManage manage = VariousDbTestHelper.findById(CaptchaManage.class, key);
         Captcha captcha = new Captcha();
-        try {
-            pstmt.setString(1, key);
-            rs = pstmt.executeQuery();
-            if (rs.next()) {
-                captcha.setKey(rs.getString(1));
-                captcha.setText(rs.getString(2));
-                captcha.setGenerateDateTime(rs.getTimestamp(3));
-            }
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            pstmt.close();
+        if (manage != null) {
+            captcha.setKey(manage.captchaKey);
+            captcha.setText(manage.captchaText);
+            captcha.setGenerateDateTime(manage.generateDateTime);
         }
         return captcha;
     }
@@ -251,9 +138,9 @@ public class CaptchaDbTestSupport {
             pstmt.setString(1, captcha.getKey());
             pstmt.setString(2, captcha.getText());
             pstmt.setTimestamp(3, captcha.getGenerateDateTime() != null ? new Timestamp(captcha.getGenerateDateTime().getTime()) : null);
-            
+
             return pstmt.executeUpdate();
-            
+
         } finally {
             pstmt.close();
         }
@@ -277,21 +164,4 @@ public class CaptchaDbTestSupport {
             pstmt.close();
         }
     }
-    
-    /**
-     * MESSAGEを登録する。
-     */
-    protected static int insertIntoMessageTable(String messageId, String lang, String message) throws SQLException {
-        PreparedStatement pstmt = con.prepareStatement("INSERT INTO MESSAGE (MESSAGE_ID, LANG, MESSAGE) VALUES (?, ?, ?)");
-        try {
-            pstmt.setString(1, messageId);
-            pstmt.setString(2, lang);
-            pstmt.setString(3, message);
-            return pstmt.executeUpdate();
-            
-        } finally {
-            pstmt.close();
-        }
-    }
-    
 }

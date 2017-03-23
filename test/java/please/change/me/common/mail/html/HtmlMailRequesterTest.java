@@ -1,10 +1,11 @@
 package please.change.me.common.mail.html;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static org.junit.matchers.JUnitMatchers.containsString;
+
 import nablarch.common.mail.MailRequester;
 import nablarch.common.mail.MailUtil;
 import nablarch.common.mail.TemplateMailContext;
@@ -12,15 +13,19 @@ import nablarch.core.db.connection.DbConnectionContext;
 import nablarch.core.db.statement.SqlPStatement;
 import nablarch.core.db.statement.SqlResultSet;
 import nablarch.core.db.statement.SqlRow;
+import nablarch.test.support.db.helper.DatabaseTestRunner;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * {@link HtmlMailRequester}の単体テスト。
  *
  * @author tani takanori
  */
+@RunWith(DatabaseTestRunner.class)
 public class HtmlMailRequesterTest extends HtmlMailTestSupport {
     private final MailRequester target = MailUtil.getMailRequester();
     private HtmlMailTestDbSupport db;
@@ -28,18 +33,27 @@ public class HtmlMailRequesterTest extends HtmlMailTestSupport {
     /**
      * テストのデフォルトの内容を設定する。
      *
-     * @throws Exception 想定外の例外が発生した場合。
      */
     @Before
-    public void setUpDb() throws Exception {
+    public void setUpDb() {
         db = new HtmlMailTestDbSupport();
         db.delete();
-        db.insertTemplate(new HtmlMailTestDbSupport.MailTemplate("1", "ja", "{name}さんへのお知らせ" ,"メール本文. [key : {key}]", "代替テキスト {key}"));
-        db.insertTemplate(new HtmlMailTestDbSupport.MailTemplate("1", "en", "langが異なる {name}" ,"langが異なる本文. [key : {key}]", "alter text {key}"));
-        db.insertTemplate(new HtmlMailTestDbSupport.MailTemplate("2", "ja", "IDが異なる {name}" ,"IDが異なる本文{name}. [key : {key}]", "IDが異なる代替テキスト {key}"));
-        db.insertTemplate(new HtmlMailTestDbSupport.MailTemplate("2", "en", "IDとlangが異なる {name}" ,"IDとlangが異なる本文{name}. [key : {key}]", "IDが異なる代替テキスト {key}"));
-        db.insertTemplate(new HtmlMailTestDbSupport.MailTemplate("3", "ja", "代替テキストなし(ja) {name}" ,"代替テキストなし {name}. [key : {key}]", null));
-        db.insertTemplate(new HtmlMailTestDbSupport.MailTemplate("3", "en", "代替テキストなし(en) {name}" ,"代替テキストなし {name}. [key : {key}]", null));
+        db.insertTemplate(new HtmlMailTestDbSupport.HtmlMailTemplate("1", "ja", "{name}さんへのお知らせ" ,"メール本文. [key : {key}]", "代替テキスト {key}"));
+        db.insertTemplate(new HtmlMailTestDbSupport.HtmlMailTemplate("1", "en", "langが異なる {name}" ,"langが異なる本文. [key : {key}]", "alter text {key}"));
+        db.insertTemplate(new HtmlMailTestDbSupport.HtmlMailTemplate("2", "ja", "IDが異なる {name}" ,"IDが異なる本文{name}. [key : {key}]", "IDが異なる代替テキスト {key}"));
+        db.insertTemplate(new HtmlMailTestDbSupport.HtmlMailTemplate("2", "en", "IDとlangが異なる {name}" ,"IDとlangが異なる本文{name}. [key : {key}]", "IDが異なる代替テキスト {key}"));
+        db.insertTemplate(new HtmlMailTestDbSupport.HtmlMailTemplate("3", "ja", "代替テキストなし(ja) {name}" ,"代替テキストなし {name}. [key : {key}]", null));
+        db.insertTemplate(new HtmlMailTestDbSupport.HtmlMailTemplate("3", "en", "代替テキストなし(en) {name}" ,"代替テキストなし {name}. [key : {key}]", null));
+    }
+
+    /**
+     *
+     */
+    @Override
+    @After
+    public void tearDown() {
+        super.tearDown();
+        db.delete();
     }
 
     /**

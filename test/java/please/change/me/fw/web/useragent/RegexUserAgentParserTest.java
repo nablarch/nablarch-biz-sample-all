@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
@@ -522,7 +523,7 @@ public class RegexUserAgentParserTest {
         } catch (IllegalStateException e) {
             Throwable cause = e.getCause();
             assertThat(e.toString(),
-                    cause, is(MyException.class));
+                    cause, is(instanceOf(MyException.class)));
         }
     }
 

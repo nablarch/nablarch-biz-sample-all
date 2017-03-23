@@ -10,7 +10,7 @@
   <!-- 透過的トランザクションの設定 -->
   <component name="transactionManagementHandler"
       class="nablarch.common.handler.TransactionManagementHandler">
-    <property name="transactionFactory" ref="transactionFactory" />
+    <property name="transactionFactory" ref="jdbcTransactionFactory" />
   </component>
 
   <!-- データベースコネクションを実現するハンドラ -->

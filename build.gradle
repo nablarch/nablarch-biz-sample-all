@@ -76,14 +76,10 @@ dependencies {
   compile 'com.nablarch.framework:nablarch-common-code-jdbc'
 
   testCompile 'com.nablarch.framework:nablarch-testing'
-  
+
   // captha
   compile 'com.google.code:kaptcha:2.3.2'
 
-  // JDBC Drivers
-  testCompile (group: 'com.oracle', name: 'ojdbc6', version: '11.2.0.4.0')
-  testRuntime (group: 'com.oracle', name: 'ucp', version: '11.2.0.3.0')
-  
   // mail
   compile 'javax.mail:mailapi:1.4.3'
   testRuntime 'com.sun.mail:pop3:1.4.4'

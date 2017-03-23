@@ -6,6 +6,7 @@
   <!-- テスト用設定値 -->
   <config-file file="unit-test.config"/>
   <config-file file="db.config"/>
+  <import file="db-default.xml"/>
 
   <!-- システム日付、業務日付を固定値に設定 -->
   <component name="dateProvider" class="nablarch.test.FixedSystemTimeProvider">
@@ -17,11 +18,6 @@
     <property name="extension" value="sql"/>
   </component>
 
-  <!-- TransactionFactoryの設定 -->
-  <component name="transactionFactory" class="nablarch.core.db.transaction.JdbcTransactionFactory">
-    <property name="isolationLevel" value="READ_COMMITTED"/>
-  </component>
-
   <component name="dbExceptionFactory" class="nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory">
   </component>
 
@@ -31,52 +27,6 @@
       <component class="nablarch.core.db.statement.autoproperty.FieldAndAnnotationLoader"/>
     </property>
     <property name="loadOnStartup" value="false"/>
-  </component>
-  
-  <!-- StatementFactoryの設定 -->
-  <component name="statementFactory" class="nablarch.core.db.statement.BasicStatementFactory">
-    <property name="fetchSize" value="500"/>
-    <property name="objectFieldCache" ref="fieldAnnotationCache"/>
-    <property name="updatePreHookObjectHandlerList">
-      <list>
-        <component
-                class="nablarch.core.db.statement.autoproperty.CurrentDateTimeAnnotationHandler">
-          <property name="dateProvider">
-            <component class="nablarch.core.date.BasicSystemTimeProvider"/>
-          </property>
-          <property name="dateFormat" value="yyyyMMdd"/>
-          <property name="fieldAnnotationCache" ref="fieldAnnotationCache"/>
-        </component>
-        <component
-                class="nablarch.core.db.statement.autoproperty.UserIdAnnotationHandler">
-          <property name="fieldAnnotationCache" ref="fieldAnnotationCache"/>
-        </component>
-      </list>
-    </property>
-    <property name="sqlParameterParserFactory">
-      <component class="nablarch.core.db.statement.BasicSqlParameterParserFactory"/>
-    </property>
-    <property name="sqlStatementExceptionFactory" ref="dbExceptionFactory"/>
-    <property name="sqlLoader" ref="sqlLoader"/>
-  </component>
-
-  <!-- ConnectionFactoryの設定 -->
-  <component name="connectionFactory"
-             class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
-    <property name="dataSource" ref="dataSource"/>
-    <property name="statementFactory" ref="statementFactory"/>
-  </component>
-  
-  <!-- データソース設定 -->
-  <component name="dataSource" class="oracle.ucp.jdbc.PoolDataSourceImpl">
-    <property name="connectionFactoryClassName"
-              value="oracle.jdbc.pool.OracleDataSource"/>
-    <property name="user" value="${db.user}"/>
-    <property name="password" value="${db.password}"/>
-    <property name="URL" value="${db.url}"/>
-    <property name="maxStatements" value="50"/>
-    <property name="maxPoolSize" value="10"/>
-    <property name="initialPoolSize" value="2"/>
   </component>
   
   <!-- dbInfo -->

@@ -1,6 +1,7 @@
 package please.change.me.common.captcha;
 
 import nablarch.core.ThreadContext;
+import nablarch.core.db.connection.DbConnectionContext;
 import nablarch.core.repository.SystemRepository;
 import nablarch.core.repository.di.DiContainer;
 import nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader;
@@ -10,11 +11,16 @@ import nablarch.fw.web.HttpRequest;
 import nablarch.fw.web.HttpResponse;
 import nablarch.fw.web.MockHttpRequest;
 import nablarch.test.RepositoryInitializer;
+import nablarch.test.support.SystemRepositoryResource;
+import nablarch.test.support.db.helper.DatabaseTestRunner;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -30,7 +36,15 @@ import static org.junit.Assert.fail;
  *
  * @author TIS
  */
+@RunWith(DatabaseTestRunner.class)
 public class CaptchaGenerateHandlerTest extends CaptchaDbTestSupport {
+
+    /**
+     * CaptchaDummyGeneratorTest.xml を読み込む
+     */
+    @ClassRule
+    public static final SystemRepositoryResource RESOURCE = new SystemRepositoryResource(
+            "please/change/me/common/captcha/CaptchaDummyGeneratorTest.xml");
 
     /**
      * クラス初期化時の処理
@@ -39,9 +53,6 @@ public class CaptchaGenerateHandlerTest extends CaptchaDbTestSupport {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        XmlComponentDefinitionLoader loader = new XmlComponentDefinitionLoader("please/change/me/common/captcha/CaptchaDummyGeneratorTest.xml");
-        SystemRepository.load(new DiContainer(loader));
-
         setupDb();
     }
 
@@ -65,6 +76,7 @@ public class CaptchaGenerateHandlerTest extends CaptchaDbTestSupport {
     @Before
     public void setup() throws Exception {
         ThreadContext.setLanguage(Locale.getDefault());
+        DbConnectionContext.setConnection(CaptchaDbTestSupport.getTmConn());
     }
 
     /**
@@ -77,6 +89,7 @@ public class CaptchaGenerateHandlerTest extends CaptchaDbTestSupport {
         // 未コミットのものは全てロールバック
         rollbackBizTran();
         rollbackTestTran();
+        DbConnectionContext.removeConnection();
     }
 
     /**

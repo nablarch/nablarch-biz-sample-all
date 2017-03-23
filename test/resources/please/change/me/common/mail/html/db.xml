@@ -9,21 +9,4 @@
 
     <component class="nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory" />
 
-    <component name="connectionFactory" class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
-        <property name="dialect">
-            <component class="please.change.me.common.mail.html.TestOracleDialect" />
-        </property>
-        <property name="dataSource">
-            <component class="oracle.jdbc.pool.OracleDataSource">
-                <property name="user" value="${db.user}" />
-                <property name="password" value="${db.password}" />
-                <property name="URL" value="${db.url}" />
-            </component>
-        </property>
-    </component>
-    <component name="transactionFactory" class="nablarch.core.db.transaction.JdbcTransactionFactory" />
-
-    <component name="statementFactory" class="nablarch.core.db.statement.BasicStatementFactory">
-    </component>
-
 </component-configuration>

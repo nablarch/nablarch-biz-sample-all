@@ -1,9 +1,9 @@
 package please.change.me.common.mail.html;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.containsString;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;

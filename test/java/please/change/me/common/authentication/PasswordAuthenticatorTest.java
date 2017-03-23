@@ -1,28 +1,26 @@
 package please.change.me.common.authentication;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.util.HashMap;
-import java.util.ResourceBundle;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import nablarch.core.db.connection.DbConnectionContext;
 import nablarch.core.db.transaction.SimpleDbTransactionManager;
 import nablarch.core.repository.SystemRepository;
 import nablarch.core.repository.di.DiContainer;
 import nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader;
-import oracle.jdbc.pool.OracleDataSource;
+import nablarch.test.support.db.helper.DatabaseTestRunner;
+import nablarch.test.support.db.helper.VariousDbTestHelper;
+
+import please.change.me.common.authentication.entity.SystemAccount;
 import please.change.me.util.FixedBusinessDateProvider;
 import please.change.me.util.FixedSystemTimeProvider;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -32,10 +30,8 @@ import static org.junit.Assert.fail;
  *
  * @author Kiyohito Itoh
  */
+@RunWith(DatabaseTestRunner.class)
 public class PasswordAuthenticatorTest {
-
-    /** テストデータなどをセットアップするためのコネクション */
-    private static Connection con;
 
     /** パスワード暗号化コンポーネント */
     private static PasswordEncryptor encryptor = getEncryptor();
@@ -59,102 +55,67 @@ public class PasswordAuthenticatorTest {
      *
      * テスト時に使用するデータベース接続の生成及びテスト用のテーブルのセットアップを行う。
      *
-     * @throws SQLException 例外
      */
     @BeforeClass
-    public static void classSetup() throws SQLException {
-
-        ResourceBundle rb = ResourceBundle.getBundle("db-config");
-        OracleDataSource ds = new OracleDataSource();
-        ds.setURL(rb.getString("db.url"));
-        ds.setUser(rb.getString("db.user"));
-        ds.setPassword(rb.getString("db.password"));
-        con = ds.getConnection();
-
-        // setup test table
-        Statement statement = con.createStatement();
-        try {
-            statement.execute("DROP TABLE SYSTEM_ACCOUNT CASCADE CONSTRAINTS");
-        } catch (Exception e) {
-            // nop
-        }
-
-        statement.execute("CREATE TABLE SYSTEM_ACCOUNT("
-                + " USER_ID                   CHAR(10) NOT NULL,"
-                + " PASSWORD                  VARCHAR2(128) NOT NULL,"
-                + " USER_ID_LOCKED            CHAR(1) DEFAULT 0 NOT NULL,"
-                + " PASSWORD_EXPIRATION_DATE  CHAR(8) DEFAULT '99991231' NOT NULL,"
-                + " FAILED_COUNT              NUMBER(1) DEFAULT 0 NOT NULL,"
-                + " EFFECTIVE_DATE_FROM       CHAR(8) DEFAULT '19000101' NOT NULL,"
-                + " EFFECTIVE_DATE_TO         CHAR(8) DEFAULT '99991231' NOT NULL,"
-                + " LAST_LOGIN_DATE_TIME      TIMESTAMP)");
-        statement.execute("ALTER TABLE SYSTEM_ACCOUNT ADD CONSTRAINT PK_sa"
-                + " PRIMARY KEY (USER_ID)");
-
-
-
-        statement.close();
-
+    public static void classSetup() {
         XmlComponentDefinitionLoader loader = new XmlComponentDefinitionLoader(
                 COMPONENT_BASE_PATH + "authentication-db.xml");
         SystemRepository.load(new DiContainer(loader));
+
+        VariousDbTestHelper.createTable(SystemAccount.class);
     }
 
     @Before
     public void setUp() throws Exception {
         DbConnectionContext.removeConnection();
 
-        PreparedStatement truncate = con.prepareStatement("truncate table system_account");
-        truncate.execute();
-        truncate.close();
+        VariousDbTestHelper.delete(SystemAccount.class);
 
-        // テストデータのセットアップ
-        PreparedStatement insert = con.prepareStatement(
-                "insert into SYSTEM_ACCOUNT values (?, ?, ?, ?, ?, ?, ?, ?)");
         // active user
-        insert.setString(1, "0000000001");
-        insert.setString(2, encryptor.encrypt("0000000001", "password"));
-        insert.setString(3, "0");
-        insert.setString(4, "20130804");
-        insert.setInt(5, 0);
-        insert.setString(6, "20130802");
-        insert.setString(7, "20130805");
-        insert.setNull(8, Types.TIMESTAMP);
-        insert.execute();
+        VariousDbTestHelper.insert(new SystemAccount(
+                "0000000001",
+                encryptor.encrypt("0000000001", "password"),
+                "0",
+                "20130804",
+                0,
+                "20130802",
+                "20130805",
+                null
+        ));
 
         // locked user
-        insert.setString(1, "0000000003");
-        insert.setString(2, encryptor.encrypt("0000000001", "password"));
-        insert.setString(3, "1");       // locked
-        insert.setString(4, "20130804");
-        insert.setInt(5, 0);
-        insert.setString(6, "20130802");
-        insert.setString(7, "20130805");
-        insert.setNull(8, Types.TIMESTAMP);
-        insert.execute();
+        VariousDbTestHelper.insert(new SystemAccount(
+                "0000000003",
+                encryptor.encrypt("0000000001", "password"),
+                "1", // locked
+                "20130804",
+                0,
+                "20130802",
+                "20130805",
+                null
+        ));
 
-        insert.setString(1, "0000000004");
-        insert.setString(2, encryptor.encrypt("0000000004", "password"));
-        insert.setString(3, "0");
-        insert.setString(4, "20130804");
-        insert.setInt(5, 2);
-        insert.setString(6, "20130802");
-        insert.setString(7, "20130805");
-        insert.setNull(8, Types.TIMESTAMP);
-        insert.execute();
+        VariousDbTestHelper.insert(new SystemAccount(
+                "0000000004",
+                encryptor.encrypt("0000000004", "password"),
+                "0",
+                "20130804",
+                2,
+                "20130802",
+                "20130805",
+                null
+        ));
 
-        insert.setString(1, "0000000005");
-        insert.setString(2, encryptor.encrypt("0000000005", "pass!!!"));
-        insert.setString(3, "0");
-        insert.setString(4, "20130805");
-        insert.setInt(5, 0);
-        insert.setString(6, "20130802");
-        insert.setString(7, "20130805");
-        insert.setNull(8, Types.TIMESTAMP);
-        insert.execute();
-
-        insert.close();
-        con.commit();
+        VariousDbTestHelper.insert(new SystemAccount(
+                "0000000005",
+                encryptor.encrypt("0000000005", "pass!!!"),
+                "0",
+                "20130805",
+                0,
+                "20130802",
+                "20130805",
+                null
+        ));
     }
 
 
@@ -165,9 +126,8 @@ public class PasswordAuthenticatorTest {
      */
     @AfterClass
     public static void classDown() throws Exception {
-        if (con != null) {
-            con.close();
-        }
+        VariousDbTestHelper.dropTable(SystemAccount.class);
+
         SystemRepository.clear();
     }
 
@@ -339,13 +299,11 @@ public class PasswordAuthenticatorTest {
         //**********************************************************************
         createPasswordAuthenticator("20130802").authenticate("0000000005", "pass!!!");
 
-        PreparedStatement statement = con.prepareStatement("select * from system_account where user_id = ?");
-        statement.setString(1, "0000000005");
-        ResultSet resultSet = statement.executeQuery();
-        assertThat(resultSet.next(), is(true));
-        assertThat("ユーザはロック中のまま", resultSet.getString("USER_ID_LOCKED"), is("0"));
-        assertThat("失敗回数は変わらない", resultSet.getInt("FAILED_COUNT"), is(0));
-        assertThat("最終ログイン日時が更新されること", resultSet.getTimestamp("LAST_LOGIN_DATE_TIME"),
+        SystemAccount account = VariousDbTestHelper.findById(SystemAccount.class, "0000000005");
+        assertThat(account, notNullValue());
+        assertThat("ユーザはロック中のまま", account.userIdLocked, is("0"));
+        assertThat("失敗回数は変わらない", account.failedCount, is(0));
+        assertThat("最終ログイン日時が更新されること", account.lastLoginDateTime,
                 is(Timestamp.valueOf("2013-08-23 00:11:22.000")));
 
         //**********************************************************************
@@ -376,14 +334,9 @@ public class PasswordAuthenticatorTest {
         authenticator.authenticate("0000000004", "password");
 
         // assertion
-        PreparedStatement statement1 = con.prepareStatement("select * from system_account where user_id = ?");
-        statement1.setString(1, "0000000004");
-        ResultSet resultSet1 = statement1.executeQuery();
-
-        assertThat(resultSet1.next(), is(true));
-        assertThat("認証失敗回数は0", resultSet1.getInt("FAILED_COUNT"), is(0));
-
-        statement1.close();
+        SystemAccount account1 = VariousDbTestHelper.findById(SystemAccount.class, "0000000004");
+        assertThat( account1, notNullValue());
+        assertThat("認証失敗回数は0", account1.failedCount, is(0));
 
         //**********************************************************************
         // 認証が失敗する(3回失敗するとロックされる)
@@ -411,15 +364,10 @@ public class PasswordAuthenticatorTest {
         }
 
         // assertion
-        PreparedStatement statement2 = con.prepareStatement("select * from system_account where user_id = ?");
-        statement2.setString(1, "0000000004");
-        ResultSet resultSet2 = statement2.executeQuery();
-
-        assertThat(resultSet2.next(), is(true));
-        assertThat("ユーザがロック済('1')みに変更されること", resultSet2.getString("USER_ID_LOCKED"), is("1"));
-        assertThat("認証失敗回数がインクリメントされること", resultSet2.getInt("FAILED_COUNT"), is(3));
-
-        statement2.close();
+        SystemAccount account2 = VariousDbTestHelper.findById(SystemAccount.class, "0000000004");
+        assertThat(account2, notNullValue());
+        assertThat("ユーザがロック済('1')みに変更されること", account2.userIdLocked, is("1"));
+        assertThat("認証失敗回数がインクリメントされること", account2.failedCount, is(3));
 
         //**********************************************************************
         // 認証成功するがユーザロック中
@@ -432,15 +380,10 @@ public class PasswordAuthenticatorTest {
             assertThat(e.getFailedCountToLock(), is(3));
         }
 
-        PreparedStatement statement3 = con.prepareStatement("select * from system_account where user_id = ?");
-        statement3.setString(1, "0000000004");
-        ResultSet resultSet3 = statement3.executeQuery();
-
-        assertThat(resultSet3.next(), is(true));
-        assertThat("ユーザはロック中のまま", resultSet3.getString("USER_ID_LOCKED"), is("1"));
-        assertThat("失敗回数は変わらない", resultSet3.getInt("FAILED_COUNT"), is(3));
-
-        statement3.close();
+        SystemAccount account3 = VariousDbTestHelper.findById(SystemAccount.class, "0000000004");
+        assertThat(account3, notNullValue());
+        assertThat("ユーザはロック中のまま", account3.userIdLocked, is("1"));
+        assertThat("失敗回数は変わらない", account3.failedCount, is(3));
     }
 
     /**
@@ -457,14 +400,9 @@ public class PasswordAuthenticatorTest {
         //*********************************************************************
         authenticator.authenticate("0000000004", "password");
 
-        PreparedStatement statement1 = con.prepareStatement("select * from system_account where user_id = ?");
-        statement1.setString(1, "0000000004");
-        ResultSet resultSet1 = statement1.executeQuery();
-
-        assertThat(resultSet1.next(), is(true));
-        assertThat("パスワード失敗回数は変更されない", resultSet1.getInt("FAILED_COUNT"), is(2));
-
-        statement1.close();
+        SystemAccount account1 = VariousDbTestHelper.findById(SystemAccount.class, "0000000004");
+        assertThat(account1, notNullValue());
+        assertThat("パスワード失敗回数は変更されない", account1.failedCount, is(2));
 
         //*********************************************************************
         // 認証失敗
@@ -476,14 +414,9 @@ public class PasswordAuthenticatorTest {
             assertThat(e.getUserId(), is("0000000004"));
         }
 
-        PreparedStatement statement2 = con.prepareStatement("select * from system_account where user_id = ?");
-        statement2.setString(1, "0000000004");
-        ResultSet resultSet2 = statement2.executeQuery();
-
-        assertThat(resultSet2.next(), is(true));
-        assertThat("パスワード失敗回数は変更されない", resultSet2.getInt("FAILED_COUNT"), is(2));
-
-        statement2.close();
+        SystemAccount account2 = VariousDbTestHelper.findById(SystemAccount.class, "0000000004");
+        assertThat(account2, notNullValue());
+        assertThat("パスワード失敗回数は変更されない", account2.failedCount, is(2));
     }
 
     /**

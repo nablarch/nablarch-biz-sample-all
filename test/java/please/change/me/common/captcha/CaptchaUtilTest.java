@@ -19,25 +19,39 @@ import java.util.concurrent.Future;
 import java.util.regex.Pattern;
 
 import nablarch.core.date.SystemTimeUtil;
+import nablarch.core.db.connection.DbConnectionContext;
 import nablarch.core.repository.SystemRepository;
 import nablarch.core.repository.di.DiContainer;
 import nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader;
 import nablarch.test.RepositoryInitializer;
+import nablarch.test.support.SystemRepositoryResource;
+import nablarch.test.support.db.helper.DatabaseTestRunner;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * {@link CaptchaUtil}のテスト
  * 
  * @author TIS
  */
+@RunWith(DatabaseTestRunner.class)
 public class CaptchaUtilTest extends CaptchaDbTestSupport {
     /** UUID パターン */
     private static final Pattern UUID_PATTERN = Pattern.compile("[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}");
-    
+
+    /**
+     * CaptchaTest.xml を読み込む
+     */
+    @ClassRule
+    public static final SystemRepositoryResource RESOURCE = new SystemRepositoryResource(
+            "please/change/me/common/captcha/CaptchaTest.xml");
+
     /**
      * クラス初期化時の処理
      * 
@@ -45,9 +59,6 @@ public class CaptchaUtilTest extends CaptchaDbTestSupport {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        XmlComponentDefinitionLoader loader = new XmlComponentDefinitionLoader("please/change/me/common/captcha/CaptchaTest.xml");
-        SystemRepository.load(new DiContainer(loader));
-
         setupDb();
     }
 
@@ -64,6 +75,16 @@ public class CaptchaUtilTest extends CaptchaDbTestSupport {
     }
 
     /**
+     * ケース開始時の処理
+     *
+     * @throws Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        DbConnectionContext.setConnection(CaptchaDbTestSupport.getTmConn());
+    }
+
+    /**
      * ケース終了時の処理
      * 
      * @throws Exception 例外
@@ -73,6 +94,7 @@ public class CaptchaUtilTest extends CaptchaDbTestSupport {
         // 未コミットのものは全てロールバック
         rollbackBizTran();
         rollbackTestTran();
+        DbConnectionContext.removeConnection();
     }
 
     /**
@@ -185,26 +207,26 @@ public class CaptchaUtilTest extends CaptchaDbTestSupport {
      */
     @Test
     public void testMultiThread() throws InterruptedException, ExecutionException {
-    
-    service = Executors.newFixedThreadPool(100);
-    final String key = CaptchaUtil.generateKey();
-    
-    final int cnt = 10000;
-    List<Callable<Captcha>> callables = new ArrayList<Callable<Captcha>>(cnt);
-    
-    for (int i = 0; i < cnt; i++) {
-        callables.add(new Callable<Captcha>() {
-            @Override
-            public Captcha call() throws Exception {
-                return CaptchaUtil.generateImage(key);
-            }
-        });
-    }
-    
-    List<Future<Captcha>> futures = service.invokeAll(callables);
-    service.shutdownNow();
-    // 呼び出し回数と結果数が一致していること。
-    assertThat(futures.size(), is(cnt));
-    
+
+        service = Executors.newFixedThreadPool(100);
+        final String key = CaptchaUtil.generateKey();
+
+        final int cnt = 10000;
+        List<Callable<Captcha>> callables = new ArrayList<Callable<Captcha>>(cnt);
+
+        for (int i = 0; i < cnt; i++) {
+            callables.add(new Callable<Captcha>() {
+                @Override
+                public Captcha call() throws Exception {
+                    return CaptchaUtil.generateImage(key);
+                }
+            });
+        }
+
+        List<Future<Captcha>> futures = service.invokeAll(callables);
+        service.shutdownNow();
+        // 呼び出し回数と結果数が一致していること。
+        assertThat(futures.size(), is(cnt));
+
     }
 }

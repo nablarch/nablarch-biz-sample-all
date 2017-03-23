@@ -1,5 +1,6 @@
 package please.change.me.common.captcha;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -10,23 +11,31 @@ import static org.junit.Assert.assertFalse;
 
 import java.util.Date;
 
+import nablarch.core.db.connection.DbConnectionContext;
 import nablarch.core.db.statement.exception.DuplicateStatementException;
-import nablarch.core.repository.SystemRepository;
-import nablarch.core.repository.di.DiContainer;
-import nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader;
 import nablarch.test.RepositoryInitializer;
+import nablarch.test.support.SystemRepositoryResource;
+import nablarch.test.support.db.helper.DatabaseTestRunner;
 
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * {@link CaptchaDataManager}のテスト
  * 
  * @author TIS
  */
+@RunWith(DatabaseTestRunner.class)
 public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
+
+    @ClassRule
+    public static final SystemRepositoryResource RESOURCE = new SystemRepositoryResource(
+            "please/change/me/common/captcha/CaptchaTest.xml");
 
     /**
      * クラス初期化時の処理
@@ -35,9 +44,6 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
      */
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        XmlComponentDefinitionLoader loader = new XmlComponentDefinitionLoader("please/change/me/common/captcha/CaptchaTest.xml");
-        SystemRepository.load(new DiContainer(loader));
-
         setupDb();
     }
 
@@ -54,8 +60,18 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
     }
 
     /**
+     * ケース開始時の処理
+     *
+     * @throws Exception
+     */
+    @Before
+    public void setUp() throws Exception {
+        DbConnectionContext.setConnection(CaptchaDbTestSupport.getTmConn());
+    }
+
+    /**
      * ケース終了時の処理
-     * 
+     *
      * @throws Exception 例外
      */
     @After
@@ -63,6 +79,7 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
         // 未コミットのものは全てロールバック
         rollbackBizTran();
         rollbackTestTran();
+        DbConnectionContext.removeConnection();
     }
 
     /**
@@ -75,7 +92,7 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
         // 一応消す
         deleteFromManageTableByKey("a");
         commitTestTran();
-        
+
         CaptchaDataManager manager = new CaptchaDataManager();
         manager.create("a");
         
@@ -99,7 +116,7 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
         // 一応消す
         deleteFromManageTableByKey("a");
         commitTestTran();
-        
+
         CaptchaDataManager manager = new CaptchaDataManager();
         manager.create("a");
         commitBizTran();
@@ -108,7 +125,7 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
             manager.create("a");
             fail();
         } catch (Exception e) {
-            assertThat(e, is(DuplicateStatementException.class));
+            assertThat(e, is(instanceOf(DuplicateStatementException.class)));
         }
     }
     
@@ -122,11 +139,11 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
         // 一応消す
         deleteFromManageTableByKey("a");
         commitTestTran();
-        
+
         // 識別キーを登録
         insertIntoManageTableByKey(new Captcha().setKey("a"));
         commitTestTran();
-        
+
         Date generateDateTime = new Date();
         
         Captcha captcha = new Captcha()
@@ -168,7 +185,7 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
             manager.save(null);
             fail();
         } catch (Exception e) {
-            assertThat(e, is(IllegalArgumentException.class));
+            assertThat(e, is(instanceOf(IllegalArgumentException.class)));
             assertEquals("captcha is null.", e.getMessage());
         }
         
@@ -176,7 +193,7 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
             manager.save(new Captcha());
             fail();
         } catch (Exception e) {
-            assertThat(e, is(IllegalArgumentException.class));
+            assertThat(e, is(instanceOf(IllegalArgumentException.class)));
             assertEquals("captcha.key is null.", e.getMessage());
         }
         
@@ -184,7 +201,7 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
             manager.save(new Captcha().setKey("a"));
             fail();
         } catch (Exception e) {
-            assertThat(e, is(IllegalArgumentException.class));
+            assertThat(e, is(instanceOf(IllegalArgumentException.class)));
             assertEquals("captcha.text is null.", e.getMessage());
         }
         
@@ -192,7 +209,7 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
             manager.save(new Captcha().setKey("a").setText("b"));
             fail();
         } catch (Exception e) {
-            assertThat(e, is(IllegalArgumentException.class));
+            assertThat(e, is(instanceOf(IllegalArgumentException.class)));
             assertEquals("captcha.generateDateTime is null.", e.getMessage());
         }
         
@@ -206,20 +223,20 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
      */
     @Test
     public void testLoad() throws Exception {
-        
+
         // 一応消す
-        deleteFromManageTableByKey("c");
+        int ret = deleteFromManageTableByKey("c");
         commitTestTran();
-        
+
         Date generateDateTime = new Date();
-        
+
         Captcha insertCaptcha = new Captcha()
                                 .setKey("c")
                                 .setText("d")
                                 .setGenerateDateTime(generateDateTime);
-        
+
         insertIntoManageTableByKey(insertCaptcha);
-        
+
         CaptchaDataManager manager = new CaptchaDataManager();
         Captcha captcha = manager.load("c");
         
@@ -249,7 +266,7 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
             manager.load(null);
             fail();
         } catch (Exception e) {
-            assertThat(e, is(IllegalArgumentException.class));
+            assertThat(e, is(instanceOf(IllegalArgumentException.class)));
             assertEquals("key is null.", e.getMessage());
         }
     }

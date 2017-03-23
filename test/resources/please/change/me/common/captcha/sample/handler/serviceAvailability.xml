@@ -31,7 +31,7 @@
       class="nablarch.core.db.transaction.SimpleDbTransactionManager">
     <property name="dbTransactionName" value="serviceAvailability" />
     <!-- トランザクションファクトリ -->
-    <property name="transactionFactory" ref="transactionFactory" />
+    <property name="transactionFactory" ref="jdbcTransactionFactory" />
     <!-- コネクションファクトリ -->
     <property name="connectionFactory" ref="connectionFactory" />
   </component>

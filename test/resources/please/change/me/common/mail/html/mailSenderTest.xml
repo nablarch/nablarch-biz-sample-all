@@ -4,6 +4,8 @@
     xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration">
 
     <config-file file="db.config" />
+    <import file="db-default.xml" />
+
     <config-file file="please/change/me/common/mail/html/mail-batch.config" />
     <config-file file="please/change/me/common/mail/html/mail-session.config" />
 
@@ -23,12 +25,12 @@
     <import file="please/change/me/common/mail/html/message.xml" />
     <!-- DbManagerの設定  -->
     <component name="dbManager" class="nablarch.core.db.transaction.SimpleDbTransactionManager">
-        <property name="transactionFactory" ref="transactionFactory" />
+        <property name="transactionFactory" ref="jdbcTransactionFactory" />
         <property name="connectionFactory" ref="connectionFactory" />
     </component>
     <!-- テストで利用するDbManager設定  -->
     <component name="dbManager-default" class="nablarch.core.db.transaction.SimpleDbTransactionManager">
-        <property name="transactionFactory" ref="transactionFactory" />
+        <property name="transactionFactory" ref="jdbcTransactionFactory" />
         <property name="dbTransactionName" value="mailtest" />
         <property name="connectionFactory" ref="connectionFactory" />
     </component>
@@ -46,7 +48,7 @@
     <component name="statusUpdateTransaction" class="nablarch.core.db.transaction.SimpleDbTransactionManager">
       <property name="dbTransactionName" value="statusUpdateTransaction" />
       <property name="connectionFactory" ref="connectionFactory" />
-      <property name="transactionFactory" ref="transactionFactory" />
+      <property name="transactionFactory" ref="jdbcTransactionFactory" />
     </component>
 
     <!-- ハンドラキュー構成 -->
@@ -81,7 +83,7 @@
         <!-- ループ・トランザクション制御ハンドラ -->
         <component class="nablarch.fw.handler.LoopHandler">
             <property name="commitInterval" value="${commitInterval}" />
-            <property name="transactionFactory" ref="transactionFactory" />
+            <property name="transactionFactory" ref="jdbcTransactionFactory" />
         </component>
 
         <!-- データリードハンドラ -->

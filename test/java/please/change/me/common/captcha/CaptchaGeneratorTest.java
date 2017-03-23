@@ -1,5 +1,6 @@
 package please.change.me.common.captcha;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -82,7 +83,7 @@ public class CaptchaGeneratorTest {
             generator.createText();
             fail();
         } catch (Exception e) {
-            assertThat(e, is(RuntimeException.class));
+            assertThat(e, is(instanceOf(RuntimeException.class)));
             assertEquals("Failed to create text.", e.getMessage());
         }
         
@@ -90,7 +91,7 @@ public class CaptchaGeneratorTest {
             generator.createImage("hoge");
             fail();
         } catch (Exception e) {
-            assertThat(e, is(RuntimeException.class));
+            assertThat(e, is(instanceOf(RuntimeException.class)));
             assertEquals("Failed to create image. imageType=[jpeg] text=[hoge]", e.getMessage());
         }
     }
@@ -131,7 +132,7 @@ public class CaptchaGeneratorTest {
             generator.createImage(text);
             fail();
         } catch (Exception e) {
-            assertThat(e, is(RuntimeException.class));
+            assertThat(e, is(instanceOf(RuntimeException.class)));
             assertEquals("Failed to write image. imageType=[" + imageType + "] text=[" + text + "]", e.getMessage());
         }
     }
@@ -148,7 +149,7 @@ public class CaptchaGeneratorTest {
             generator.createImage(null);
             fail();
         } catch (Exception e) {
-            assertThat(e, is(IllegalArgumentException.class));
+            assertThat(e, is(instanceOf(IllegalArgumentException.class)));
             assertEquals("text is null.", e.getMessage());
         }
         
@@ -156,7 +157,7 @@ public class CaptchaGeneratorTest {
             generator.createImage("");
             fail();
         } catch (Exception e) {
-            assertThat(e, is(IllegalArgumentException.class));
+            assertThat(e, is(instanceOf(IllegalArgumentException.class)));
             assertEquals("text is null.", e.getMessage());
         }
     }
@@ -214,7 +215,7 @@ public class CaptchaGeneratorTest {
 
     /**
      * イメージ生成時の除外拡張子。
-     * {@link ImageIO#write()} では {@link ImageIO#getWriterFormatNames()} で取得できるフォーマット名を使用できるはずだが、
+     * {@link ImageIO#write} では {@link ImageIO#getWriterFormatNames()} で取得できるフォーマット名を使用できるはずだが、
      * 一部使用できないフォーマット名があるため、除外する。
      */
     private Set<String> imageExceptedExtention = new HashSet<String>() { {

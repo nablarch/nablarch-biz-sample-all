@@ -3,16 +3,14 @@ package please.change.me.common.file.management;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.sql.Blob;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ResourceBundle;
+
+import javax.sql.rowset.serial.SerialBlob;
+
+import please.change.me.common.file.management.entity.FileControl;
 
 import nablarch.common.idgenerator.IdFormatter;
 import nablarch.common.idgenerator.IdGenerator;
@@ -25,69 +23,42 @@ import nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader;
 import nablarch.core.util.BinaryUtil;
 import nablarch.core.util.FileUtil;
 import nablarch.fw.web.upload.PartInfo;
-import oracle.jdbc.pool.OracleDataSource;
+import nablarch.test.support.SystemRepositoryResource;
+import nablarch.test.support.db.helper.DatabaseTestRunner;
+import nablarch.test.support.db.helper.VariousDbTestHelper;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+@RunWith(DatabaseTestRunner.class)
 public class DbFileManagementTest {
     /**テスト対象が使用するコネクション*/
     static TransactionManagerConnection tmConn;
 
-    /** テストデータなどをセットアップするためのコネクション */
-    private static Connection con;
-
+    @Rule
+    public SystemRepositoryResource resouce = new SystemRepositoryResource(
+            "please/change/me/common/file/management/dbFileManagement.xml");
     /**
      * セットアップ。
      *
      * テスト時に使用するデータベース接続の生成及びテスト用のテーブルのセットアップを行う。
      *
-     * @throws SQLException 例外
      */
     @BeforeClass
-    public static void classSetup() throws SQLException {
-
-        ResourceBundle rb = ResourceBundle.getBundle("db-config");
-        OracleDataSource ds = new OracleDataSource();
-        ds.setURL(rb.getString("db.url"));
-        ds.setUser(rb.getString("db.user"));
-        ds.setPassword(rb.getString("db.password"));
-        con = ds.getConnection();
-
+    public static void classSetup() {
         // setup test table
-        Statement statement = con.createStatement();
-        try {
-            statement.execute("DROP TABLE FILE_CONTROL CASCADE CONSTRAINTS");
-        } catch (Exception e) {
-            // nop
-        }
-        try {
-            statement.execute("DROP SEQUENCE FILE_ID_SEQ");
-        } catch (Exception e) {
-            // nop
-        }
-
-        statement.execute("CREATE TABLE FILE_CONTROL("
-                + "FILE_CONTROL_ID NCHAR(18),"
-                + "FILE_OBJECT BLOB NOT NULL,"
-                + "SAKUJO_SGN NCHAR(1) NOT NULL"
-                + ")");
-        statement.execute("ALTER TABLE" +
-                " FILE_CONTROL ADD CONSTRAINT PK_fc PRIMARY KEY (FILE_CONTROL_ID)");
-        
-        statement.execute("CREATE SEQUENCE" +
-                " FILE_ID_SEQ MAXVALUE 999999999999999999");
-        statement.close();
+        VariousDbTestHelper.createTable(FileControl.class);
 
         XmlComponentDefinitionLoader loader = new XmlComponentDefinitionLoader("please/change/me/common/file/management/dbFileManagement.xml");
         SystemRepository.load(new DiContainer(loader));
         
         ConnectionFactory factory = SystemRepository.get("connectionFactory");
         tmConn = factory.getConnection("test");
-        DbConnectionContext.setConnection(tmConn);
     }
 
     /**
@@ -97,23 +68,21 @@ public class DbFileManagementTest {
      */
     @AfterClass
     public static void classDown() throws Exception {
-        DbConnectionContext.removeConnection();
-        if (con != null) {
-            con.close();
-        }
+        // drop table
+        VariousDbTestHelper.dropTable(FileControl.class);
+
         SystemRepository.clear();
     }
     
     @Before
     public void setUp(){
-        SystemRepository.clear();
-        XmlComponentDefinitionLoader loader = new XmlComponentDefinitionLoader("please/change/me/common/file/management/dbFileManagement.xml");
-        SystemRepository.load(new DiContainer(loader));
+        DbConnectionContext.setConnection(tmConn);
     }
     
     @After
     public void tearDown(){
         tmConn.rollback();
+        DbConnectionContext.removeConnection();
     }
     
     /**
@@ -372,34 +341,14 @@ public class DbFileManagementTest {
      * 正常系用のDBテストデータを用意する処理。
      */
     private void prepareDbData() throws Exception {
-        con.commit();
-        PreparedStatement truncate = con.prepareStatement("DELETE FROM FILE_CONTROL");
-        truncate.execute();
-        truncate.close();
-        con.commit();
-
-        InputStream inputStream = null;
-
-        // テストデータのセットアップ
-        PreparedStatement insert = con.prepareStatement(
-                "insert into FILE_CONTROL (FILE_CONTROL_ID, FILE_OBJECT, SAKUJO_SGN) values(?, ?, ?)");
-        
-        //有効なレコード
-        insert.setString(1, "900000000000000001");
-        inputStream = new ByteArrayInputStream("abc".getBytes("utf-8")); 
-        insert.setBlob(2, inputStream);
-        insert.setString(3, "0");
-        insert.execute();
-        
-        //論理削除済みレコード
-        insert.setString(1, "900000000000000002");
-        inputStream = new ByteArrayInputStream("def".getBytes("utf-8")); 
-        insert.setBlob(2, inputStream);
-        insert.setString(3, "1");
-        insert.execute();
-
-        insert.close();
-        con.commit();
+        Blob blob1 = new SerialBlob("abc".getBytes("utf-8"));
+        Blob blob2 = new SerialBlob("def".getBytes("utf-8"));
+        VariousDbTestHelper.setUpTable(
+                //有効なレコード
+                new FileControl("900000000000000001", blob1, "0"),
+                //論理削除済みレコード
+                new FileControl("900000000000000002", blob2, "1")
+        );
     }
 
     /**
