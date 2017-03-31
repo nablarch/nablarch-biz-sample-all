@@ -71,14 +71,6 @@ configurations {
   all*.exclude module: 'jsp-2.1-glassfish'
 }
 
-test {
-
-  // find sql files
-  classpath = files("${projectDir}/main/java") \
-            + files("${projectDir}/test/java") \
-            + project.sourceSets.test.runtimeClasspath
-}
-
 wrapper {
   gradleVersion = '2.4'
 }
