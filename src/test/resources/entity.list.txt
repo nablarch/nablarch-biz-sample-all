@@ -1,0 +1,13 @@
+please.change.me.common.authentication.entity.SystemAccount
+please.change.me.common.captcha.entity.CaptchaManage
+please.change.me.common.captcha.entity.CaptchaMessage
+please.change.me.common.mail.html.entity.AlternativeText
+please.change.me.common.mail.html.entity.AlternativeTextTemplate
+please.change.me.common.mail.html.entity.BatchRequest
+please.change.me.common.mail.html.entity.IdGenerateMail
+please.change.me.common.mail.html.entity.MailAttachedFile
+please.change.me.common.mail.html.entity.MailRecipient
+please.change.me.common.mail.html.entity.MailRequest
+please.change.me.common.mail.html.entity.MailTemplate
+please.change.me.common.mail.html.entity.MailMessage
+please.change.me.common.file.management.entity.FileControl

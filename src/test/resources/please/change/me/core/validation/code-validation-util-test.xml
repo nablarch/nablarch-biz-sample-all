@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration">
+
+  <component name="stringResourceHolder" class="please.change.me.core.validation.validator.CodeValidationUtilTest$MockStringResourceHolder">
+  </component>
+
+  <!-- 精査用の設定 -->
+  <component name="validationManager" class="nablarch.core.validation.ValidationManager">
+    <property name="convertors">
+      <list>
+        <component class="nablarch.core.validation.convertor.StringConvertor">
+          <property name="conversionFailedMessageId" value="MSG90001" />
+          <property name="allowNullValue" value="false" />
+        </component>
+      </list>
+    </property>
+    <property name="validators">
+      <list>
+        <component class="nablarch.core.validation.validator.RequiredValidator">
+          <property name="messageId" value="MSG00010" />
+        </component>
+        <component name="codeValidator" class="nablarch.common.code.validator.CodeValueValidator">
+          <property name="messageId" value="MSG90002" />
+        </component>
+      </list>
+    </property>
+    <!-- サイズキーの設定が正しくなかった場合に表示されるメッセージ -->
+    <property name="invalidSizeKeyMessageId" value="MSG90001" />
+    <property name="formDefinitionCache" ref="formDefinitionCache" />
+  </component>
+
+  <component name="formDefinitionCache" class="nablarch.core.cache.BasicStaticDataCache">
+    <property name="loader">
+      <component class="nablarch.core.validation.FormValidationDefinitionLoader" />
+    </property>
+  </component>
+
+  <!-- コード用の設定 -->
+  <component name="codeLoader"
+      class="please.change.me.core.validation.validator.MockCodeLoader">
+  </component>
+
+  <component name="codeCache"
+      class="nablarch.core.cache.BasicStaticDataCache" >
+
+    <property name="loader" ref="codeLoader"/>
+
+    <property name="loadOnStartup" value="false"/>
+  </component>
+
+  <component name="codeManager"
+      class="nablarch.common.code.BasicCodeManager" autowireType="None">
+    <property name="codeDefinitionCache" ref="codeCache"/>
+  </component>
+
+  <component name="initializer"
+      class="nablarch.core.repository.initialization.BasicApplicationInitializer">
+    <property name="initializeList">
+      <list>
+        <component-ref name="codeLoader" />
+        <component-ref name="formDefinitionCache" />
+        <component-ref name="codeCache" />
+        <component-ref name="validationManager" />
+      </list>
+    </property>
+  </component>
+
+</component-configuration>
