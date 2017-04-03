@@ -49,8 +49,9 @@ public class CaptchaDbTestSupport {
      *
      */
     protected static void teardownDb() {
-        VariousDbTestHelper.dropTable(CaptchaManage.class);
-        VariousDbTestHelper.dropTable(CaptchaMessage.class);
+        if (tmConn != null) {
+            tmConn.terminate();
+        }
     }
 
     /**

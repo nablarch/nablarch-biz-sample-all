@@ -18,8 +18,6 @@ import nablarch.core.db.connection.ConnectionFactory;
 import nablarch.core.db.connection.DbConnectionContext;
 import nablarch.core.db.connection.TransactionManagerConnection;
 import nablarch.core.repository.SystemRepository;
-import nablarch.core.repository.di.DiContainer;
-import nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader;
 import nablarch.core.util.BinaryUtil;
 import nablarch.core.util.FileUtil;
 import nablarch.fw.web.upload.PartInfo;
@@ -53,13 +51,14 @@ public class DbFileManagementTest {
     public static void classSetup() {
         // setup test table
         VariousDbTestHelper.createTable(FileControl.class);
+    }
 
-        XmlComponentDefinitionLoader loader = new XmlComponentDefinitionLoader(
-                "please/change/me/common/file/management/dbFileManagement.xml");
-        SystemRepository.load(new DiContainer(loader));
-
-        ConnectionFactory factory = SystemRepository.get("connectionFactory");
-        tmConn = factory.getConnection("test");
+    private static TransactionManagerConnection getTmConn() {
+        if (tmConn == null) {
+            ConnectionFactory factory = SystemRepository.get("connectionFactory");
+            tmConn = factory.getConnection("test");
+        }
+        return tmConn;
     }
 
     /**
@@ -69,20 +68,19 @@ public class DbFileManagementTest {
      */
     @AfterClass
     public static void classDown() throws Exception {
-        // drop table
-        VariousDbTestHelper.dropTable(FileControl.class);
-
-        SystemRepository.clear();
+        if (tmConn != null) {
+            tmConn.terminate();
+        }
     }
-    
+
     @Before
     public void setUp(){
-        DbConnectionContext.setConnection(tmConn);
+        DbConnectionContext.setConnection(getTmConn());
     }
     
     @After
     public void tearDown(){
-        tmConn.rollback();
+        getTmConn().rollback();
         DbConnectionContext.removeConnection();
     }
 

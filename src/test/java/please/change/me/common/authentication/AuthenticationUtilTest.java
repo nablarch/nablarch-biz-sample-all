@@ -3,15 +3,14 @@ package please.change.me.common.authentication;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.ClassRule;
 import org.junit.Test;
 
-import nablarch.core.repository.ObjectLoader;
 import nablarch.core.repository.SystemRepository;
+import nablarch.test.support.SystemRepositoryResource;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -32,26 +31,8 @@ public class AuthenticationUtilTest {
      */
     private static PasswordEncryptor defaultPasswordEncryptor;
 
-    /**
-     * {@code authenticator} と {@code passwordEncryptor} を {@link SystemRepository} の
-     * "authenticator", "passwordEncryptor" に登録する。
-     *
-     * @param authenticator {@link SystemRepository} に登録する {@link Authenticator}
-     * @param encryptor {@link SystemRepository} に登録する {@link PasswordEncryptor}
-     */
-    private static void setupAuthenticationComponents(final Authenticator authenticator, final PasswordEncryptor encryptor) {
-        SystemRepository.load(new ObjectLoader() {
-            @Override
-            public Map<String, Object> load() {
-                return new HashMap<String, Object>() {
-                    {
-                        put("authenticator", authenticator);
-                        put("passwordEncryptor", encryptor);
-                    }
-                };
-            }
-        });
-    }
+    @ClassRule
+    public static final SystemRepositoryResource RESOURCE = new SystemRepositoryResource(null);
 
     /**
      * Delegateを確認するテストのため、 {@link SystemRepository} に、
@@ -60,21 +41,8 @@ public class AuthenticationUtilTest {
      */
     @BeforeClass
     public static void setupRepository() {
-        defaultAuthenticator = SystemRepository.get("authenticator");
-        defaultPasswordEncryptor = SystemRepository.get("passwordEncryptor");
-
-        setupAuthenticationComponents(new MockAuthenticator(), new MockPasswordEncryptor());
-    }
-
-    /**
-     * テスト終了時に、 {@link SystemRepository} に登録されている "authenticator" と "passwordEncryptor" を
-     * 元の値に戻す。
-     */
-    @AfterClass
-    public static void revertRepository() {
-        if (defaultAuthenticator != null && defaultPasswordEncryptor != null) {
-            setupAuthenticationComponents(defaultAuthenticator, defaultPasswordEncryptor);
-        }
+        RESOURCE.addComponent("authenticator", new MockAuthenticator());
+        RESOURCE.addComponent("passwordEncryptor", new MockPasswordEncryptor());
     }
 
     /**

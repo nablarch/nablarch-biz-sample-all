@@ -28,7 +28,7 @@ import org.junit.runner.RunWith;
 @RunWith(DatabaseTestRunner.class)
 public class HtmlMailRequesterTest extends HtmlMailTestSupport {
     private final MailRequester target = MailUtil.getMailRequester();
-    private HtmlMailTestDbSupport db;
+    private final HtmlMailTestDbSupport db = new HtmlMailTestDbSupport();
 
     /**
      * テストのデフォルトの内容を設定する。
@@ -36,7 +36,6 @@ public class HtmlMailRequesterTest extends HtmlMailTestSupport {
      */
     @Before
     public void setUpDb() {
-        db = new HtmlMailTestDbSupport();
         db.delete();
         db.insertTemplate(new HtmlMailTestDbSupport.HtmlMailTemplate("1", "ja", "{name}さんへのお知らせ" ,"メール本文. [key : {key}]", "代替テキスト {key}"));
         db.insertTemplate(new HtmlMailTestDbSupport.HtmlMailTemplate("1", "en", "langが異なる {name}" ,"langが異なる本文. [key : {key}]", "alter text {key}"));
@@ -53,7 +52,6 @@ public class HtmlMailRequesterTest extends HtmlMailTestSupport {
     @After
     public void tearDown() {
         super.tearDown();
-        db.delete();
     }
 
     /**
@@ -67,7 +65,6 @@ public class HtmlMailRequesterTest extends HtmlMailTestSupport {
      */
     @Test
     public void testRequestToSendByPlain() throws Exception {
-        HtmlMailTestDbSupport db = new HtmlMailTestDbSupport();
         TemplateMailContext ctx = new TemplateMailContext();
         ctx.setFrom("from");
         ctx.setLang("ja");

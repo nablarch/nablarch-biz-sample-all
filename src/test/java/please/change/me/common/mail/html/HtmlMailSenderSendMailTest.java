@@ -31,13 +31,14 @@ import nablarch.core.db.transaction.SimpleDbTransactionManager;
 import nablarch.core.repository.SystemRepository;
 import nablarch.fw.launcher.CommandLine;
 import nablarch.fw.launcher.Main;
-import nablarch.test.RepositoryInitializer;
+import nablarch.test.support.SystemRepositoryResource;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -68,11 +69,15 @@ import org.junit.runner.RunWith;
 @RunWith(DatabaseTestRunner.class)
 public class HtmlMailSenderSendMailTest {
 
-    private HtmlMailTestDbSupport db;
+    private static HtmlMailTestDbSupport db = new HtmlMailTestDbSupport("mailtest");
 
     private MailConfig mailConfig;
 
     private final SimpleDbTransactionManager transactionManager = SystemRepository.get("dbManager-default");
+
+    @Rule
+    public final SystemRepositoryResource resource = new SystemRepositoryResource(
+            "please/change/me/common/mail/html/mailSenderTest.xml");
 
     private static final String REPLY_TO = "replyto@localhost";
     private static final String RETURN_PATH = "returnPath@localhost";
@@ -173,16 +178,13 @@ public class HtmlMailSenderSendMailTest {
     }
 
     /**
-     * コンポーネント定義で定義した情報を基に、{@link RepositoryInitializer#reInitializeRepository(String)}を行う。<br>
-     * 初回の場合はテーブルの初期化も行う。
+     * テーブルの初期化を行う。
      *
      * @throws Exception 想定外の例外
      */
     @BeforeClass
     public static void setupClass() throws Exception {
         HtmlMailTestDbSupport.initDB();
-        RepositoryInitializer.reInitializeRepository("please/change/me/common/mail/html/mailSenderTest.xml");
-        HtmlMailTestDbSupport db = new HtmlMailTestDbSupport("mailtest");
         db.insertMessage("SEND_FAIL0", "メール送信に失敗しました。 mailRequestId=[{0}]", "send mail failed. mailRequestId=[{0}]");
         db.insertMessage("SEND_OK000", "メールを送信しました。 mailRequestId=[{0}]", "send mail. mailRequestId=[{0}]");
         db.insertMessage("REQ_COUNT0", "メール送信要求が {0} 件あります。", "{0} records of mail request selected.");
@@ -204,7 +206,6 @@ public class HtmlMailSenderSendMailTest {
     @Before
     public void setDB() throws Exception {
         transactionManager.beginTransaction();
-        db = new HtmlMailTestDbSupport("mailtest");
         db.deleteRequest();
         mailConfig = SystemRepository.get("mailConfig");
         MailAccountManager.cleanup();

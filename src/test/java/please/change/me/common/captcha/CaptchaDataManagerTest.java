@@ -13,7 +13,6 @@ import java.util.Date;
 
 import nablarch.core.db.connection.DbConnectionContext;
 import nablarch.core.db.statement.exception.DuplicateStatementException;
-import nablarch.test.RepositoryInitializer;
 import nablarch.test.support.SystemRepositoryResource;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
 
@@ -55,8 +54,6 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
         teardownDb();
-        
-        RepositoryInitializer.initializeDefaultRepository();
     }
 
     /**
@@ -67,6 +64,8 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
     @Before
     public void setUp() throws Exception {
         DbConnectionContext.setConnection(CaptchaDbTestSupport.getTmConn());
+        // 消す
+        deleteFromManageTable();
     }
 
     /**
@@ -79,9 +78,6 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
         // 未コミットのものは全てロールバック
         rollbackBizTran();
         DbConnectionContext.removeConnection();
-
-        // 消す
-        deleteFromManageTable();
     }
 
     /**

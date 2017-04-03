@@ -15,7 +15,6 @@ import nablarch.core.message.Message;
 import nablarch.core.message.MessageNotFoundException;
 import nablarch.core.message.StringResource;
 import nablarch.core.message.StringResourceHolder;
-import nablarch.core.repository.SystemRepository;
 import nablarch.core.validation.ValidateFor;
 import nablarch.core.validation.ValidationContext;
 import nablarch.core.validation.ValidationUtil;
@@ -73,7 +72,6 @@ public class CodeValidationUtilTest {
      */
     @AfterClass
     public static void tearDownClass() throws Exception {
-        SystemRepository.clear();
         ThreadContext.clear();
     }
 

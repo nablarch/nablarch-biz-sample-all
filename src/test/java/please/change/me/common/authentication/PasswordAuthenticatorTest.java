@@ -18,7 +18,6 @@ import nablarch.test.support.SystemRepositoryResource;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
 import nablarch.test.support.db.helper.VariousDbTestHelper;
 
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -113,19 +112,6 @@ public class PasswordAuthenticatorTest {
                 "20130805",
                 null
         ));
-    }
-
-
-    /**
-     * クラス終了時の処理。
-     *
-     * @throws Exception 例外
-     */
-    @AfterClass
-    public static void classDown() throws Exception {
-        VariousDbTestHelper.dropTable(SystemAccount.class);
-
-        SystemRepository.clear();
     }
 
     /**

@@ -16,10 +16,8 @@ import please.change.me.core.validation.creator.ReflectionFormCreator;
 
 import nablarch.core.ThreadContext;
 import nablarch.core.validation.ValidationContext;
-import nablarch.test.RepositoryInitializer;
 import nablarch.test.support.SystemRepositoryResource;
 
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -43,11 +41,6 @@ public class JapaneseTelNumberValidatorTest {
     @Rule
     public final SystemRepositoryResource repositoryResource = new SystemRepositoryResource(
             "please/change/me/core/validation/convertor-test-base.xml");
-
-    @AfterClass
-    public static void restoreRepository() {
-        RepositoryInitializer.initializeDefaultRepository();
-    }
 
     @Before
     public void setUp() {
