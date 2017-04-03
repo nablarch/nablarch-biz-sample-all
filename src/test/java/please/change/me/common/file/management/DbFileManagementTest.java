@@ -36,7 +36,7 @@ import org.junit.runner.RunWith;
 @RunWith(DatabaseTestRunner.class)
 public class DbFileManagementTest {
     /**テスト対象が使用するコネクション*/
-    static TransactionManagerConnection tmConn;
+    private TransactionManagerConnection tmConn;
 
     @Rule
     public final SystemRepositoryResource resouce = new SystemRepositoryResource(
@@ -53,14 +53,6 @@ public class DbFileManagementTest {
         VariousDbTestHelper.createTable(FileControl.class);
     }
 
-    private static TransactionManagerConnection getTmConn() {
-        if (tmConn == null) {
-            ConnectionFactory factory = SystemRepository.get("connectionFactory");
-            tmConn = factory.getConnection("test");
-        }
-        return tmConn;
-    }
-
     /**
      * クラス終了時の処理。
      *
@@ -68,19 +60,20 @@ public class DbFileManagementTest {
      */
     @AfterClass
     public static void classDown() throws Exception {
-        if (tmConn != null) {
-            tmConn.terminate();
-        }
+
     }
 
     @Before
     public void setUp(){
-        DbConnectionContext.setConnection(getTmConn());
+        ConnectionFactory factory = SystemRepository.get("connectionFactory");
+        tmConn = factory.getConnection("test");
+        DbConnectionContext.setConnection(tmConn);
     }
     
     @After
     public void tearDown(){
-        getTmConn().rollback();
+        tmConn.rollback();
+        tmConn.terminate();
         DbConnectionContext.removeConnection();
     }
 

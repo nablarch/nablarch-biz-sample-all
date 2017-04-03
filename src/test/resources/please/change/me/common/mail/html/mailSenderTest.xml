@@ -3,7 +3,6 @@
     xmlns="http://tis.co.jp/nablarch/component-configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration">
 
-    <config-file file="db.config" />
     <import file="db-default.xml" />
 
     <config-file file="please/change/me/common/mail/html/mail-batch.config" />

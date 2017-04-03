@@ -5,7 +5,6 @@
 
   <!-- テスト用設定値 -->
   <config-file file="unit-test.config"/>
-  <config-file file="db.config"/>
   <import file="db-default.xml"/>
 
   <!-- システム日付、業務日付を固定値に設定 -->

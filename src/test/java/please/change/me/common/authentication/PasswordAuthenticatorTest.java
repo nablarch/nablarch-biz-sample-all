@@ -65,53 +65,50 @@ public class PasswordAuthenticatorTest {
     public void setUp() throws Exception {
         DbConnectionContext.removeConnection();
 
-        VariousDbTestHelper.delete(SystemAccount.class);
-
         // active user
-        VariousDbTestHelper.insert(new SystemAccount(
-                "0000000001",
-                encryptor.encrypt("0000000001", "password"),
-                "0",
-                "20130804",
-                0,
-                "20130802",
-                "20130805",
-                null
-        ));
-
-        // locked user
-        VariousDbTestHelper.insert(new SystemAccount(
-                "0000000003",
-                encryptor.encrypt("0000000001", "password"),
-                "1", // locked
-                "20130804",
-                0,
-                "20130802",
-                "20130805",
-                null
-        ));
-
-        VariousDbTestHelper.insert(new SystemAccount(
-                "0000000004",
-                encryptor.encrypt("0000000004", "password"),
-                "0",
-                "20130804",
-                2,
-                "20130802",
-                "20130805",
-                null
-        ));
-
-        VariousDbTestHelper.insert(new SystemAccount(
-                "0000000005",
-                encryptor.encrypt("0000000005", "pass!!!"),
-                "0",
-                "20130805",
-                0,
-                "20130802",
-                "20130805",
-                null
-        ));
+        VariousDbTestHelper.setUpTable(
+                new SystemAccount(
+                        "0000000001",
+                        encryptor.encrypt("0000000001", "password"),
+                        "0",
+                        "20130804",
+                        0,
+                        "20130802",
+                        "20130805",
+                        null
+                ),
+                // locked user
+                new SystemAccount(
+                        "0000000003",
+                        encryptor.encrypt("0000000001", "password"),
+                        "1", // locked
+                        "20130804",
+                        0,
+                        "20130802",
+                        "20130805",
+                        null
+                ),
+                new SystemAccount(
+                        "0000000004",
+                        encryptor.encrypt("0000000004", "password"),
+                        "0",
+                        "20130804",
+                        2,
+                        "20130802",
+                        "20130805",
+                        null
+                ),
+                new SystemAccount(
+                        "0000000005",
+                        encryptor.encrypt("0000000005", "pass!!!"),
+                        "0",
+                        "20130805",
+                        0,
+                        "20130802",
+                        "20130805",
+                        null
+                )
+        );
     }
 
     /**

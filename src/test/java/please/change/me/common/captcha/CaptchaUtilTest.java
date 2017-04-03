@@ -28,7 +28,6 @@ import nablarch.test.support.SystemRepositoryResource;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -63,25 +62,13 @@ public class CaptchaUtilTest extends CaptchaDbTestSupport {
     }
 
     /**
-     * クラス終了時の処理
-     * 
-     * @throws Exception 例外
-     */
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-        teardownDb();
-        
-        RepositoryInitializer.initializeDefaultRepository();
-    }
-
-    /**
      * ケース開始時の処理
      *
      * @throws Exception
      */
     @Before
     public void setUp() throws Exception {
-        DbConnectionContext.setConnection(CaptchaDbTestSupport.getTmConn());
+        DbConnectionContext.setConnection(getTmConn());
     }
 
     /**
@@ -91,9 +78,10 @@ public class CaptchaUtilTest extends CaptchaDbTestSupport {
      */
     @After
     public void tearDown() throws Exception {
+        DbConnectionContext.removeConnection();
         // 未コミットのものは全てロールバック
         rollbackBizTran();
-        DbConnectionContext.removeConnection();
+        terminateTmConn();
     }
 
     /**

@@ -73,7 +73,7 @@ public class HtmlMailSenderSendMailTest {
 
     private MailConfig mailConfig;
 
-    private final SimpleDbTransactionManager transactionManager = SystemRepository.get("dbManager-default");
+    private SimpleDbTransactionManager transactionManager;
 
     @Rule
     public final SystemRepositoryResource resource = new SystemRepositoryResource(
@@ -185,6 +185,7 @@ public class HtmlMailSenderSendMailTest {
     @BeforeClass
     public static void setupClass() throws Exception {
         HtmlMailTestDbSupport.initDB();
+        db.deleteMessage();
         db.insertMessage("SEND_FAIL0", "メール送信に失敗しました。 mailRequestId=[{0}]", "send mail failed. mailRequestId=[{0}]");
         db.insertMessage("SEND_OK000", "メールを送信しました。 mailRequestId=[{0}]", "send mail. mailRequestId=[{0}]");
         db.insertMessage("REQ_COUNT0", "メール送信要求が {0} 件あります。", "{0} records of mail request selected.");
@@ -205,6 +206,7 @@ public class HtmlMailSenderSendMailTest {
      */
     @Before
     public void setDB() throws Exception {
+        transactionManager = SystemRepository.get("dbManager-default");
         transactionManager.beginTransaction();
         db.deleteRequest();
         mailConfig = SystemRepository.get("mailConfig");

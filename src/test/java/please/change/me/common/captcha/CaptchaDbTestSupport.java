@@ -18,14 +18,24 @@ import nablarch.test.support.db.helper.VariousDbTestHelper;
 public class CaptchaDbTestSupport {
 
     /**テスト対象が使用するコネクション*/
-    private static TransactionManagerConnection tmConn;
+    private TransactionManagerConnection tmConn;
 
     /**
      * テスト対象が使用するコネクションを取得する。
      * @return
      */
-    public static TransactionManagerConnection getTmConn() {
+    protected TransactionManagerConnection getTmConn() {
+        if (tmConn == null) {
+            ConnectionFactory factory = SystemRepository.get("connectionFactory");
+            tmConn = factory.getConnection("test");
+        }
         return tmConn;
+    }
+
+    protected void terminateTmConn() {
+        if (tmConn != null) {
+            tmConn.terminate();
+        }
     }
 
     /**
@@ -37,35 +47,22 @@ public class CaptchaDbTestSupport {
     protected static void setupDb() {
         VariousDbTestHelper.createTable(CaptchaManage.class);
         VariousDbTestHelper.createTable(CaptchaMessage.class);
+        VariousDbTestHelper.setUpTable(new CaptchaMessage("MSG90001", "ja", "{0}が正しくありません。"));
 
-        VariousDbTestHelper.insert(new CaptchaMessage("MSG90001", "ja", "{0}が正しくありません。"));
-
-        ConnectionFactory factory = SystemRepository.get("connectionFactory");
-        tmConn = factory.getConnection("test");
-    }
-    
-    /**
-     * DB関係終了処理。
-     *
-     */
-    protected static void teardownDb() {
-        if (tmConn != null) {
-            tmConn.terminate();
-        }
     }
 
     /**
      * テスト対象が使用するトランザクションのコミット
      */
-    protected static void commitBizTran() {
-        tmConn.commit();
+    protected void commitBizTran() {
+        getTmConn().commit();
     }
     
     /**
      * テスト対象が使用するトランザクションのロールバック
      */
-    protected static void rollbackBizTran() {
-        tmConn.rollback();
+    protected void rollbackBizTran() {
+        getTmConn().rollback();
     }
 
     /**

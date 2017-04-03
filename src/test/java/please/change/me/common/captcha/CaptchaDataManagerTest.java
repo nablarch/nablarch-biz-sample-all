@@ -3,11 +3,11 @@ package please.change.me.common.captcha;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-import static org.junit.Assert.assertFalse;
 
 import java.util.Date;
 
@@ -17,7 +17,6 @@ import nablarch.test.support.SystemRepositoryResource;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -47,23 +46,13 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
     }
 
     /**
-     * クラス終了時の処理
-     * 
-     * @throws Exception 例外
-     */
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-        teardownDb();
-    }
-
-    /**
      * ケース開始時の処理
      *
      * @throws Exception
      */
     @Before
     public void setUp() throws Exception {
-        DbConnectionContext.setConnection(CaptchaDbTestSupport.getTmConn());
+        DbConnectionContext.setConnection(getTmConn());
         // 消す
         deleteFromManageTable();
     }
@@ -75,9 +64,10 @@ public class CaptchaDataManagerTest extends CaptchaDbTestSupport {
      */
     @After
     public void tearDown() throws Exception {
+        DbConnectionContext.removeConnection();
         // 未コミットのものは全てロールバック
         rollbackBizTran();
-        DbConnectionContext.removeConnection();
+        terminateTmConn();
     }
 
     /**

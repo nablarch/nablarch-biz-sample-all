@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Set;
 
@@ -41,8 +39,6 @@ import nablarch.test.support.db.helper.VariousDbTestHelper;
  * @author tani takanori
  */
 public class HtmlMailTestDbSupport {
-
-    private final MailConfig mailConfig = SystemRepository.get("mailConfig");
 
     private String connectionName;
 
@@ -182,6 +178,7 @@ public class HtmlMailTestDbSupport {
      */
     protected void insertReqeustToSend(FreeTextMailContext ctx, String mailRequestId, FileData... files) throws Exception {
         // mail request
+        MailConfig mailConfig = SystemRepository.get("mailConfig");
         VariousDbTestHelper.insert(new MailRequest(
                 mailRequestId,
                 ctx.getSubject(),
@@ -298,6 +295,13 @@ public class HtmlMailTestDbSupport {
     }
 
     /**
+     * メッセージをすべて削除する。
+     */
+    public void deleteMessage() {
+        VariousDbTestHelper.delete(MailMessage.class);
+    }
+
+    /**
      * HTMLメールのテンプレートクラス。
      *
      * @author tani takanori
@@ -343,11 +347,6 @@ public class HtmlMailTestDbSupport {
      * @throws SQLException SQL実行時エラー
      */
     void insertMessage(String message_id, String message_ja, String message_en) throws SQLException {
-        Connection con = VariousDbTestHelper.getNativeConnection();
-        PreparedStatement ps = con.prepareStatement("DELETE FROM MESSAGE WHERE MESSAGE_ID = ?");
-        ps.setString(1, message_id);
-        ps.execute();
-        con.commit();
         VariousDbTestHelper.insert(new MailMessage(message_id, "ja", message_ja));
         VariousDbTestHelper.insert(new MailMessage(message_id, "en", message_en));
     }

@@ -3,7 +3,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../../Nablarch/resources/component-configuration.xsd">
 
-  <config-file file="db.config" />
   <import file="db-default.xml" />
 
   <component name="dbManager" class="nablarch.core.db.transaction.SimpleDbTransactionManager">

@@ -48,7 +48,6 @@ public class HtmlMailRequesterTest extends HtmlMailTestSupport {
     /**
      *
      */
-    @Override
     @After
     public void tearDown() {
         super.tearDown();
