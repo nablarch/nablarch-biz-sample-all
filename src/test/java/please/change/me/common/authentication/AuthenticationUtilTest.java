@@ -21,16 +21,6 @@ import static org.junit.Assert.assertThat;
  */
 public class AuthenticationUtilTest {
 
-    /**
-     * テスト開始時点の {@link Authenticator}
-     */
-    private static Authenticator defaultAuthenticator;
-
-    /**
-     * テスト開始時点の {@link PasswordEncryptor}
-     */
-    private static PasswordEncryptor defaultPasswordEncryptor;
-
     @ClassRule
     public static final SystemRepositoryResource RESOURCE = new SystemRepositoryResource(null);
 

@@ -15,7 +15,6 @@ import nablarch.core.db.statement.SqlResultSet;
 import nablarch.core.db.statement.SqlRow;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,14 +42,6 @@ public class HtmlMailRequesterTest extends HtmlMailTestSupport {
         db.insertTemplate(new HtmlMailTestDbSupport.HtmlMailTemplate("2", "en", "IDとlangが異なる {name}" ,"IDとlangが異なる本文{name}. [key : {key}]", "IDが異なる代替テキスト {key}"));
         db.insertTemplate(new HtmlMailTestDbSupport.HtmlMailTemplate("3", "ja", "代替テキストなし(ja) {name}" ,"代替テキストなし {name}. [key : {key}]", null));
         db.insertTemplate(new HtmlMailTestDbSupport.HtmlMailTemplate("3", "en", "代替テキストなし(en) {name}" ,"代替テキストなし {name}. [key : {key}]", null));
-    }
-
-    /**
-     *
-     */
-    @After
-    public void tearDown() {
-        super.tearDown();
     }
 
     /**

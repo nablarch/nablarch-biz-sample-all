@@ -26,7 +26,6 @@ import nablarch.test.support.db.helper.DatabaseTestRunner;
 import nablarch.test.support.db.helper.VariousDbTestHelper;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -51,16 +50,6 @@ public class DbFileManagementTest {
     public static void classSetup() {
         // setup test table
         VariousDbTestHelper.createTable(FileControl.class);
-    }
-
-    /**
-     * クラス終了時の処理。
-     *
-     * @throws Exception 例外
-     */
-    @AfterClass
-    public static void classDown() throws Exception {
-
     }
 
     @Before
