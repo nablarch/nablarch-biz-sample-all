@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../../Nablarch/resources/component-configuration.xsd">
+
+    <import file="db-default.xml" />
+
+    <!-- テスト時のDBの設定 -->
+    <import file="please/change/me/common/mail/html/db.xml" />
+    <!-- メール関連テーブルスキーマ情報の定義ファイル -->
+    <import file="please/change/me/common/mail/html/schema.xml" />
+    <!-- 出力ライブラリ（メール送信）テストの共通定義ファイル -->
+    <import file="please/change/me/common/mail/html/common.xml" />
+
+    <!-- DbManagerの設定  -->
+    <component name="dbManager-default" class="nablarch.core.db.transaction.SimpleDbTransactionManager">
+        <property name="transactionFactory" ref="jdbcTransactionFactory" />
+    </component>
+
+    <!-- メール送信要求API -->
+    <component name="mailRequester" class="please.change.me.common.mail.html.HtmlMailRequester">
+        <property name="mailRequestConfig" ref="mailRequestConfig" />
+        <property name="mailRequestIdGenerator" ref="mailRequestIdGenerator" />
+        <property name="mailRequestTable" ref="mailRequestTable" />
+        <property name="mailRecipientTable" ref="mailRecipientTable" />
+        <property name="mailAttachedFileTable" ref="mailAttachedFileTable" />
+        <property name="mailTemplateTable" ref="mailTemplateTable" />
+        <property name="htmlMailTable" ref="htmlMailTable" />
+    </component>
+
+    <!-- テスト用の初期化処理。 -->
+    <component name="initializer"
+        class="nablarch.core.repository.initialization.BasicApplicationInitializer">
+        <property name="initializeList">
+            <list>
+                <component-ref name="mailRequestIdGenerator" />
+                <component-ref name="mailRequestTable" />
+                <component-ref name="mailRecipientTable" />
+                <component-ref name="mailAttachedFileTable" />
+                <component-ref name="mailTemplateTable" />
+            </list>
+        </property>
+    </component>
+
+    <component name="systemTimeProvider" class="nablarch.core.date.BasicSystemTimeProvider" />
+</component-configuration>

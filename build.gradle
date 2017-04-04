@@ -45,28 +45,6 @@ apply {
   from 'https://github.com/nablarch/nablarch-gradle-plugin/blob/develop/scripts/cobertura/cobertura-0.0.1.gradle?raw=true'
 }
 
-
-sourceSets {
-  main {
-    java {
-      srcDir "${projectDir}/main/java"
-    }
-    resources {
-      srcDir "${projectDir}/main/resources"
-    }
-  }
-  test {
-    java {
-      srcDir "${projectDir}/test/java"
-    }
-    resources {
-      srcDirs "${projectDir}/test/resources"
-      srcDirs "${projectDir}/test/java"
-      srcDirs "${projectDir}/main/java"
-    }
-  }
-}
-
 dependencies {
   compile 'com.nablarch.profile:nablarch-web'
   compile 'com.nablarch.framework:nablarch-common-jdbc'
@@ -76,14 +54,10 @@ dependencies {
   compile 'com.nablarch.framework:nablarch-common-code-jdbc'
 
   testCompile 'com.nablarch.framework:nablarch-testing'
-  
+
   // captha
   compile 'com.google.code:kaptcha:2.3.2'
 
-  // JDBC Drivers
-  testCompile (group: 'com.oracle', name: 'ojdbc6', version: '11.2.0.4.0')
-  testRuntime (group: 'com.oracle', name: 'ucp', version: '11.2.0.3.0')
-  
   // mail
   compile 'javax.mail:mailapi:1.4.3'
   testRuntime 'com.sun.mail:pop3:1.4.4'
@@ -91,20 +65,10 @@ dependencies {
 
 }
 
-
-test {
-  
-  // find sql files
-  classpath = files("${projectDir}/main/java") \
-            + files("${projectDir}/test/java") \
-            + project.sourceSets.test.runtimeClasspath
-}
-
-jar {
-  // need sql files
-  from("${projectDir}/main/java") {
-    include '**/*.sql'
-  }
+configurations {
+  all*.exclude module: 'nablarch-test-support-hereis'
+  all*.exclude module: 'jsp-api-2.1-glassfish'
+  all*.exclude module: 'jsp-2.1-glassfish'
 }
 
 wrapper {

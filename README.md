@@ -6,8 +6,6 @@
 
 ライブラリ          |ファイル名       |グループID     |アーティファクトID   |バージョン   |
 :-------------------|:----------------|:--------------|:--------------------|:------------|
-Oracle JDBC Driver  |ojdbc6.jar       |com.oracle     |ojdbc6               |11.2.0.4.0   |
-Oracle UCP for JDBC |ucp.jar          |com.oracle     |ucp                  |11.2.0.3.0   |
 [kaptcha](https://code.google.com/archive/p/kaptcha/downloads) |kaptcha-2.3.2.jar |com.google.code |kaptcha              |2.3.2        |
 
 
