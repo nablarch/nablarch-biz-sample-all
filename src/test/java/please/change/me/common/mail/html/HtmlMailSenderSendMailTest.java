@@ -103,7 +103,7 @@ public class HtmlMailSenderSendMailTest {
             setProperty("mail.smtp.host", getEnv("mail.smtp.host", "localhost"));
             setProperty("mail.host",      getEnv("mail.host", "localhost"));
             setProperty("mail.pop3.host", getEnv("mail.pop3.host", "localhost"));
-            setProperty("mail.pop3.port", getEnv("mail.pop3.port", "110"));
+            setProperty("mail.pop3.port", getEnv("mail.pop3.port", "10110"));
         }};
 
         /**
