@@ -31,6 +31,7 @@ import nablarch.core.db.transaction.SimpleDbTransactionManager;
 import nablarch.core.repository.SystemRepository;
 import nablarch.fw.launcher.CommandLine;
 import nablarch.fw.launcher.Main;
+import nablarch.test.RepositoryInitializer;
 import nablarch.test.support.SystemRepositoryResource;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
 
@@ -184,7 +185,9 @@ public class HtmlMailSenderSendMailTest {
      */
     @BeforeClass
     public static void setupClass() throws Exception {
-        HtmlMailTestDbSupport.initDB();
+        HtmlMailTestDbSupport.createTable();
+        RepositoryInitializer.reInitializeRepository("please/change/me/common/mail/html/mailSenderTest.xml");
+        HtmlMailTestDbSupport.initMasterData();
         db.deleteMessage();
         db.insertMessage("SEND_FAIL0", "メール送信に失敗しました。 mailRequestId=[{0}]", "send mail failed. mailRequestId=[{0}]");
         db.insertMessage("SEND_OK000", "メールを送信しました。 mailRequestId=[{0}]", "send mail. mailRequestId=[{0}]");

@@ -62,6 +62,14 @@ public class HtmlMailTestDbSupport {
      * テーブルを構築し、テンプレートデータを事前に準備する。
      */
     static void initDB() {
+        createTable();
+        initMasterData();
+    }
+
+    /**
+     * テーブルを作成する。
+     */
+    static void createTable() {
         VariousDbTestHelper.createTable(AlternativeText.class);
         VariousDbTestHelper.createTable(AlternativeTextTemplate.class);
         VariousDbTestHelper.createTable(BatchRequest.class);
@@ -71,7 +79,6 @@ public class HtmlMailTestDbSupport {
         VariousDbTestHelper.createTable(MailRequest.class);
         VariousDbTestHelper.createTable(MailTemplate.class);
         VariousDbTestHelper.createTable(MailMessage.class);
-        initMasterData();
     }
 
     /**
@@ -92,7 +99,7 @@ public class HtmlMailTestDbSupport {
     /**
      * テストで利用するマスタデータテーブルを初期化する。
      */
-    private static void initMasterData() {
+    static void initMasterData() {
         // 採番ID
         MailConfig mailConfig = SystemRepository.get("mailConfig");
         String id = mailConfig.getMailRequestSbnId();
