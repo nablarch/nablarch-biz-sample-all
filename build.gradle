@@ -32,7 +32,7 @@ apply plugin: "io.spring.dependency-management"
 
 dependencyManagement {
   imports {
-    mavenBom 'com.nablarch.profile:nablarch-bom:5u11'
+    mavenBom 'com.nablarch.profile:nablarch-bom:5u12'
   }
   applyMavenExclusions false
 }
