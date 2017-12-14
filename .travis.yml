@@ -17,7 +17,7 @@ script:
 - $HOME/build-script/travis-ci/prepare_travis_settings.sh
 - $HOME/build-script/travis-ci/install-james.sh
 - $HOME/james-2.3.2.1/bin/phoenix.sh start
-- $HOME/build-script/travis-ci/build-nablarch.sh -m deploy -p ci,dev-deploy
+- $HOME/build-script/travis-ci/build-nablarch.sh -p ci
 - $HOME/build-script/travis-ci/upload-test-report.sh -p dev-deploy
 notifications:
   slack:
