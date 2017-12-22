@@ -5,8 +5,6 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import java.util.Map;
-
 import org.junit.Test;
 
 /**
@@ -31,11 +29,10 @@ public class TemplateHtmlMailContextTest {
         target.setContentType("dummy");
         assertThat(target.getContentType(), is("dummy"));
 
-        Map<String, String> replaceKeyValue = target.getReplaceKeyValue();
-        assertThat(replaceKeyValue.size(), is(0));
+        assertThat(target.getReplaceKeyValue().size(), is(0));
         target.setReplaceKeyValue("key", "value");
-        assertThat(replaceKeyValue.containsKey("key"), is(true));
-        assertThat(replaceKeyValue.get("key"), is("value"));
+        assertThat(target.getReplaceKeyValue().containsKey("key"), is(true));
+        assertThat(target.getReplaceKeyValue().get("key"), is("value"));
     }
 
     /**
@@ -83,18 +80,16 @@ public class TemplateHtmlMailContextTest {
     @Test
     public void testEscapeHtmlInSetReplaceValue() {
         TemplateHtmlMailContext ctx = new TemplateHtmlMailContext();
-        Map<String, String> target = ctx.getReplaceKeyValue();
-
-        assertThat(target.isEmpty(), is(true));
+        assertThat(ctx.getReplaceKeyValue().isEmpty(), is(true));
 
         ctx.setReplaceKeyValue("notEscape white space", "value has white space");
-        assertThat(target.get("notEscape white space"), is("value has white space"));
+        assertThat(ctx.getReplaceKeyValue().get("notEscape white space"), is("value has white space"));
 
         ctx.setReplaceKeyValue("escape start tag", "<img");
-        assertThat(target.get("escape start tag"), is("&lt;img"));
+        assertThat(ctx.getReplaceKeyValue().get("escape start tag"), is("&lt;img"));
 
         ctx.setReplaceKeyValue("holder in tag attr", "< may escaped");
-        assertThat("エスケープ用のやつを利用しているのでエスケープされる。", target.get("holder in tag attr"), is("&lt; may escaped"));
+        assertThat("エスケープ用のやつを利用しているのでエスケープされる。", ctx.getReplaceKeyValue().get("holder in tag attr"), is("&lt; may escaped"));
 
     }
 
