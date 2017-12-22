@@ -24,7 +24,11 @@
         <property name="mailRequestTable" ref="mailRequestTable" />
         <property name="mailRecipientTable" ref="mailRecipientTable" />
         <property name="mailAttachedFileTable" ref="mailAttachedFileTable" />
-        <property name="mailTemplateTable" ref="mailTemplateTable" />
+        <property name="templateEngineMailProcessor">
+            <component class="nablarch.common.mail.TinyTemplateEngineMailProcessor">
+                <property name="mailTemplateTable" ref="mailTemplateTable" />
+            </component>
+        </property>
         <property name="htmlMailTable" ref="htmlMailTable" />
     </component>
 
