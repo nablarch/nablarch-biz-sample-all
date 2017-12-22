@@ -5,8 +5,6 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import java.util.Map;
-
 import org.junit.Test;
 
 /**
