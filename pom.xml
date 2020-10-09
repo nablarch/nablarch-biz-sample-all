@@ -6,7 +6,7 @@
 
   <groupId>com.nablarch.applib</groupId>
   <artifactId>nablarch-biz-sample-all</artifactId>
-  <version>1.2.0-SNAPSHOT</version>
+  <version>5-NEXT-SNAPSHOT</version>
   <description>業務サンプル</description>
 
   <scm>
@@ -18,7 +18,7 @@
   <parent>
     <groupId>com.nablarch</groupId>
     <artifactId>nablarch-parent</artifactId>
-    <version>5u18-SNAPSHOT</version>
+    <version>5-NEXT-SNAPSHOT</version>
   </parent>
 
   <dependencies>
