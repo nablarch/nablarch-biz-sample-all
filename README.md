@@ -1,9 +1,5 @@
 # nablarch-biz-sample-all
 
-| master | develop |
-|:-----------|:------------|
-|[![Build Status](https://travis-ci.org/nablarch/nablarch-biz-sample-all.svg?branch=master)](https://travis-ci.org/nablarch/nablarch-biz-sample-all)|[![Build Status](https://travis-ci.org/nablarch/nablarch-biz-sample-all.svg?branch=develop)](https://travis-ci.org/nablarch/nablarch-biz-sample-all)|
-
 ## 依存ライブラリ
 
 本モジュールのコンパイルまたはテストには、下記ライブラリを手動でローカルリポジトリへインストールする必要があります。
