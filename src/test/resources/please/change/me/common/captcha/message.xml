@@ -25,8 +25,6 @@
   <component name="stringResourceCache"
       class="nablarch.core.cache.BasicStaticDataCache">
     <property name="loader" ref="stringResourceLoader" />
-    <!-- 初期ロード -->
-    <property name="loadOnStartup" value="${loadMessageOnStartUp}" />
   </component>
 
   <!-- 文字列リソースの保持クラス -->
