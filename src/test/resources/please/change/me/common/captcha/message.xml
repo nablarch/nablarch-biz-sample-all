@@ -7,9 +7,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  ../component-configuration.xsd">
 
-  <!-- メッセージ用設定値 -->
-  <config-file file="please/change/me/common/captcha/message.config" />
-
   <!-- 文字列リソースのロードモジュール -->
   <component name="stringResourceLoader"
       class="nablarch.core.message.BasicStringResourceLoader">
@@ -28,8 +25,6 @@
   <component name="stringResourceCache"
       class="nablarch.core.cache.BasicStaticDataCache">
     <property name="loader" ref="stringResourceLoader" />
-    <!-- 初期ロード -->
-    <property name="loadOnStartup" value="${loadMessageOnStartUp}" />
   </component>
 
   <!-- 文字列リソースの保持クラス -->
