@@ -1,18 +1,19 @@
-package please.change.me.common.authentication;
-
+package please.change.me.common.authentication.exception;
 
 /**
- * アカウント情報の不一致により認証に失敗した場合に発生する例外。<br>
- * <br>
+ * アカウント情報の不一致により認証に失敗した場合に発生する例外。
+ * <p/>
  * 対象ユーザのユーザIDを保持する。
- * 
- * @author Kiyohito Itoh
+ * @author Nabu Rakutaro
  */
 public class AuthenticationFailedException extends AuthenticationException {
-    
+
+    /** serialVersionUID. */
+    private static final long serialVersionUID = 1L;
+
     /** ユーザID */
-    private String userId;
-    
+    private final String userId;
+
     /**
      * コンストラクタ。
      * @param userId ユーザID
@@ -20,7 +21,7 @@ public class AuthenticationFailedException extends AuthenticationException {
     public AuthenticationFailedException(String userId) {
         this.userId = userId;
     }
-    
+
     /**
      * ユーザIDを取得する。
      * @return ユーザID
