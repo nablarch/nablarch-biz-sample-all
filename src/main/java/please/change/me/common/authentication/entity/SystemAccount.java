@@ -1,4 +1,4 @@
-package please.change.me.common.entity;
+package please.change.me.common.authentication.entity;
 
 import javax.annotation.Generated;
 import javax.persistence.*;
