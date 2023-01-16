@@ -7,8 +7,6 @@ import please.change.me.common.authentication.exception.PasswordExpiredException
 import please.change.me.common.authentication.exception.UserIdLockedException;
 import nablarch.core.db.connection.ConnectionFactory;
 import nablarch.core.db.connection.DbConnectionContext;
-import nablarch.core.db.transaction.SimpleDbTransactionManager;
-import nablarch.core.repository.ObjectLoader;
 import nablarch.core.repository.SystemRepository;
 import nablarch.core.repository.di.DiContainer;
 import nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader;
@@ -19,7 +17,6 @@ import please.change.me.util.FixedSystemTimeProvider;
 
 import java.sql.*;
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
