@@ -26,9 +26,6 @@ public class SystemAccount implements Serializable {
     /** パスワード */
     private String userPassword;
 
-    /** 管理者フラグ */
-    private boolean adminFlag;
-
     /** ユーザIDロック */
     private boolean userIdLocked;
 
@@ -105,24 +102,6 @@ public class SystemAccount implements Serializable {
      */
     public void setUserPassword(String userPassword) {
         this.userPassword = userPassword;
-    }
-    /**
-     * 管理者フラグを返します。
-     *
-     * @return 管理者フラグ
-     */
-    @Column(name = "ADMIN_FLAG", length = 1, nullable = false, unique = false)
-    public boolean isAdminFlag() {
-        return adminFlag;
-    }
-
-    /**
-     * 管理者フラグを設定します。
-     *
-     * @param adminFlag 管理者フラグ
-     */
-    public void setAdminFlag(boolean adminFlag) {
-        this.adminFlag = adminFlag;
     }
     /**
      * ユーザIDロックを返します。
