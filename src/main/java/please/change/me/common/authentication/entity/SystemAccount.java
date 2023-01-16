@@ -4,7 +4,6 @@ import javax.annotation.Generated;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * システムアカウント
