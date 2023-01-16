@@ -512,7 +512,7 @@ class SystemAccountAuthenticatorTest {
 
         authenticator.setFailedCountToLock(1);
 
-        authenticator.setDbManager(SystemRepository.<SimpleDbTransactionManager>get("dbManager"));
+        authenticator.setDbManager(SystemRepository.get("dbManager"));
         authenticator.setPasswordEncryptor(encryptor);
 
         // テストのために固定日付で動作させる。
