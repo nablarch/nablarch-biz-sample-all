@@ -1,4 +1,4 @@
-package please.change.me.common.authentication;
+package please.change.me.common.authentication.exception;
 
 
 /**
@@ -6,8 +6,12 @@ package please.change.me.common.authentication;
  * <br>
  * 認証方式に応じて、本クラスを継承した例外クラスを作成する。<br>
  * 本クラス及びサブクラスでは、ユーザへ提示するメッセージの作成に必要な情報を保持し、メッセージの作成は行わない。
- * 
- * @author Kiyohito Itoh
+ * @author Nabu Rakutaro
  */
 public class AuthenticationException extends RuntimeException {
+
+    /**
+     * serialVersionUID.
+     */
+    private static final long serialVersionUID = 1L;
 }

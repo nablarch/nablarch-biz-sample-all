@@ -1,35 +1,31 @@
-package please.change.me.common.authentication;
+package please.change.me.common.authentication.encrypt;
 
+import nablarch.core.util.Base64Util;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import java.nio.charset.Charset;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-
-import nablarch.core.util.Base64Util;
 
 /**
  * PBKDF2を使用してパスワードの暗号化を行うクラス。
  * <p/>
- * ソルトには、{@link #fixedSalt} に設定された固定文字列と、{@link #encrypt(String, String)} で
+ * ソルトには、{@link #fixedSalt} に設定された固定文字列と、{@link #encrypt(String, String)}で
  * {@code saltSeed} に指定された文字列を連結して、UTF-8でエンコードしたバイト列を用いる。
  * <p/>
  * {@link #iterationCount} に指定された回数のストレッチングを行って暗号化し、
  * 暗号化後のパスワードは、 {@link #keyLength} に設定された長さ（ビット数）となる。
- * <p/>
  *
- * @author Ryo TANAKA
+ * @author Nabu Rakutaro
  */
 public class PBKDF2PasswordEncryptor implements PasswordEncryptor {
 
     /**
      * 暗号化アルゴリズム名
      */
-    private static final String CRYPT_ALGORITHM = "PBKDF2WithHmacSha1";
-    // TODO Java8以上を使用する場合、パスワード暗号化に使用するアルゴリズムを変更してください。
-    // 「PBKDF2WithHmacSha1」よりも、パスワードを安全にできる「PBKDF2WithHmacSHA256」を使用してください。
-    // private static final String CRYPT_ALGORITHM = "PBKDF2WithHmacSHA256";
+    private static final String CRYPT_ALGORITHM = "PBKDF2WithHmacSHA256";
 
     /**
      * パスワード暗号化のストレッチング回数
@@ -57,18 +53,15 @@ public class PBKDF2PasswordEncryptor implements PasswordEncryptor {
      * <p/>
      * シングルトンインスタンスとして使用される想定のため、 {@link SecretKeyFactory} はスレッドローカルとする。
      */
-    private static final ThreadLocal<SecretKeyFactory> FACTORY = new ThreadLocal<SecretKeyFactory>() {
-        @Override
-        protected SecretKeyFactory initialValue() {
-            try {
-                return SecretKeyFactory.getInstance(CRYPT_ALGORITHM);
-            } catch (NoSuchAlgorithmException e) {
-                // Oracle JRE など、PBKDF2WithHmacSha1が提供されているJREを利用する場合には、アルゴリズムが存在するため、この例外は発生し得ない。
-                throw new RuntimeException("Initialization Failed. Can't get instance of SecretKeyFactory. "
-                        + "Algorithm name is '" + CRYPT_ALGORITHM + "'.", e);
-            }
+    private static final ThreadLocal<SecretKeyFactory> FACTORY = ThreadLocal.withInitial(() -> {
+        try {
+            return SecretKeyFactory.getInstance(CRYPT_ALGORITHM);
+        } catch (NoSuchAlgorithmException e) {
+            // Oracle JRE など、PBKDF2WithHmacSha1が提供されているJREを利用する場合には、アルゴリズムが存在するため、この例外は発生し得ない。
+            throw new IllegalStateException("Initialization Failed. Can't get instance of SecretKeyFactory. "
+                    + "Algorithm name is '" + CRYPT_ALGORITHM + "'.", e);
         }
-    };
+    });
 
     /**
      * PBKDF2で、パスワードを暗号化し、Base64エンコードを行って返却する。
@@ -83,10 +76,9 @@ public class PBKDF2PasswordEncryptor implements PasswordEncryptor {
      * @see Base64Util#encode(byte[])
      */
     @Override
-    public String encrypt(String saltSeed, String password) throws IllegalStateException {
-        if (saltSeed == null || password == null) {
-            throw new IllegalArgumentException("saltSeed and password must not be null.");
-        }
+    public String encrypt(String saltSeed, String password) {
+        verifyParameter(saltSeed, password);
+
         if (saltSeed.isEmpty() || password.isEmpty()) {
             return "";
         }
@@ -95,24 +87,40 @@ public class PBKDF2PasswordEncryptor implements PasswordEncryptor {
         byte[] encryptPassword;
         try {
             do {
-                encryptPassword = FACTORY.get().generateSecret(spec).getEncoded();
+                encryptPassword = FACTORY.get()
+                                         .generateSecret(spec)
+                                         .getEncoded();
             } while (!isSuccessEncryption(encryptPassword));
         } catch (InvalidKeySpecException e) {
             // パスワードが空の場合に発生するが、事前にチェックしているためこの例外は発生しない。
-            throw new RuntimeException(e);
+            throw new IllegalStateException(e);
         }
         return Base64Util.encode(encryptPassword);
     }
 
     /**
+     * 暗号化に必要な情報が正しいか検証する。
+     * <p>
+     * 正しくない場合は、{@link IllegalArgumentException}を送出する。
+     *
+     * @param saltSeed パスワードの暗号化に使用するソルトを生成するために使用する文字列
+     * @param password 暗号化前のパスワード
+     */
+    private void verifyParameter(String saltSeed, String password) {
+        if (saltSeed == null || password == null) {
+            throw new IllegalArgumentException("saltSeed and password must not be null.");
+        }
+    }
+
+    /**
      * 暗号化処理に成功したか否かを返す。
-     * </p>
+     * <p/>
      * 暗号化されたパスワードの全ての桁が"0"であれば失敗と判定する。
      *
      * @param bytes 暗号化されたパスワード
      * @return 暗号化に成功していれば{@code true}
      */
-    private boolean isSuccessEncryption(byte[] bytes) {
+    private static boolean isSuccessEncryption(byte[] bytes) {
         for (byte b : bytes) {
             if (b != 0) {
                 return true;
