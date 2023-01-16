@@ -518,15 +518,9 @@ class SystemAccountAuthenticatorTest {
         // テストのために固定日付で動作させる。
         final FixedSystemTimeProvider systemTimeProvider = new FixedSystemTimeProvider();
         systemTimeProvider.setFixedDate(businessDate + "001122");
-        SystemRepository.load(new ObjectLoader() {
-
-            @Override
-            public Map<String, Object> load() {
-                return new HashMap<String, Object>() {
-                    {
-                        put("systemTimeProvider", systemTimeProvider);
-                    }
-                };
+        SystemRepository.load(() -> new HashMap<String, Object>() {
+            {
+                put("systemTimeProvider", systemTimeProvider);
             }
         });
 
