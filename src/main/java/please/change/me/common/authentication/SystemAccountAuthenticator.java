@@ -19,15 +19,15 @@ import java.sql.Date;
 /**
  * データベースに保存されたアカウント情報に対してパスワード認証を行うクラス。<br>
  * <br>
- * PasswordAuthenticatorの特徴を下記に示す。
+ * SystemAccountAuthenticatorの特徴を下記に示す。
  * <ul>
  * <li>DBに保存したアカウント情報を使用したパスワード認証ができる。</li>
  * <li>認証時にパスワードの有効期限をチェックできる。</li>
  * <li>連続で指定回数認証に失敗するとユーザIDにロックをかける。(失敗可能回数が指定（0より大きい場合）のみロック機能が有効となる）</li>
  * </ul>
- * PasswordAuthenticatorでは、認証の成功・失敗に関わらず、認証処理においてDBの更新処理が必要なため、内部でトランザクションのコミットを行う。<br>
- * そのため、PasswordAuthenticatorのトランザクション制御が個別アプリケーションの処理に影響を与えないように、
- * 個別アプリケーションとは別のトランザクションを使用するように、PasswordAuthenticatorに{@link SimpleDbTransactionManager}を設定すること。
+ * SystemAccountAuthenticatorでは、認証の成功・失敗に関わらず、認証処理においてDBの更新処理が必要なため、内部でトランザクションのコミットを行う。<br>
+ * そのため、SystemAccountAuthenticatorのトランザクション制御が個別アプリケーションの処理に影響を与えないように、
+ * 個別アプリケーションとは別のトランザクションを使用するように、SystemAccountAuthenticatorに{@link SimpleDbTransactionManager}を設定すること。
  *
  * @author Nabu Rakutaro
  */
