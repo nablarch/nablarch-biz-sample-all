@@ -205,8 +205,8 @@ class AuthenticationUtilTest {
         void initialize() {
             this.actualCalled = 0;
             this.expectedCall = 0;
-            this.calledWith = new ArrayList<List<String>>();
-            this.expectedParams = new ArrayList<List<String>>();
+            this.calledWith = new ArrayList<>();
+            this.expectedParams = new ArrayList<>();
         }
 
         /**
