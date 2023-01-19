@@ -115,13 +115,13 @@ public class SystemAccountAuthenticator implements PasswordAuthenticator {
      *
      * @param account システムアカウント
      * @param password パスワード
-     * @param businessDate 業務日付
+     * @param sysDate 現在日付
      *
      * @throws AuthenticationFailedException ユーザIDまたはパスワードに一致するユーザが見つからない場合
      * @throws UserIdLockedException ユーザIDがロックされている場合。この例外がスローされる場合は、まだ認証を実施していない。
      * @throws PasswordExpiredException パスワードが有効期限切れの場合。この例外がスローされる場合は、古いパスワードによる認証に成功している。
      */
-    private void authenticate(SystemAccount account, String password, Date businessDate)
+    private void authenticate(SystemAccount account, String password, Date sysDate)
         throws AuthenticationFailedException, UserIdLockedException, PasswordExpiredException {
 
         if (account.isUserIdLocked()) {
@@ -151,12 +151,12 @@ public class SystemAccountAuthenticator implements PasswordAuthenticator {
 
         // パスワード有効期限切れの判定
         // パスワードの有効期限が切れていたら例外を送出する。
-        if (isExpiredPassword(account, businessDate)) {
+        if (isExpiredPassword(account, sysDate)) {
 
             throw new PasswordExpiredException(
                     String.valueOf(account.getUserId()),
                     account.getPasswordExpirationDate(),
-                    businessDate);
+                    sysDate);
         }
     }
 
@@ -164,11 +164,11 @@ public class SystemAccountAuthenticator implements PasswordAuthenticator {
      * 判定基準日時点で、パスワードが有効期限切れであるか否か。
      *
      * @param account 判定するアカウント
-     * @param businessDate 判定基準日（yyyyMMdd）
+     * @param sysDate 現在日付（yyyyMMdd）
      * @return パスワードが有効期限切れの場合　true
      */
-    private boolean isExpiredPassword(SystemAccount account, Date businessDate) {
-        return businessDate.compareTo(account.getPasswordExpirationDate()) > 0;
+    private boolean isExpiredPassword(SystemAccount account, Date sysDate) {
+        return sysDate.compareTo(account.getPasswordExpirationDate()) > 0;
     }
 
     /**
