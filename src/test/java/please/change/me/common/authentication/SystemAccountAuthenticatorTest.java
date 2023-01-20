@@ -346,7 +346,7 @@ class SystemAccountAuthenticatorTest {
     public void testLoginSuccess() throws Exception {
 
         //**********************************************************************
-        // 業務日付がユーザの有効期限（開始日）と同日
+        // 現在日付がユーザの有効期限（開始日）と同日
         //**********************************************************************
         createPasswordAuthenticator("20130802").authenticate("active user2", "pass!!!");
 
@@ -360,7 +360,7 @@ class SystemAccountAuthenticatorTest {
                 is(Timestamp.valueOf("2013-08-02 00:11:22.000")));
 
         //**********************************************************************
-        // 業務日付がユーザの有効期限（終了日）と同日
+        // 現在日付がユーザの有効期限（終了日）と同日
         //**********************************************************************
         createPasswordAuthenticator("20130805").authenticate("active user2", "pass!!!");
     }
@@ -500,11 +500,11 @@ class SystemAccountAuthenticatorTest {
     /**
      * テスト対象の{@link SystemAccountAuthenticator}を生成する。
      *
-     * @param businessDate 業務日付
+     * @param sysDate 現在日付
      *
      * @return 生成した {@link SystemAccountAuthenticator}
      */
-    private SystemAccountAuthenticator createPasswordAuthenticator(final String businessDate) {
+    private SystemAccountAuthenticator createPasswordAuthenticator(final String sysDate) {
         SystemAccountAuthenticator authenticator = new SystemAccountAuthenticator();
 
         authenticator.setFailedCountToLock(1);
@@ -514,7 +514,7 @@ class SystemAccountAuthenticatorTest {
 
         // テストのために固定日付で動作させる。
         final FixedSystemTimeProvider systemTimeProvider = new FixedSystemTimeProvider();
-        systemTimeProvider.setFixedDate(businessDate + "001122");
+        systemTimeProvider.setFixedDate(sysDate + "001122");
         SystemRepository.load(() -> new HashMap<String, Object>() {
             {
                 put("systemTimeProvider", systemTimeProvider);
