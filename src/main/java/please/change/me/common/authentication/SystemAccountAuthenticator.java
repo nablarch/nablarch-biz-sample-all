@@ -164,7 +164,7 @@ public class SystemAccountAuthenticator implements PasswordAuthenticator {
      * 判定基準日時点で、パスワードが有効期限切れであるか否か。
      *
      * @param account 判定するアカウント
-     * @param sysDate 現在日付（yyyyMMdd）
+     * @param sysDate 判定基準日（yyyyMMdd）
      * @return パスワードが有効期限切れの場合　true
      */
     private boolean isExpiredPassword(SystemAccount account, Date sysDate) {
