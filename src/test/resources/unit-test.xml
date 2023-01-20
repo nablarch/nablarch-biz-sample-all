@@ -7,7 +7,7 @@
   <config-file file="unit-test.config"/>
   <import file="db-default.xml"/>
 
-  <!-- システム日付、固定日時を固定値に設定 -->
+  <!-- システム日付を固定値に設定 -->
   <component name="dateProvider" class="nablarch.test.FixedSystemTimeProvider">
     <property name="fixedDate" value="20100914123456"/>
   </component>
