@@ -10,6 +10,9 @@
   <!-- 認証モジュールの設定 -->
   <component name="authenticator"
       class="please.change.me.common.authentication.SystemAccountAuthenticator">
+    <!-- パスワードを暗号化するPasswordEncryptor -->
+    <property name="passwordEncryptor" ref="passwordEncryptor" />
+    <!-- データベースへのトランザクション制御を行うクラス -->
     <property name="dbManager">
       <component
           class="nablarch.core.db.transaction.SimpleDbTransactionManager">
