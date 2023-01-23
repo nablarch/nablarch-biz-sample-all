@@ -23,16 +23,6 @@
   </tag-file>
 
   <tag-file>
-    <name>listSearchSortSubmit</name>
-    <path>/META-INF/tags/listSearchResult/listSearchSortSubmit.tag</path>
-  </tag-file>
-
-  <tag-file>
-    <name>listSearchParams</name>
-    <path>/META-INF/tags/listSearchResult/listSearchParams.tag</path>
-  </tag-file>
-  
-  <tag-file>
     <name>table</name>
     <path>/META-INF/tags/listSearchResult/table.tag</path>
   </tag-file>

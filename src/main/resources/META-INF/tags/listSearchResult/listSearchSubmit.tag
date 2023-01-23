@@ -5,12 +5,9 @@
 <%@ taglib prefix="n" uri="http://tis.co.jp/nablarch" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="nbs" uri="http://tis.co.jp/nablarch-biz-sample" %>
-
 <%--------------------------------------------------------------
 属性
 --------------------------------------------------------------%>
-<%@ attribute name="tag" required="true" rtexprvalue="true" %>
-<%@ attribute name="type" required="false" rtexprvalue="true" %>
 <%@ attribute name="css" required="false" rtexprvalue="true" %>
 <%@ attribute name="label" required="true" rtexprvalue="true" %>
 <%@ attribute name="enable" required="true" rtexprvalue="true" type="java.lang.Boolean" %>
@@ -23,37 +20,26 @@
 <%--------------------------------------------------------------
 本体処理
 --------------------------------------------------------------%>
-<div class="<n:write name="css" withHtmlFormat="false" />">
-    <c:if test="${enable}">
-        <c:if test="${'submitLink' == tag}">
-            <n:submitLink uri="${uri}" name="${name}" cssClass="${css}">
-                <n:write name="label" />
-                <nbs:listSearchParams pageNumber="${pageNumber}" listSearchInfoName="${listSearchInfoName}" sortId="${sortId}" />
-            </n:submitLink>
+<c:if test="${enable}">
+<li>
+    <c:url value="${uri}" var="uri" context="/">
+        <c:if test="${not empty pageNumber}">
+            <c:param name="${listSearchInfoName}.pageNumber" value="${pageNumber}" />
         </c:if>
-        <c:if test="${'submit' == tag}">
-            <n:submit uri="${uri}" name="${name}" value="${label}" type="${type}" cssClass="${css}">
-                <nbs:listSearchParams pageNumber="${pageNumber}" listSearchInfoName="${listSearchInfoName}" sortId="${sortId}" />
-            </n:submit>
+        <c:if test="${not empty sortId}">
+            <c:param name="${listSearchInfoName}.sortId" value="${sortId}" />
         </c:if>
-        <c:if test="${'button' == tag}">
-            <n:button uri="${uri}" name="${name}" value="${label}" type="${type}" cssClass="${css}">
-                <n:write name="label" />
-                <nbs:listSearchParams pageNumber="${pageNumber}" listSearchInfoName="${listSearchInfoName}" sortId="${sortId}" />
-            </n:button>
-        </c:if>
+    </c:url>
+    <n:a href="${uri}" name="${name}" cssClass="${css}"><n:write name="label" /></n:a>
+</li>
+</c:if>
+<c:if test="${not enable}">
+    <c:if test="${label == pageNumber}">
+        <li class="active">
     </c:if>
-    <c:if test="${not enable}">
-        <c:if test="${'submitLink' == tag}">
-            <n:write name="label" />
-        </c:if>
-        <c:if test="${'submit' == tag}">
-            <n:submit uri="${uri}" name="${name}" value="${label}" type="${type}" disabled="true" cssClass="${css}" />
-        </c:if>
-        <c:if test="${'button' == tag}">
-            <n:button uri="${uri}" name="${name}" value="${label}" type="${type}" disabled="true" cssClass="${css}">
-                <n:write name="label" />
-            </n:button>
-        </c:if>
+    <c:if test="${label != pageNumber}">
+        <li class="disabled">
     </c:if>
-</div>
+    <a href="javascript:void(0)"><n:write name="label" /></a>
+    </li>
+</c:if>

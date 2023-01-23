@@ -5,7 +5,6 @@
 <%@ taglib prefix="n" uri="http://tis.co.jp/nablarch" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="nbs" uri="http://tis.co.jp/nablarch-biz-sample" %>
-
 <%--------------------------------------------------------------
 属性
 --------------------------------------------------------------%>
@@ -37,8 +36,8 @@
 <%--------------------------------------------------------------
 本体処理
 --------------------------------------------------------------%>
-<div class="<n:write name="resultSetCss" withHtmlFormat="false" />">
-<table> 
+<div>
+<table class="<n:write name="resultSetCss" withHtmlFormat="false" />">
     <%-- ヘッダ行 --%>
     <jsp:invoke fragment="headerRowFragment" />
     <%-- ボディ行 --%>

@@ -9,6 +9,7 @@
 <%--------------------------------------------------------------
 属性
 --------------------------------------------------------------%>
+<%@ attribute name="resultSetName" required="true" rtexprvalue="true" %>
 <%@ attribute name="listSearchInfoName" required="true" rtexprvalue="true" %>
 <%@ attribute name="pagingCss" required="false" rtexprvalue="true" %>
 <%@ attribute name="searchUri" required="true" rtexprvalue="true" %>
@@ -19,36 +20,26 @@
 <%@ attribute name="currentPageNumberFragment" required="false" fragment="true" %>
 <%-- 最初 --%>
 <%@ attribute name="useFirstSubmit" required="false" rtexprvalue="true" %>
-<%@ attribute name="firstSubmitTag" required="false" rtexprvalue="true" %>
-<%@ attribute name="firstSubmitType" required="false" rtexprvalue="true" %>
 <%@ attribute name="firstSubmitCss" required="false" rtexprvalue="true" %>
 <%@ attribute name="firstSubmitLabel" required="false" rtexprvalue="true" %>
 <%@ attribute name="firstSubmitName" required="false" rtexprvalue="true" %>
 <%-- 前へ --%>
 <%@ attribute name="usePrevSubmit" required="false" rtexprvalue="true" %>
-<%@ attribute name="prevSubmitTag" required="false" rtexprvalue="true" %>
-<%@ attribute name="prevSubmitType" required="false" rtexprvalue="true" %>
 <%@ attribute name="prevSubmitCss" required="false" rtexprvalue="true" %>
 <%@ attribute name="prevSubmitLabel" required="false" rtexprvalue="true" %>
 <%@ attribute name="prevSubmitName" required="false" rtexprvalue="true" %>
 <%-- ページ番号(1 2 3 ...n) --%>
 <%@ attribute name="usePageNumberSubmit" required="false" rtexprvalue="true" %>
 <%@ attribute name="pageNumberSubmitWrapperCss" required="false" rtexprvalue="true" %>
-<%@ attribute name="pageNumberSubmitTag" required="false" rtexprvalue="true" %>
-<%@ attribute name="pageNumberSubmitType" required="false" rtexprvalue="true" %>
 <%@ attribute name="pageNumberSubmitCss" required="false" rtexprvalue="true" %>
 <%@ attribute name="pageNumberSubmitName" required="false" rtexprvalue="true" %>
 <%-- 次へ --%>
 <%@ attribute name="useNextSubmit" required="false" rtexprvalue="true" %>
-<%@ attribute name="nextSubmitTag" required="false" rtexprvalue="true" %>
-<%@ attribute name="nextSubmitType" required="false" rtexprvalue="true" %>
 <%@ attribute name="nextSubmitCss" required="false" rtexprvalue="true" %>
 <%@ attribute name="nextSubmitLabel" required="false" rtexprvalue="true" %>
 <%@ attribute name="nextSubmitName" required="false" rtexprvalue="true" %>
 <%-- 最後 --%>
 <%@ attribute name="useLastSubmit" required="false" rtexprvalue="true" %>
-<%@ attribute name="lastSubmitTag" required="false" rtexprvalue="true" %>
-<%@ attribute name="lastSubmitType" required="false" rtexprvalue="true" %>
 <%@ attribute name="lastSubmitCss" required="false" rtexprvalue="true" %>
 <%@ attribute name="lastSubmitLabel" required="false" rtexprvalue="true" %>
 <%@ attribute name="lastSubmitName" required="false" rtexprvalue="true" %>
@@ -62,36 +53,26 @@
 <c:if test="${empty currentPageNumberCss}"><n:set var="currentPageNumberCss" value="nablarch_currentPageNumber" scope="page" /></c:if>
 <%-- 最初 --%>
 <c:if test="${empty useFirstSubmit}"><n:set var="useFirstSubmit" value="false" scope="page" /></c:if>
-<c:if test="${empty firstSubmitTag}"><n:set var="firstSubmitTag" value="submitLink" scope="page" /></c:if>
-<c:if test="${empty firstSubmitType}"><n:set var="firstSubmitType" value="" scope="page" /></c:if>
 <c:if test="${empty firstSubmitCss}"><n:set var="firstSubmitCss" value="nablarch_firstSubmit" scope="page" /></c:if>
 <c:if test="${empty firstSubmitLabel}"><n:set var="firstSubmitLabel" value="最初" scope="page" /></c:if>
 <c:if test="${empty firstSubmitName}"><n:set var="firstSubmitName" value="firstSubmit" scope="page" /></c:if>
 <%-- 前へ --%>
 <c:if test="${empty usePrevSubmit}"><n:set var="usePrevSubmit" value="true" scope="page" /></c:if>
-<c:if test="${empty prevSubmitTag}"><n:set var="prevSubmitTag" value="submitLink" scope="page" /></c:if>
-<c:if test="${empty prevSubmitType}"><n:set var="prevSubmitType" value="" scope="page" /></c:if>
 <c:if test="${empty prevSubmitCss}"><n:set var="prevSubmitCss" value="nablarch_prevSubmit" scope="page" /></c:if>
 <c:if test="${empty prevSubmitLabel}"><n:set var="prevSubmitLabel" value="前へ" scope="page" /></c:if>
 <c:if test="${empty prevSubmitName}"><n:set var="prevSubmitName" value="prevSubmit" scope="page" /></c:if>
 <%-- ページ番号(1 2 3 ...n) --%>
 <c:if test="${empty usePageNumberSubmit}"><n:set var="usePageNumberSubmit" value="false" scope="page" /></c:if>
 <c:if test="${empty pageNumberSubmitWrapperCss}"><n:set var="pageNumberSubmitWrapperCss" value="nablarch_pageNumberSubmitWrapper" scope="page" /></c:if>
-<c:if test="${empty pageNumberSubmitTag}"><n:set var="pageNumberSubmitTag" value="submitLink" scope="page" /></c:if>
-<c:if test="${empty pageNumberSubmitType}"><n:set var="pageNumberSubmitType" value="" scope="page" /></c:if>
 <c:if test="${empty pageNumberSubmitCss}"><n:set var="pageNumberSubmitCss" value="nablarch_pageNumberSubmit" scope="page" /></c:if>
 <c:if test="${empty pageNumberSubmitName}"><n:set var="pageNumberSubmitName" value="pageNumberSubmit" scope="page" /></c:if>
 <%-- 次へ --%>
 <c:if test="${empty useNextSubmit}"><n:set var="useNextSubmit" value="true" scope="page" /></c:if>
-<c:if test="${empty nextSubmitTag}"><n:set var="nextSubmitTag" value="submitLink" scope="page" /></c:if>
-<c:if test="${empty nextSubmitType}"><n:set var="nextSubmitType" value="" scope="page" /></c:if>
 <c:if test="${empty nextSubmitCss}"><n:set var="nextSubmitCss" value="nablarch_nextSubmit" scope="page" /></c:if>
 <c:if test="${empty nextSubmitLabel}"><n:set var="nextSubmitLabel" value="次へ" scope="page" /></c:if>
 <c:if test="${empty nextSubmitName}"><n:set var="nextSubmitName" value="nextSubmit" scope="page" /></c:if>
 <%-- 最後 --%>
 <c:if test="${empty useLastSubmit}"><n:set var="useLastSubmit" value="false" scope="page" /></c:if>
-<c:if test="${empty lastSubmitTag}"><n:set var="lastSubmitTag" value="submitLink" scope="page" /></c:if>
-<c:if test="${empty lastSubmitType}"><n:set var="lastSubmitType" value="" scope="page" /></c:if>
 <c:if test="${empty lastSubmitCss}"><n:set var="lastSubmitCss" value="nablarch_lastSubmit" scope="page" /></c:if>
 <c:if test="${empty lastSubmitLabel}"><n:set var="lastSubmitLabel" value="最後" scope="page" /></c:if>
 <c:if test="${empty lastSubmitName}"><n:set var="lastSubmitName" value="lastSubmit" scope="page" /></c:if>
@@ -100,7 +81,11 @@
 本体処理
 --------------------------------------------------------------%>
 <n:set var="listSearchInfo" name="${listSearchInfoName}" scope="page" bySingleValue="false" />
-<c:if test="${listSearchInfo.resultCount != 0}">
+<n:set var="resultSet" name="${resultSetName}" scope="page" bySingleValue="false" />
+<%-- resultSetはListを継承したクラスであるため、EL式ではindex番号以外でのアクセスができない。 --%>
+<%-- そのため、paginationを一旦別変数に保存して使用する。 --%>
+<n:set var="pagination" name="${resultSetName}.pagination" scope="page" />
+<c:if test="${pagination.resultCount != 0}">
 
     <div class="<n:write name="pagingCss" withHtmlFormat="false" />">
         <%-- 現在のページ番号 --%>
@@ -108,77 +93,73 @@
             <div class="<n:write name="currentPageNumberCss" withHtmlFormat="false" />">
                 <jsp:invoke fragment="currentPageNumberFragment" var="currentPageTag" />
                 <c:if test="${empty currentPageTag}">
-                    [<n:write name="${listSearchInfoName}.pageNumber" />/<n:write name="${listSearchInfoName}.pageCount" />ページ]
+                    [<n:write name="${resultSetName}.pagination.pageNumber" />/<n:write name="${resultSetName}.pagination.pageCount" />ページ]
                 </c:if>
                 <c:if test="${not empty currentPageTag}">
                     <jsp:invoke fragment="currentPageNumberFragment" />
                 </c:if>
             </div>
         </c:if>
+        <ul class="pagination">
         <%-- 最初 --%>
         <c:if test="${useFirstSubmit}">
-            <nbs:listSearchSubmit tag="${firstSubmitTag}"
-                                type="${firstSubmitType}"
+            <nbs:listSearchSubmit
                                 css="${firstSubmitCss}"
                                 label="${firstSubmitLabel}"
-                                enable="${listSearchInfo.hasPrevPage}"
+                                enable="${pagination.hasPrevPage}"
                                 uri="${searchUri}"
                                 name="${firstSubmitName}${submitNameSuffix}"
-                                pageNumber="${listSearchInfo.firstPageNumber}"
+                                pageNumber="${pagination.firstPageNumber}"
                                 listSearchInfoName="${listSearchInfoName}" />
         </c:if>
         <%-- 前へ --%>
         <c:if test="${usePrevSubmit}">
-            <nbs:listSearchSubmit tag="${prevSubmitTag}"
-                                type="${prevSubmitType}"
+            <nbs:listSearchSubmit
                                 css="${prevSubmitCss}"
                                 label="${prevSubmitLabel}"
-                                enable="${listSearchInfo.hasPrevPage}"
+                                enable="${pagination.hasPrevPage}"
                                 uri="${searchUri}"
                                 name="${prevSubmitName}${submitNameSuffix}"
-                                pageNumber="${listSearchInfo.prevPageNumber}"
+                                pageNumber="${pagination.prevPageNumber}"
                                 listSearchInfoName="${listSearchInfoName}" />
         </c:if>
         <%--  ページ番号(1 2 3 ...n) --%>
-        <c:if test="${(usePageNumberSubmit == 'true') && (listSearchInfo.pageCount != 1)}">
-            <div class="<n:write name="pageNumberSubmitWrapperCss" withHtmlFormat="false" />">
-                <c:forEach begin="1" end="${listSearchInfo.pageCount}" varStatus="status">
+        <c:if test="${(usePageNumberSubmit == 'true') && (pagination.pageCount != 1)}">
+
+                <c:forEach begin="1" end="${pagination.pageCount}" varStatus="status">
                     <n:set var="pageNumber" value="${status.index}" scope="page" />
-                    <nbs:listSearchSubmit tag="${pageNumberSubmitTag}"
-                                        type="${pageNumberSubmitType}"
+                    <nbs:listSearchSubmit
                                         css="${pageNumberSubmitCss}"
                                         label="${pageNumber}"
-                                        enable="${listSearchInfo.pageNumber != pageNumber}"
+                                        enable="${pagination.pageNumber != pageNumber}"
                                         uri="${searchUri}"
                                         name="${pageNumberSubmitName}${pageNumber}${submitNameSuffix}"
                                         pageNumber="${pageNumber}"
                                         listSearchInfoName="${listSearchInfoName}" />
                 </c:forEach>
-            </div>
         </c:if>
         <%-- 次へ --%>
         <c:if test="${useNextSubmit}">
-            <nbs:listSearchSubmit tag="${nextSubmitTag}"
-                                type="${nextSubmitType}"
+            <nbs:listSearchSubmit
                                 css="${nextSubmitCss}"
                                 label="${nextSubmitLabel}"
-                                enable="${listSearchInfo.hasNextPage}"
+                                enable="${pagination.hasNextPage}"
                                 uri="${searchUri}"
                                 name="${nextSubmitName}${submitNameSuffix}"
-                                pageNumber="${listSearchInfo.nextPageNumber}"
+                                pageNumber="${pagination.nextPageNumber}"
                                 listSearchInfoName="${listSearchInfoName}" />
         </c:if>
         <%-- 最後 --%>
         <c:if test="${useLastSubmit}">
-            <nbs:listSearchSubmit tag="${lastSubmitTag}"
-                                type="${lastSubmitType}"
+            <nbs:listSearchSubmit
                                 css="${lastSubmitCss}"
                                 label="${lastSubmitLabel}"
-                                enable="${listSearchInfo.hasNextPage}"
+                                enable="${pagination.hasNextPage}"
                                 uri="${searchUri}"
                                 name="${lastSubmitName}${submitNameSuffix}"
-                                pageNumber="${listSearchInfo.lastPageNumber}"
+                                pageNumber="${pagination.lastPageNumber}"
                                 listSearchInfoName="${listSearchInfoName}" />
         </c:if>
+        </ul>
     </div>
 </c:if>
