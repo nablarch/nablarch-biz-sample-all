@@ -4,7 +4,7 @@
 <%@ tag language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="n" uri="http://tis.co.jp/nablarch" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="nbs" uri="http://tis.co.jp/nablarch-biz-sample" %>
+<%@ taglib prefix="app" tagdir="/WEB-INF/tags/listSearchResult" %>
 
 <%--------------------------------------------------------------
 属性
@@ -103,7 +103,7 @@
         <ul class="pagination">
         <%-- 最初 --%>
         <c:if test="${useFirstSubmit}">
-            <nbs:listSearchSubmit
+            <app:listSearchSubmit
                                 css="${firstSubmitCss}"
                                 label="${firstSubmitLabel}"
                                 enable="${pagination.hasPrevPage}"
@@ -114,7 +114,7 @@
         </c:if>
         <%-- 前へ --%>
         <c:if test="${usePrevSubmit}">
-            <nbs:listSearchSubmit
+            <app:listSearchSubmit
                                 css="${prevSubmitCss}"
                                 label="${prevSubmitLabel}"
                                 enable="${pagination.hasPrevPage}"
@@ -128,7 +128,7 @@
 
                 <c:forEach begin="1" end="${pagination.pageCount}" varStatus="status">
                     <n:set var="pageNumber" value="${status.index}" scope="page" />
-                    <nbs:listSearchSubmit
+                    <app:listSearchSubmit
                                         css="${pageNumberSubmitCss}"
                                         label="${pageNumber}"
                                         enable="${pagination.pageNumber != pageNumber}"
@@ -140,7 +140,7 @@
         </c:if>
         <%-- 次へ --%>
         <c:if test="${useNextSubmit}">
-            <nbs:listSearchSubmit
+            <app:listSearchSubmit
                                 css="${nextSubmitCss}"
                                 label="${nextSubmitLabel}"
                                 enable="${pagination.hasNextPage}"
@@ -151,7 +151,7 @@
         </c:if>
         <%-- 最後 --%>
         <c:if test="${useLastSubmit}">
-            <nbs:listSearchSubmit
+            <app:listSearchSubmit
                                 css="${lastSubmitCss}"
                                 label="${lastSubmitLabel}"
                                 enable="${pagination.hasNextPage}"

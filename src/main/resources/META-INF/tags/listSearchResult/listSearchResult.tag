@@ -4,7 +4,7 @@
 <%@ tag language="java" pageEncoding="UTF-8" %>
 <%@ taglib prefix="n" uri="http://tis.co.jp/nablarch" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="nbs" uri="http://tis.co.jp/nablarch-biz-sample" %>
+<%@ taglib prefix="app" tagdir="/WEB-INF/tags/listSearchResult" %>
 
 <%--------------------------------------------------------------
 属性
@@ -104,7 +104,7 @@
     </c:if>
     <%-- ページング(top) --%>
     <c:if test="${(not empty listSearchInfo && (usePaging == 'true')) && ((pagingPosition == 'top') || (pagingPosition == 'both'))}">
-    <nbs:listSearchPaging resultSetName="${resultSetName}"
+    <app:listSearchPaging resultSetName="${resultSetName}"
                         listSearchInfoName="${listSearchInfoName}"
                         pagingCss="${pagingCss}"
                         searchUri="${searchUri}"
@@ -132,7 +132,7 @@
                         lastSubmitLabel="${lastSubmitLabel}"
                         lastSubmitName="${lastSubmitName}">
         <jsp:attribute name="currentPageNumberFragment"><jsp:invoke fragment="currentPageNumberFragment" /></jsp:attribute>
-    </nbs:listSearchPaging>
+    </app:listSearchPaging>
     </c:if>
     <%-- 検索結果 --%>
     <c:if test="${showResult}">
@@ -142,7 +142,7 @@
         <c:if test="${empty listSearchInfo}">
             <n:set var="startPosition" value="1" scope="page" />
         </c:if>
-        <nbs:table resultSetName="${resultSetName}"
+        <app:table resultSetName="${resultSetName}"
                  resultSetCss="${resultSetCss}"
                  varRowName="${varRowName}"
                  varStatusName="${varStatusName}"
@@ -154,11 +154,11 @@
                  startPosition="${startPosition}">
             <jsp:attribute name="headerRowFragment"><jsp:invoke fragment="headerRowFragment" /></jsp:attribute>
             <jsp:attribute name="bodyRowFragment"><jsp:invoke fragment="bodyRowFragment" /></jsp:attribute>
-        </nbs:table>
+        </app:table>
     </c:if>
     <%-- ページング(bottom) --%>
     <c:if test="${(not empty listSearchInfo && (usePaging == 'true')) && ((pagingPosition == 'bottom') || (pagingPosition == 'both'))}">
-    <nbs:listSearchPaging resultSetName="${resultSetName}"
+    <app:listSearchPaging resultSetName="${resultSetName}"
                         listSearchInfoName="${listSearchInfoName}"
                         pagingCss="${pagingCss}"
                         searchUri="${searchUri}"
@@ -186,7 +186,7 @@
                         lastSubmitLabel="${lastSubmitLabel}"
                         lastSubmitName="${lastSubmitName}">
         <jsp:attribute name="currentPageNumberFragment"><jsp:invoke fragment="currentPageNumberFragment"/></jsp:attribute>
-    </nbs:listSearchPaging>
+    </app:listSearchPaging>
     </c:if>
 </div>
 </c:if>
