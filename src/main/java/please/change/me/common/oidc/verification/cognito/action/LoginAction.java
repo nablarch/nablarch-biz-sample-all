@@ -7,14 +7,13 @@ import nablarch.common.web.session.SessionUtil;
 import nablarch.core.log.Logger;
 import nablarch.core.log.LoggerManager;
 import nablarch.core.repository.SystemRepository;
-import nablarch.core.validation.ee.ValidatorUtil;
 import nablarch.fw.ExecutionContext;
 import nablarch.fw.web.HttpErrorResponse;
-import nablarch.fw.web.HttpRequest;
 import nablarch.fw.web.HttpResponse;
 import please.change.me.common.oidc.verification.cognito.form.LoginRequestForm;
 import please.change.me.common.oidc.verification.cognito.jwt.IdTokenVerifier;
 
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -28,16 +27,13 @@ public class LoginAction {
     /**
      * IDトークンで認証を行い、成功すればログインセッションを確立する。
      *
-     * @param req HTTPリクエスト
      * @param context 実行コンテキスト
      * @param form リクエストボディ
      */
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void login(HttpRequest req, ExecutionContext context, LoginRequestForm form) {
-        // Bean Validationで入力値をチェック
-        ValidatorUtil.validate(form);
-
+    @Valid
+    public void login(ExecutionContext context, LoginRequestForm form) {
         // IDトークンが有効であるか検証する
         DecodedJWT decodedJWT = verifyIdToken(form.getIdToken());
 
