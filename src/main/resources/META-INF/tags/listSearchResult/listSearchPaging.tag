@@ -46,7 +46,6 @@
 <%--------------------------------------------------------------
 デフォルト
 --------------------------------------------------------------%>
-<c:if test="${empty pagingCss}"><n:set var="pagingCss" value="nablarch_paging" scope="page" /></c:if>
 <%-- 現在のページ番号 --%>
 <c:if test="${empty useCurrentPageNumber}"><n:set var="useCurrentPageNumber" value="true" scope="page" /></c:if>
 <c:if test="${empty currentPageNumberCss}"><n:set var="currentPageNumberCss" value="nablarch_currentPageNumber" scope="page" /></c:if>
