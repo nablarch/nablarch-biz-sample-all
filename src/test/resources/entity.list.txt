@@ -1,6 +1,4 @@
 please.change.me.common.authentication.entity.SystemAccount
-please.change.me.common.captcha.entity.CaptchaManage
-please.change.me.common.captcha.entity.CaptchaMessage
 please.change.me.common.mail.html.entity.AlternativeText
 please.change.me.common.mail.html.entity.AlternativeTextTemplate
 please.change.me.common.mail.html.entity.BatchRequest
