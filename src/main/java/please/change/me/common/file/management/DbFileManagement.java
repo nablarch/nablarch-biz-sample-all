@@ -1,20 +1,18 @@
 package please.change.me.common.file.management;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.sql.Blob;
-
+import nablarch.common.dao.UniversalDao;
 import nablarch.common.idgenerator.IdFormatter;
 import nablarch.common.idgenerator.IdGenerator;
-import nablarch.core.db.statement.SqlPStatement;
-import nablarch.core.db.statement.SqlResultSet;
-import nablarch.core.db.statement.SqlRow;
-import nablarch.core.db.support.DbAccessSupport;
+import nablarch.core.db.transaction.SimpleDbTransactionManager;
 import nablarch.core.util.FileUtil;
 import nablarch.fw.web.upload.PartInfo;
+import please.change.me.common.file.management.entity.FileControl;
+
+import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialException;
+import java.io.*;
+import java.sql.Blob;
+import java.sql.SQLException;
 
 /**
  * DBを用いたファイル管理機能を行うクラス。<br>
@@ -25,7 +23,11 @@ import nablarch.fw.web.upload.PartInfo;
  *
  * @author Masaya Seko
  */
-public class DbFileManagement extends DbAccessSupport implements FileManagement {
+public class DbFileManagement implements FileManagement {
+
+    /** データベースへのトランザクション制御を行う{@link SimpleDbTransactionManager} */
+    private SimpleDbTransactionManager dbManager;
+
     /**格納可能なファイル長(単位：バイト)(デフォルトは10Mバイト)*/
     private int maxFileSize = 10000000;
 
@@ -39,6 +41,15 @@ public class DbFileManagement extends DbAccessSupport implements FileManagement 
     private IdFormatter idFormatter;
 
     /**
+     * データベースへのトランザクション制御を行う{@link SimpleDbTransactionManager}を設定する。
+     *
+     * @param dbManager データベースへのトランザクション制御を行う{@link SimpleDbTransactionManager}
+     */
+    public void setDbManager(SimpleDbTransactionManager dbManager) {
+        this.dbManager = dbManager;
+    }
+
+    /**
      * ファイルを保存する。
      * @param partInfo 保存対象のファイル
      * @return ファイル管理ID
@@ -49,6 +60,9 @@ public class DbFileManagement extends DbAccessSupport implements FileManagement 
            throw new IllegalArgumentException("partInfo is null.");
         }
         if (partInfo.size() > maxFileSize) {
+            System.out.println("!!!pmaxFileSize:" + maxFileSize);
+
+            System.out.println("!!!partInfo.size():" + partInfo.size());
             throw new IllegalArgumentException("File is too large. fileName = [" + partInfo.getFileName() + "]");
         }
         return save(partInfo.getInputStream(), partInfo.size());
@@ -85,16 +99,20 @@ public class DbFileManagement extends DbAccessSupport implements FileManagement 
      * @return ファイル管理ID
      */
     private String save(InputStream inStream, int fileSize) {
-        BufferedInputStream bufferedInStream = null;
-        try {
-            bufferedInStream = new BufferedInputStream(inStream);
-            String fileId = idGenerator.generateId(fileIdKey, idFormatter);
+        BufferedInputStream bufferedInStream = new BufferedInputStream(inStream);
+        byte[] bytes = new byte[fileSize];
 
-            SqlPStatement stmt = getSqlPStatement("INSERT_FILE_CONTROL");
-            stmt.setString(1, fileId);
-            stmt.setBinaryStream(2, bufferedInStream, fileSize);
-            stmt.executeUpdate();
-            return fileId;
+        try {
+            bufferedInStream.read(bytes);
+            String fileControlId = idGenerator.generateId(fileIdKey, idFormatter);
+            FileControl fileControl = new FileControl();
+            fileControl.setFileControlId(fileControlId);
+            fileControl.setFileObject(bytes);;
+            fileControl.setSakujoSgn("0");
+            UniversalDao.insert(fileControl);
+            return fileControlId;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         } finally {
             FileUtil.closeQuietly(bufferedInStream);
         }
@@ -102,34 +120,31 @@ public class DbFileManagement extends DbAccessSupport implements FileManagement 
 
     /**
      * ファイルを論理削除する。
-     * @param fileId ファイル管理ID
+     * @param fileControlId ファイル管理ID
      * @exception RuntimeException 削除対象のファイルが見つからなかった場合。
      */
-    public void delete(String fileId) throws RuntimeException {
-        SqlPStatement stmt = getSqlPStatement("DELETE_FILE_CONTROL");
-        stmt.setString(1, fileId);
-        int count = stmt.executeUpdate();
-        if (count != 1) {
-            throw new RuntimeException("Record not found. FILE_CONTROL_ID= [" + fileId + "]");
-        }
+    public void delete(String fileControlId) {
+        FileControl fileControl =  UniversalDao.findBySqlFile(FileControl.class, "SELECT_FILE_CONTROL", new Object[]{fileControlId});
+        fileControl.setSakujoSgn("1");
+        UniversalDao.update(fileControl);
     }
-    
+
     /**
      * ファイルを取得する。
-     * @param fileId ファイル管理ID
+     * @param fileControlId ファイル管理ID
      * @return ファイルのデータ。
      * @exception RuntimeException 指定したファイルが見つからなかった場合
      */
-    public Blob find(String fileId) throws RuntimeException {
-        SqlPStatement stmt = getSqlPStatement("SELECT_FILE_CONTROL");
-        stmt.setString(1, fileId);
-        SqlResultSet resultSet = stmt.retrieve();
-        if (resultSet.size() == 1) {
-            SqlRow sqlRow = resultSet.get(0);
-            return (Blob) sqlRow.get("FILE_OBJECT");
-        } else {
-            //取得結果が0件の場合
-            throw new RuntimeException("Record not found. FILE_CONTROL_ID= [" + fileId + "]");
+    public Blob find(String fileControlId) {
+        FileControl fileControl =  UniversalDao.findBySqlFile(FileControl.class, "SELECT_FILE_CONTROL", new Object[]{fileControlId});
+
+        byte[] bytes = fileControl.getFileObject();
+        try {
+            return new SerialBlob(bytes);
+        } catch (SerialException e) {
+            throw new RuntimeException(e);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 

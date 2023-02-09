@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------------
 SELECT_FILE_CONTROL =
 SELECT
-    FILE_OBJECT
+    *
 FROM
     FILE_CONTROL
 WHERE
