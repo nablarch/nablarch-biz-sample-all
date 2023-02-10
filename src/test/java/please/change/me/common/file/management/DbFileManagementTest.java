@@ -98,7 +98,7 @@ public class DbFileManagementTest {
     }
 
     @AfterEach
-    void tearDown() throws Exception {
+    void tearDown() {
         DbConnectionContext.getTransactionManagerConnection("transaction").commit();
         DbConnectionContext.removeConnection();
     }
