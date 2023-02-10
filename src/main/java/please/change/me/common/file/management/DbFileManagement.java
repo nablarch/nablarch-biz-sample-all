@@ -3,13 +3,10 @@ package please.change.me.common.file.management;
 import nablarch.common.dao.UniversalDao;
 import nablarch.common.idgenerator.IdFormatter;
 import nablarch.common.idgenerator.IdGenerator;
-import nablarch.core.db.transaction.SimpleDbTransactionManager;
-import nablarch.core.util.FileUtil;
 import nablarch.fw.web.upload.PartInfo;
 import please.change.me.common.file.management.entity.FileControl;
 
 import javax.sql.rowset.serial.SerialBlob;
-import javax.sql.rowset.serial.SerialException;
 import java.io.*;
 import java.sql.Blob;
 import java.sql.SQLException;
@@ -120,8 +117,6 @@ public class DbFileManagement implements FileManagement {
         byte[] bytes = fileControl.getFileObject();
         try {
             return new SerialBlob(bytes);
-        } catch (SerialException e) {
-            throw new RuntimeException(e);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
