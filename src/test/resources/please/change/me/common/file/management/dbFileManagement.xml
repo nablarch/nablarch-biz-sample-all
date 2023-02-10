@@ -53,12 +53,6 @@
     </property>
   </component>
 
-  <component name="dbManager" class="nablarch.core.db.transaction.SimpleDbTransactionManager" >
-    <property name="dbTransactionName" value="subTran"/>
-    <property name="transactionFactory" ref="transactionFactory" />
-    <property name="connectionFactory" ref="connectionFactory" />
-  </component>
-
   <component name="daoContextFactory" class="nablarch.common.dao.BasicDaoContextFactory" />
 
 </component-configuration>

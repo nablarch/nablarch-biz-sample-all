@@ -25,9 +25,6 @@ import java.sql.SQLException;
  */
 public class DbFileManagement implements FileManagement {
 
-    /** データベースへのトランザクション制御を行う{@link SimpleDbTransactionManager} */
-    private SimpleDbTransactionManager dbManager;
-
     /**格納可能なファイル長(単位：バイト)(デフォルトは10Mバイト)*/
     private int maxFileSize = 10000000;
 
@@ -39,15 +36,6 @@ public class DbFileManagement implements FileManagement {
     
     /**採番IDを整形するためのフォーマッター*/
     private IdFormatter idFormatter;
-
-    /**
-     * データベースへのトランザクション制御を行う{@link SimpleDbTransactionManager}を設定する。
-     *
-     * @param dbManager データベースへのトランザクション制御を行う{@link SimpleDbTransactionManager}
-     */
-    public void setDbManager(SimpleDbTransactionManager dbManager) {
-        this.dbManager = dbManager;
-    }
 
     /**
      * ファイルを保存する。
