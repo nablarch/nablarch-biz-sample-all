@@ -51,7 +51,7 @@ public class DbFileManagementTest {
 
         // setup test table
         Statement statement = con.createStatement();
-        statement.execute("DROP TABLE FILE_CONTROL CASCADE CONSTRAINTS");
+        statement.execute("DROP TABLE IF EXISTS FILE_CONTROL CASCADE CONSTRAINTS");
 
         statement.execute("CREATE TABLE FILE_CONTROL("
                 + " FILE_CONTROL_ID CHAR(18) NOT NULL,"
