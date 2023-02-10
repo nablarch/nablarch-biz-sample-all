@@ -66,14 +66,13 @@ public class DbFileManagement implements FileManagement {
         if (file.length() > maxFileSize) {
             throw new IllegalArgumentException("File is too large. fileName = [" + file.getName() + "]");
         }
-        FileInputStream fileInputStream = null;
-        try {
-            fileInputStream = new FileInputStream(file);
+
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
             return save(fileInputStream, (int) file.length());
         } catch (FileNotFoundException e) {
             throw new IllegalArgumentException(e);
-        } finally {
-            FileUtil.closeQuietly(fileInputStream);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -84,10 +83,9 @@ public class DbFileManagement implements FileManagement {
      * @return ファイル管理ID
      */
     private String save(InputStream inStream, int fileSize) {
-        BufferedInputStream bufferedInStream = new BufferedInputStream(inStream);
-        byte[] bytes = new byte[fileSize];
+        try (BufferedInputStream bufferedInStream = new BufferedInputStream(inStream)) {
+            byte[] bytes = new byte[fileSize];
 
-        try {
             bufferedInStream.read(bytes);
             String fileControlId = idGenerator.generateId(fileIdKey, idFormatter);
             FileControl fileControl = new FileControl();
@@ -98,8 +96,6 @@ public class DbFileManagement implements FileManagement {
             return fileControlId;
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } finally {
-            FileUtil.closeQuietly(bufferedInStream);
         }
     }
 
