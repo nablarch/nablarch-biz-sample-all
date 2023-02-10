@@ -102,7 +102,6 @@ public class DbFileManagement implements FileManagement {
     /**
      * ファイルを論理削除する。
      * @param fileControlId ファイル管理ID
-     * @exception RuntimeException 削除対象のファイルが見つからなかった場合。
      */
     public void delete(String fileControlId) {
         FileControl fileControl =  UniversalDao.findBySqlFile(FileControl.class, "SELECT_FILE_CONTROL", new Object[]{fileControlId});
@@ -114,7 +113,6 @@ public class DbFileManagement implements FileManagement {
      * ファイルを取得する。
      * @param fileControlId ファイル管理ID
      * @return ファイルのデータ。
-     * @exception RuntimeException 指定したファイルが見つからなかった場合
      */
     public Blob find(String fileControlId) {
         FileControl fileControl =  UniversalDao.findBySqlFile(FileControl.class, "SELECT_FILE_CONTROL", new Object[]{fileControlId});
