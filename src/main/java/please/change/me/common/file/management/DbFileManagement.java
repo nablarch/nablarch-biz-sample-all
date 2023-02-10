@@ -60,9 +60,6 @@ public class DbFileManagement implements FileManagement {
            throw new IllegalArgumentException("partInfo is null.");
         }
         if (partInfo.size() > maxFileSize) {
-            System.out.println("!!!pmaxFileSize:" + maxFileSize);
-
-            System.out.println("!!!partInfo.size():" + partInfo.size());
             throw new IllegalArgumentException("File is too large. fileName = [" + partInfo.getFileName() + "]");
         }
         return save(partInfo.getInputStream(), partInfo.size());
