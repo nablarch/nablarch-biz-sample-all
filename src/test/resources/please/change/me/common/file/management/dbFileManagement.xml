@@ -7,7 +7,6 @@
   <!-- 使用するDBに合わせてダイアレクトを設定すること -->
   <component name="dialect" class="nablarch.core.db.dialect.H2Dialect" />
 
-  <component name="transactionFactory" class="nablarch.core.db.transaction.JdbcTransactionFactory" />
   <component name="connectionFactory" class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
     <property name="dialect" ref="dialect" />
     <property name="dataSource">
