@@ -53,6 +53,4 @@
     </property>
   </component>
 
-  <component name="daoContextFactory" class="nablarch.common.dao.BasicDaoContextFactory" />
-
 </component-configuration>
