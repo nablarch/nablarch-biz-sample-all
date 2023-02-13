@@ -3,7 +3,9 @@
 --------------------------------------------------------------------------------
 SELECT_FILE_CONTROL =
 SELECT
-    *
+    FILE_CONTROL_ID,
+    FILE_OBJECT,
+    SAKUJO_SGN
 FROM
     FILE_CONTROL
 WHERE
