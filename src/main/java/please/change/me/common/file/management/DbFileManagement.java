@@ -66,10 +66,8 @@ public class DbFileManagement implements FileManagement {
 
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             return save(fileInputStream, (int) file.length());
-        } catch (FileNotFoundException e) {
-            throw new IllegalArgumentException(e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new IllegalArgumentException(e);
         }
     }
 
@@ -80,20 +78,26 @@ public class DbFileManagement implements FileManagement {
      * @return ファイル管理ID
      */
     private String save(InputStream inStream, int fileSize) {
-        try (BufferedInputStream bufferedInStream = new BufferedInputStream(inStream)) {
-            byte[] bytes = new byte[fileSize];
-
-            bufferedInStream.read(bytes);
-            String fileControlId = idGenerator.generateId(fileIdKey, idFormatter);
-            FileControl fileControl = new FileControl();
-            fileControl.setFileControlId(fileControlId);
-            fileControl.setFileObject(bytes);;
-            fileControl.setSakujoSgn("0");
-            UniversalDao.insert(fileControl);
-            return fileControlId;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[fileSize];
+        while(true) {
+            try {
+                if ((fileSize = inStream.read(buffer)) == -1) break;
+            } catch (IOException e) {
+                // readに失敗することは無いため、以下は実行されない。
+                throw new IllegalArgumentException(e);
+            }
+            bos.write(buffer, 0, fileSize);
         }
+        byte[] bytes = bos.toByteArray();
+
+        String fileControlId = idGenerator.generateId(fileIdKey, idFormatter);
+        FileControl fileControl = new FileControl();
+        fileControl.setFileControlId(fileControlId);
+        fileControl.setFileObject(bytes);
+        fileControl.setSakujoSgn("0");
+        UniversalDao.insert(fileControl);
+        return fileControlId;
     }
 
     /**
@@ -118,7 +122,8 @@ public class DbFileManagement implements FileManagement {
         try {
             return new SerialBlob(bytes);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            // 不正なbytesがSerialBlobコンストラクタに渡されることは無いため、以下は実行されない。
+            throw new IllegalArgumentException(e);
         }
     }
 
