@@ -84,6 +84,7 @@ public class DbFileManagement implements FileManagement {
             try {
                 if ((fileSize = inStream.read(buffer)) == -1) break;
             } catch (IOException e) {
+                // readに失敗することは無いため、以下は実行されない。
                 throw new IllegalArgumentException(e);
             }
             bos.write(buffer, 0, fileSize);
@@ -121,6 +122,7 @@ public class DbFileManagement implements FileManagement {
         try {
             return new SerialBlob(bytes);
         } catch (SQLException e) {
+            // 不正なbytesがSerialBlobコンストラクタに渡されることは無いため、以下は実行されない。
             throw new IllegalArgumentException(e);
         }
     }
