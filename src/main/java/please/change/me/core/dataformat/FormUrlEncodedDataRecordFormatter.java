@@ -160,11 +160,7 @@ public class FormUrlEncodedDataRecordFormatter extends DataRecordFormatterSuppor
             value = URLDecoder.decode(value, encoding.name());
             
             // 同一キーで複数個存在する可能性があるのでリストにする
-            List<String> list = map.get(key);
-            if (list == null) {
-                list = new ArrayList<String>();
-                map.put(key, list);
-            }
+            List<String> list = map.computeIfAbsent(key, k -> new ArrayList<>());
             list.add(value);
         }
 
