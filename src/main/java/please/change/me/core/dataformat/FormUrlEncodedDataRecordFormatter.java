@@ -93,6 +93,7 @@ public class FormUrlEncodedDataRecordFormatter extends DataRecordFormatterSuppor
      * また、入力ストリームをBufferedReaderにラップする処理および、
      * 出力ストリームをBufferedWriterにラップする処理を行う。
      */
+    @Override
     public DataRecordFormatter initialize() {        
         super.initialize();
         if (source != null && reader == null) {  // reader生成済みの場合は初期化しない
