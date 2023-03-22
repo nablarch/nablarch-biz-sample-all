@@ -2,8 +2,8 @@ package please.change.me.common.mail.html;
 
 import java.util.List;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 
 import nablarch.common.mail.MailAttachedFileTable;
 import nablarch.common.mail.MailRequestTable;
