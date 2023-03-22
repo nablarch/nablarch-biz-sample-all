@@ -1,7 +1,7 @@
 package please.change.me.common.authentication.entity;
 
-import javax.annotation.Generated;
-import javax.persistence.*;
+import jakarta.annotation.Generated;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 

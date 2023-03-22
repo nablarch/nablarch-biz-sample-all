@@ -10,18 +10,18 @@ import static org.junit.Assert.assertThat;
 
 import java.util.Properties;
 
-import javax.mail.Address;
-import javax.mail.Authenticator;
-import javax.mail.Flags;
-import javax.mail.Folder;
-import javax.mail.Message;
-import javax.mail.Multipart;
-import javax.mail.NoSuchProviderException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Store;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage.RecipientType;
+import jakarta.mail.Address;
+import jakarta.mail.Authenticator;
+import jakarta.mail.Flags;
+import jakarta.mail.Folder;
+import jakarta.mail.Message;
+import jakarta.mail.Multipart;
+import jakarta.mail.NoSuchProviderException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Store;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage.RecipientType;
 
 import nablarch.common.mail.FreeTextMailContext;
 import nablarch.common.mail.MailConfig;

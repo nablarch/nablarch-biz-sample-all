@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.mail.BodyPart;
-import javax.mail.Multipart;
+import jakarta.mail.BodyPart;
+import jakarta.mail.Multipart;
 
 import nablarch.common.mail.MailAttachedFileTable.MailAttachedFile;
 
@@ -30,7 +30,7 @@ public class HtmlMailContentCreatorTest {
     /**
      * 添付ファイルなしのコンテンツ作成を確認する。
      * <br />
-     * MimeMessageに設定後、{@link javax.mail.internet.MimeMessage#saveChanges() 変更を保存}した結果はHtmlMailSender側で実施する。
+     * MimeMessageに設定後、{@link jakarta.mail.internet.MimeMessage#saveChanges() 変更を保存}した結果はHtmlMailSender側で実施する。
      * <br />
      * 本テストでは論理的な構造が構築されているかを確認する。
      *
