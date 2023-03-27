@@ -1,45 +1,86 @@
 package please.change.me.common.authentication;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Test;
-
+import please.change.me.common.authentication.encrypt.PasswordEncryptor;
+import please.change.me.common.authentication.exception.AuthenticationException;
+import nablarch.core.repository.ObjectLoader;
 import nablarch.core.repository.SystemRepository;
-import nablarch.test.support.SystemRepositoryResource;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import java.lang.reflect.Constructor;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * {@link AuthenticationUtil}のテストクラス
  *
- * @author Ryo TANAKA
+ * @author Nabu Rakutaro
  */
-public class AuthenticationUtilTest {
+class AuthenticationUtilTest {
 
-    @ClassRule
-    public static final SystemRepositoryResource RESOURCE = new SystemRepositoryResource(null);
+    /**
+     * テスト開始時点の {@link PasswordAuthenticator}
+     */
+    private static PasswordAuthenticator defaultAuthenticator;
+
+    /**
+     * テスト開始時点の {@link PasswordEncryptor}
+     */
+    private static PasswordEncryptor defaultPasswordEncryptor;
+
+    /**
+     * {@code authenticator} と {@code passwordEncryptor} を {@link SystemRepository} の
+     * "authenticator", "passwordEncryptor" に登録する。
+     *
+     * @param authenticator {@link SystemRepository} に登録する {@link PasswordAuthenticator}
+     * @param encryptor {@link SystemRepository} に登録する {@link PasswordEncryptor}
+     */
+    private static void setupAuthenticationComponents(final PasswordAuthenticator authenticator, final PasswordEncryptor encryptor) {
+        SystemRepository.load(new ObjectLoader() {
+            @Override
+            public Map<String, Object> load() {
+                return new HashMap<String, Object>() {
+                    {
+                        put("authenticator", authenticator);
+                        put("passwordEncryptor", encryptor);
+                    }
+                };
+            }
+        });
+    }
 
     /**
      * Delegateを確認するテストのため、 {@link SystemRepository} に、
      * {@code authenticator} として {@link MockAuthenticator} を、
      * {@code passwordEncryptor} として {@link MockPasswordEncryptor} を登録する。
      */
-    @BeforeClass
-    public static void setupRepository() {
-        RESOURCE.addComponent("authenticator", new MockAuthenticator());
-        RESOURCE.addComponent("passwordEncryptor", new MockPasswordEncryptor());
+    @BeforeAll
+    static void setupRepository() {
+        defaultAuthenticator = SystemRepository.get("authenticator");
+        defaultPasswordEncryptor = SystemRepository.get("passwordEncryptor");
+
+        setupAuthenticationComponents(new MockAuthenticator(), new MockPasswordEncryptor());
+    }
+
+    /**
+     * テスト終了時に、 {@link SystemRepository} に登録されている "authenticator" と "passwordEncryptor" を
+     * 元の値に戻す。
+     */
+    @AfterAll
+    static void revertRepository() {
+        if (defaultAuthenticator != null && defaultPasswordEncryptor != null) {
+            setupAuthenticationComponents(defaultAuthenticator, defaultPasswordEncryptor);
+        }
     }
 
     /**
      * {@link AuthenticationUtil#encryptPassword(String, String)}のテスト
      */
     @Test
-    public void testEncryptPassword() {
+    void testEncryptPassword() {
         MockPasswordEncryptor sut = SystemRepository.get("passwordEncryptor");
         sut.called(1);
         sut.calledWith("salt", "password");
@@ -51,7 +92,7 @@ public class AuthenticationUtilTest {
      * {@link AuthenticationUtil#authenticate(String, String)}のテスト
      */
     @Test
-    public void testAuthenticate() {
+    void testAuthenticate() {
         MockAuthenticator sut = SystemRepository.get("authenticator");
         sut.called(1);
         sut.calledWith("userId", "password");
@@ -60,14 +101,14 @@ public class AuthenticationUtilTest {
     }
 
     /**
-     * テスト用の {@link Authenticator}
+     * テスト用の {@link PasswordAuthenticator}
      * <p/>
      * 呼び出された回数と、引数として渡されたユーザID・パスワードを検証する。
      *
-     * @author Ryo TANAKA
+     * @author Nabu Rakutaro
      * @version 1.4
      */
-    private static class MockAuthenticator extends MockSupport implements Authenticator {
+    private static class MockAuthenticator extends MockSupport implements PasswordAuthenticator {
 
         @Override
         public void authenticate(String userId, String password) throws AuthenticationException {
@@ -81,7 +122,7 @@ public class AuthenticationUtilTest {
      * <p/>
      * 呼び出された回数と、引数として渡されたソルト取得元・パスワードを検証する。
      *
-     * @author Ryo TANAKA
+     * @author Nabu Rakutaro
      * @version 1.4
      */
     private static class MockPasswordEncryptor extends MockSupport implements PasswordEncryptor {
@@ -99,7 +140,7 @@ public class AuthenticationUtilTest {
      * <p/>
      * 呼び出された回数と引数を検証するためのメソッドを定義している。
      *
-     * @author Ryo TANAKA
+     * @author Nabu Rakutaro
      * @version 1.4
      */
     private static abstract class MockSupport {
@@ -164,8 +205,8 @@ public class AuthenticationUtilTest {
         void initialize() {
             this.actualCalled = 0;
             this.expectedCall = 0;
-            this.calledWith = new ArrayList<List<String>>();
-            this.expectedParams = new ArrayList<List<String>>();
+            this.calledWith = new ArrayList<>();
+            this.expectedParams = new ArrayList<>();
         }
 
         /**
@@ -182,7 +223,7 @@ public class AuthenticationUtilTest {
      * @throws Exception コンストラクタの呼び出しに失敗した場合
      */
     @Test
-    public void testConstructor() throws Exception {
+    void testConstructor() throws Exception {
         Constructor<AuthenticationUtil> constructor = AuthenticationUtil.class.getDeclaredConstructor();
         constructor.setAccessible(true);
         constructor.newInstance();

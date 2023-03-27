@@ -1,11 +1,15 @@
 package please.change.me.common.authentication;
 
+import please.change.me.common.authentication.encrypt.PasswordEncryptor;
+import please.change.me.common.authentication.exception.AuthenticationFailedException;
+import please.change.me.common.authentication.exception.PasswordExpiredException;
+import please.change.me.common.authentication.exception.UserIdLockedException;
 import nablarch.core.repository.SystemRepository;
 
 /**
  * 認証関連の処理のユーティリティクラス。
  *
- * @author Ryo TANAKA
+ * @author Nabu Rakutaro
  */
 public final class AuthenticationUtil {
 
@@ -44,7 +48,7 @@ public final class AuthenticationUtil {
     /**
      * ユーザを認証する。
      * <p/>
-     * ユーザの認証に使用する {@link Authenticator} は、 {@link SystemRepository} から
+     * ユーザの認証に使用する {@link PasswordAuthenticator} は、 {@link SystemRepository} から
      * {@value #AUTHENTICATOR} というコンポーネント名で取得する。
      *
      * @param userId ユーザID
@@ -52,11 +56,11 @@ public final class AuthenticationUtil {
      * @throws AuthenticationFailedException 認証に失敗した場合
      * @throws UserIdLockedException ユーザIDがロックされていた場合
      * @throws PasswordExpiredException パスワードの有効期限が切れていた場合
-     * @see Authenticator#authenticate(String, String)
+     * @see PasswordAuthenticator#authenticate(String, String)
      */
     public static void authenticate(String userId, String password)
-            throws AuthenticationFailedException, UserIdLockedException, PasswordExpiredException {
-        Authenticator authenticator = SystemRepository.get(AUTHENTICATOR);
+        throws AuthenticationFailedException, UserIdLockedException, PasswordExpiredException {
+        PasswordAuthenticator authenticator = SystemRepository.get(AUTHENTICATOR);
         authenticator.authenticate(userId, password);
     }
 }

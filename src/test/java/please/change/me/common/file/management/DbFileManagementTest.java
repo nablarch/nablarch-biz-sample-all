@@ -1,69 +1,118 @@
 package please.change.me.common.file.management;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.sql.Blob;
-
-import javax.sql.rowset.serial.SerialBlob;
-
-import please.change.me.common.file.management.entity.FileControl;
-
 import nablarch.common.idgenerator.IdFormatter;
 import nablarch.common.idgenerator.IdGenerator;
 import nablarch.core.db.connection.ConnectionFactory;
 import nablarch.core.db.connection.DbConnectionContext;
-import nablarch.core.db.connection.TransactionManagerConnection;
 import nablarch.core.repository.SystemRepository;
+import nablarch.core.repository.di.DiContainer;
+import nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader;
 import nablarch.core.util.BinaryUtil;
 import nablarch.core.util.FileUtil;
 import nablarch.fw.web.upload.PartInfo;
-import nablarch.test.support.SystemRepositoryResource;
-import nablarch.test.support.db.helper.DatabaseTestRunner;
-import nablarch.test.support.db.helper.VariousDbTestHelper;
+import org.h2.jdbcx.JdbcDataSource;
+import org.junit.jupiter.api.*;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import javax.sql.rowset.serial.SerialBlob;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.sql.*;
 
-@RunWith(DatabaseTestRunner.class)
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 public class DbFileManagementTest {
-    /**テスト対象が使用するコネクション*/
-    private TransactionManagerConnection tmConn;
 
-    @Rule
-    public final SystemRepositoryResource resouce = new SystemRepositoryResource(
-            "please/change/me/common/file/management/dbFileManagement.xml");
+    /**
+     * テストデータなどをセットアップするためのコネクション
+     */
+    private static Connection con;
+
+    /** xml（テスト用設定ファイル）の配置ディレクトリ */
+    private static final String COMPONENT_BASE_PATH = "please/change/me/common/file/management/";
+
     /**
      * セットアップ。
      *
      * テスト時に使用するデータベース接続の生成及びテスト用のテーブルのセットアップを行う。
      *
+     * @throws SQLException 例外
      */
-    @BeforeClass
-    public static void classSetup() {
+    @BeforeAll
+    static void classSetup() throws SQLException {
+
+        JdbcDataSource ds = new JdbcDataSource();
+        ds.setURL("jdbc:h2:~/nablarch_test");
+        ds.setUser("sa");
+        ds.setPassword("");
+        con = ds.getConnection();
+
         // setup test table
-        VariousDbTestHelper.createTable(FileControl.class);
+        Statement statement = con.createStatement();
+        statement.execute("DROP TABLE IF EXISTS FILE_CONTROL CASCADE CONSTRAINTS");
+
+        statement.execute("CREATE TABLE FILE_CONTROL("
+                + " FILE_CONTROL_ID CHAR(18) NOT NULL,"
+                + " FILE_OBJECT BLOB NOT NULL,"
+                + " SAKUJO_SGN CHAR(1) NOT NULL,"
+                + " PRIMARY KEY (FILE_CONTROL_ID))"
+        );
+
+        statement.close();
     }
 
-    @Before
-    public void setUp(){
-        ConnectionFactory factory = SystemRepository.get("connectionFactory");
-        tmConn = factory.getConnection("test");
-        DbConnectionContext.setConnection(tmConn);
-    }
-    
-    @After
-    public void tearDown(){
-        tmConn.rollback();
-        tmConn.terminate();
+    @BeforeEach
+    void setUp() throws Exception {
+
         DbConnectionContext.removeConnection();
+
+        PreparedStatement truncate = con.prepareStatement("truncate table FILE_CONTROL");
+        truncate.execute();
+        truncate.close();
+
+        // テストデータのセットアップ
+        // 有効なレコード
+        PreparedStatement insert = con.prepareStatement("insert into FILE_CONTROL values (?, ?, ?)");
+        insert.setString(1, "900000000000000001");
+        insert.setBlob(2, new SerialBlob("abc".getBytes("utf-8")));
+        insert.setString(3, "0");
+        insert.execute();
+
+        // 論理削除済みレコード
+        insert.setString(1, "900000000000000002");
+        insert.setBlob(2, new SerialBlob("def".getBytes("utf-8")));
+        insert.setString(3, "1");
+        insert.execute();
+
+        insert.close();
+        con.commit();
+
+        XmlComponentDefinitionLoader loader = new XmlComponentDefinitionLoader(
+                COMPONENT_BASE_PATH + "dbFileManagement.xml");
+        SystemRepository.load(new DiContainer(loader));
+
+        ConnectionFactory factory = SystemRepository.get("connectionFactory");
+        DbConnectionContext.setConnection("transaction", factory.getConnection("transaction"));
+    }
+
+    @AfterEach
+    void tearDown() {
+        DbConnectionContext.getTransactionManagerConnection("transaction").commit();
+        DbConnectionContext.removeConnection();
+    }
+
+    /**
+     * クラス終了時の処理。
+     *
+     * @throws Exception 例外
+     */
+    @AfterAll
+    static void classDown() throws Exception {
+        if (con != null) {
+            con.close();
+        }
     }
 
     /**
@@ -72,83 +121,47 @@ public class DbFileManagementTest {
      */
     @Test
     public void testFindExist() throws Exception {
-        prepareDbData();
+        Blob blob = FileManagementUtil.find("900000000000000001");
+        byte[] byteArray = BinaryUtil.toByteArray(blob.getBinaryStream());
 
-        //存在するファイル管理IDを指定した場合は、ファイルの内容を取得できる。
-        InputStream inputStream = null;
-        try{
-            Blob blob = FileManagementUtil.find("900000000000000001");
-            byte[] byteArray = BinaryUtil.toByteArray(blob.getBinaryStream());
-            assertThat(new String(byteArray, "UTF-8"), is("abc"));
-        } finally {
-            FileUtil.closeQuietly(inputStream);
-        }
-    }
-
-    /**
-     * 論理削除済みデータを取得しようとすると、例外が送出されるテスト。
-     * @throws Exception
-     */
-    @Test(expected = RuntimeException.class)
-    public void testFindDeleted() throws Exception {
-        prepareDbData();
-
-        FileManagementUtil.find("900000000000000002");
-    }
-
-    /**
-     * 該当するファイル管理IDが存在しない際にデータ取得をすると、例外が送出されるテスト。
-     * @throws Exception
-     */
-    @Test(expected = RuntimeException.class)
-    public void testFind() throws Exception {
-        prepareDbData();
-
-        FileManagementUtil.find("900000000000000003");
+        // 存在するファイル管理IDを指定した場合は、ファイルの内容を取得できる。
+        assertThat(new String(byteArray, "UTF-8"), is("abc"));
     }
 
     /**
      * 有効なレコードに対するデータ削除のテスト。<br>
      * 
      * データ削除後、findでレコードが取得できずに例外が送出されることによって、レコードの削除を確認する。
-     * @throws Exception
      */
     @Test
-    public void testDeleteNormal() throws Exception {
-        prepareDbData();
-        
-        //存在するファイル管理IDを指定した場合は、レコードを削除できることを確認する。
-        
-        String fileId = "900000000000000001";
-        FileManagementUtil.delete(fileId);
+    public void testDeleteNormal() {
+        // 存在するファイル管理IDを指定した場合は、レコードを削除できることを確認する。
+        String fileControlId = "900000000000000001";
+        FileManagementUtil.delete(fileControlId);
+
+        // 削除済みのため例外が発生する。
+        assertThrows(RuntimeException.class, () -> FileManagementUtil.find(fileControlId));
     }
 
     /**
      * 論理削除済みデータを削除しようとした際に、例外が送出されるテスト。
-     * @throws Exception
      */
-    @Test(expected = RuntimeException.class)
-    public void testDeleteDeleted() throws Exception {
-        prepareDbData();
-
-        //論理削除されたデータの場合、実行時例外が送出される。
-        String fileId = "900000000000000002";
-        FileManagementUtil.delete(fileId);
+    @Test
+    public void testDeleteDeleted() {
+        // 論理削除されたデータの場合、実行時例外が送出される。
+        String fileControlId = "900000000000000002";
+        assertThrows(RuntimeException.class, () -> FileManagementUtil.delete(fileControlId));
     }
 
     /**
      * 存在しないレコードを削除しようとした際に、例外が送出されるテスト。
-     * @throws Exception
      */
-    @Test(expected = RuntimeException.class)
-    public void testDelete() throws Exception {
-        prepareDbData();
-
-        //該当するファイル管理IDが存在しない場合、実行時例外が送出される。
-        String fileId = "900000000000000003";
-        FileManagementUtil.delete(fileId);
+    @Test
+    public void testDelete() {
+        // 該当するファイル管理IDが存在しない場合、実行時例外が送出される。
+        String fileControlId = "900000000000000003";
+        assertThrows(RuntimeException.class, () -> FileManagementUtil.delete(fileControlId));
     }
-
 
     /**
      * Fileオブジェクト登録のテスト(正常系)。
@@ -156,23 +169,18 @@ public class DbFileManagementTest {
      */
     @Test
     public void testSaveFileNormal() throws Exception {
-        //ファイル登録のテストに使用するファイルを作成。
+        // ファイル登録のテストに使用するファイルを作成。
         File uploadFile = prepareUploadFile("abcde");
         
-        //Fileオブジェクトを登録する。
+        // Fileオブジェクトを登録する。
         MockIdGenerator.setReturnId("4");
-        String fileId = FileManagementUtil.save(uploadFile);
-        assertThat(fileId, is("000000000000000004"));
+        String fileControlId = FileManagementUtil.save(uploadFile);
+        assertThat(fileControlId, is("000000000000000004"));
 
-        //登録したオブジェクトを取り出せるか確認する。
-        InputStream inputStream = null;
-        try{
-            Blob blob = FileManagementUtil.find(fileId);
-            byte[] byteArray = BinaryUtil.toByteArray(blob.getBinaryStream());
-            assertThat(new String(byteArray, "UTF-8"), is("abcde"));
-        }finally{
-            FileUtil.closeQuietly(inputStream);
-        }
+        // 登録したオブジェクトを取り出せるか確認する。
+        Blob blob = FileManagementUtil.find(fileControlId);
+        byte[] byteArray = BinaryUtil.toByteArray(blob.getBinaryStream());
+        assertThat(new String(byteArray, "UTF-8"), is("abcde"));
     }
 
     /**
@@ -181,58 +189,51 @@ public class DbFileManagementTest {
      */
     @Test
     public void testSavePartInfoNormal() throws Exception {
-        //ファイル登録のテストに使用するファイルを作成。
+        // ファイル登録のテストに使用するファイルを作成。
         File uploadFile = prepareUploadFile("abcde");
         
-        //PartInfoを登録する。
+        // PartInfoを登録する。
         PartInfo partInfo = PartInfo.newInstance("dbFileManagement.txt");
         partInfo.setSavedFile(uploadFile);
         partInfo.setSize(5);
+
         MockIdGenerator.setReturnId("1");
         String fileId = FileManagementUtil.save(partInfo);
         assertThat(fileId, is("000000000000000001"));
-        //登録したオブジェクトを取り出せるか確認する。
+        // 登録したオブジェクトを取り出せるか確認する。
         InputStream inputStream = null;
-        try{
-            Blob blob = FileManagementUtil.find(fileId);
-            byte[] byteArray = BinaryUtil.toByteArray(blob.getBinaryStream());
-            assertThat(new String(byteArray, "UTF-8"), is("abcde"));
-        } finally {
-            FileUtil.closeQuietly(inputStream);
-        }
+        Blob blob = FileManagementUtil.find(fileId);
+        byte[] byteArray = BinaryUtil.toByteArray(blob.getBinaryStream());
+        assertThat(new String(byteArray, "UTF-8"), is("abcde"));
     }
 
     /**
      * ディレクトリを登録しようとした場合に例外が送出されるテスト。
-     * @throws Exception
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testSaveDirectory() throws Exception {
+    @Test
+    public void testSaveDirectory() {
         File directory = new File(".");
-        //ファイル以外(ここではディレクトリ)を登録しようとした場合。
-        FileManagementUtil.save(directory);
+        assertThrows(IllegalArgumentException.class, () -> FileManagementUtil.save(directory));
     }
 
     /**
      * nullのFileを登録しようとした際に、例外が送出されるテスト。
      * @throws Exception
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testSaveNullFile() throws Exception {
-        //nullのFileを登録しようとした場合
-        File file = null;
-        FileManagementUtil.save(file);
+    @Test
+    public void testSaveNullFile() {
+        File nullFile = null;
+        assertThrows(IllegalArgumentException.class, () -> FileManagementUtil.save(nullFile));
     }
 
     /**
      * nullのpartInfoを登録しようとした際に、例外が送出されるテスト。
      * @throws Exception
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void testSaveIllegal() throws Exception {
-        //nullのPartInfoを登録しようとした場合
-        PartInfo partInfo = null;
-        FileManagementUtil.save(partInfo);
+    @Test
+    public void testSaveIllegal() {
+        PartInfo nullPartInfo = null;
+        assertThrows(IllegalArgumentException.class, () -> FileManagementUtil.save(nullPartInfo));
     }
 
     /**
@@ -242,10 +243,10 @@ public class DbFileManagementTest {
     @Test
     public void testSaveFileSizeNormal() throws Exception {
         DbFileManagement dbFileManagement = SystemRepository.get("fileManagement");
-        //テストのためにファイルサイズを小さくする。
+        // テストのためにファイルサイズを小さくする。
         dbFileManagement.setMaxFileSize(1);
         
-        //登録可能な最大サイズ
+        // 登録可能な最大サイズ
         File oneByteFile = prepareUploadFile("a");
         MockIdGenerator.setReturnId("2");
         String fileId = dbFileManagement.save(oneByteFile);
@@ -256,15 +257,15 @@ public class DbFileManagementTest {
      * 制限サイズよりファイルが大きい際に、File登録に失敗することを確認するテスト。
      * @throws Exception
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testSaveFileSizeIllegal() throws Exception {
         DbFileManagement dbFileManagement = SystemRepository.get("fileManagement");
-        //テストのためにファイルサイズを小さくする。
+        // テストのためにファイルサイズを小さくする。
         dbFileManagement.setMaxFileSize(1);
-        
-        //登録可能な最大サイズを1超えた場合
+
+        // 登録可能な最大サイズを1超えた場合
         File twoByteFile = prepareUploadFile("ab");
-        dbFileManagement.save(twoByteFile);
+        assertThrows(IllegalArgumentException.class, () -> dbFileManagement.save(twoByteFile));
     }
 
     /**
@@ -292,7 +293,7 @@ public class DbFileManagementTest {
      * 制限サイズと同じサイズの際に、PartInfoが登録できることを確認するテスト。
      * @throws Exception
      */
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testSavePartInfoSizeIllegal() throws Exception {
         DbFileManagement dbFileManagement = SystemRepository.get("fileManagement");
         //テストのためにファイルサイズを小さくする。
@@ -304,32 +305,17 @@ public class DbFileManagementTest {
         PartInfo partInfo = PartInfo.newInstance(twoByteFile.getName());
         partInfo.setSavedFile(twoByteFile);
         partInfo.setSize((int) twoByteFile.length());
-        
-        dbFileManagement.save(partInfo);
+
+        assertThrows(RuntimeException.class, () -> dbFileManagement.save(partInfo));
     }
 
     /**
      * コンポーネント定義が行われていない場合のテスト。
-     * @throws Exception
      */
-    @Test(expected = IllegalStateException.class)
-    public void testUninitialized() throws Exception{
+    @Test
+    public void testUninitialized() {
         SystemRepository.clear();
-        FileManagementUtil.find("900000000000000001");
-    }
-
-    /**
-     * 正常系用のDBテストデータを用意する処理。
-     */
-    private void prepareDbData() throws Exception {
-        Blob blob1 = new SerialBlob("abc".getBytes("utf-8"));
-        Blob blob2 = new SerialBlob("def".getBytes("utf-8"));
-        VariousDbTestHelper.setUpTable(
-                //有効なレコード
-                new FileControl("900000000000000001", blob1, "0"),
-                //論理削除済みレコード
-                new FileControl("900000000000000002", blob2, "1")
-        );
+        assertThrows(IllegalStateException.class, () -> FileManagementUtil.find("900000000000000001"));
     }
 
     /**

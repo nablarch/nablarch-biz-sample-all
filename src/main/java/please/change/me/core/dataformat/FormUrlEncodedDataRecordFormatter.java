@@ -93,6 +93,7 @@ public class FormUrlEncodedDataRecordFormatter extends DataRecordFormatterSuppor
      * また、入力ストリームをBufferedReaderにラップする処理および、
      * 出力ストリームをBufferedWriterにラップする処理を行う。
      */
+    @Override
     public DataRecordFormatter initialize() {        
         super.initialize();
         if (source != null && reader == null) {  // reader生成済みの場合は初期化しない
@@ -159,11 +160,7 @@ public class FormUrlEncodedDataRecordFormatter extends DataRecordFormatterSuppor
             value = URLDecoder.decode(value, encoding.name());
             
             // 同一キーで複数個存在する可能性があるのでリストにする
-            List<String> list = map.get(key);
-            if (list == null) {
-                list = new ArrayList<String>();
-                map.put(key, list);
-            }
+            List<String> list = map.computeIfAbsent(key, k -> new ArrayList<>());
             list.add(value);
         }
 
@@ -187,6 +184,10 @@ public class FormUrlEncodedDataRecordFormatter extends DataRecordFormatterSuppor
         Map<String, List<String>> map = readAllParameters();
         
         // フィールドを精査、レコードに格納する
+        return toDataRecord(map);
+    }
+
+    private DataRecord toDataRecord(Map<String, List<String>> map) {
         DataRecord record = new DataRecord();
         RecordDefinition recordDef = getDefinition().getRecords().get(0); // シングルレコードフォーマットのみ
         for (FieldDefinition fieldDef : recordDef.getFields()) {
@@ -196,34 +197,20 @@ public class FormUrlEncodedDataRecordFormatter extends DataRecordFormatterSuppor
                 // 必須項目が存在しない
                 throw new InvalidDataFormatException(fieldName + " is required");
             }
-            
+
             // まず値を変換
-            List<Object> convertedList = new ArrayList<Object>();
-            if (list == null) {
-                convertedList.add(convertToField(null, fieldDef));
-            } else {
-                for (String str : list) {
-                    convertedList.add(convertToField(str, fieldDef));
-                }
-            }
-            
+            List<Object> convertedList = toConvertedList(list, fieldDef);
+
             if (fieldDef.isArray()) {
                 // 配列範囲チェック
                 if (fieldDef.getMinArraySize() > convertedList.size() || fieldDef.getMaxArraySize() < convertedList.size()) {
                     throw new InvalidDataFormatException(fieldName + " is out of range array");
                 }
-                
+
                 // DataRecordの配列はString配列のみのため、変換する
-                String[] array = new String[convertedList.size()];
-                for (int i = 0; i < convertedList.size(); i++) {
-                    Object obj = convertedList.get(i);
-                    array[i] = (obj == null)
-                             ? null
-                             : obj.toString();
-                }
-                
+                String[] array = toArray(convertedList);
                 record.put(fieldName, array);
-                
+
             } else {
                 // 配列以外でデータが複数の場合のチェック
                 if (convertedList.size() > 1) {
@@ -234,6 +221,29 @@ public class FormUrlEncodedDataRecordFormatter extends DataRecordFormatterSuppor
         }
 
         return record;
+    }
+
+    private List<Object> toConvertedList(List<String> list, FieldDefinition fieldDef) {
+        List<Object> convertedList = new ArrayList<>();
+        if (list == null) {
+            convertedList.add(convertToField(null, fieldDef));
+        } else {
+            for (String str : list) {
+                convertedList.add(convertToField(str, fieldDef));
+            }
+        }
+        return convertedList;
+    }
+
+    private String[] toArray(List<Object> convertedList) {
+        String[] array = new String[convertedList.size()];
+        for (int i = 0; i < convertedList.size(); i++) {
+            Object obj = convertedList.get(i);
+            array[i] = (obj == null)
+                    ? null
+                    : obj.toString();
+        }
+        return array;
     }
 
     /**
