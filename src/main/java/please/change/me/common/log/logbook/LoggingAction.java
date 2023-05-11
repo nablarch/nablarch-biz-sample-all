@@ -1,5 +1,6 @@
 package please.change.me.common.log.logbook;
 
+import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.zalando.logbook.Logbook;
@@ -21,10 +22,16 @@ import java.util.List;
 @Path("/logbook")
 public class LoggingAction {
 
+    /**
+     * LogbookでGETリクエストのログを出力する。
+     *
+     * @return モックからのレスポンスデータ
+     * @throws JacksonException JSON形式のデータ変換に失敗した場合
+     */
     @GET
     @Path("/get")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<User> getAll() throws Exception{
+    public List<User> getAll() throws JacksonException {
         // Logbookを生成（デフォルト設定）
         Logbook logbook = Logbook.builder().build();
 
@@ -45,10 +52,16 @@ public class LoggingAction {
         return responseBody;
     }
 
+    /**
+     * LogbookでGETリクエストのログをマスク処理した上で出力する。
+     *
+     * @return モックからのレスポンスデータ
+     * @throws JacksonException JSON形式のデータ変換に失敗した場合
+     */
     @GET
     @Path("/get/mask")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<User> getMasked() throws Exception{
+    public List<User> getMasked() throws JacksonException{
         // Logbookを生成（ボディにある配列内の id と username 項目をマスクする設定）
         Logbook logbook = Logbook.builder()
                 .bodyFilter(JsonPathBodyFilters.jsonPath("$[*].id").replace("*****"))
@@ -72,11 +85,17 @@ public class LoggingAction {
         return responseBody;
     }
 
+    /**
+     * LogbookでPOSTリクエストのログを出力する。
+     *
+     * @return モックからのレスポンスデータ
+     * @throws JacksonException JSON形式のデータ変換に失敗した場合
+     */
     @POST
     @Path("/post")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public User post(User input) throws Exception {
+    public User post(User input) throws JacksonException {
         // Logbookを生成（デフォルト設定）
         Logbook logbook = Logbook.builder().build();
 
@@ -101,11 +120,17 @@ public class LoggingAction {
         return responseBody;
     }
 
+    /**
+     * LogbookでPOSTリクエストのログをマスク処理した上で出力する。
+     *
+     * @return モックからのレスポンスデータ
+     * @throws JacksonException JSON形式のデータ変換に失敗した場合
+     */
     @POST
     @Path("/post/mask")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public User postMasked(User input) throws Exception {
+    public User postMasked(User input) throws JacksonException {
         // Logbookを生成（ボディの id 項目をマスクする設定）
         Logbook logbook = Logbook.builder()
                 .bodyFilter(JsonPathBodyFilters.jsonPath("$.id").replace("*****"))
