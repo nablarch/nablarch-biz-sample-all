@@ -47,7 +47,7 @@ public class LoggingAction {
 
         // レスポンスをオブジェクトに変換
         String json = response.readEntity(String.class);
-        List<User> responseBody = new ObjectMapper().readValue(json, new TypeReference<>() {});
+        List<User> responseBody = new ObjectMapper().readValue(json, new TypeReference<List<User>>() {});
 
         return responseBody;
     }
@@ -80,7 +80,7 @@ public class LoggingAction {
 
         // レスポンスをオブジェクトに変換
         String json = response.readEntity(String.class);
-        List<User> responseBody = new ObjectMapper().readValue(json, new TypeReference<>() {});
+        List<User> responseBody = new ObjectMapper().readValue(json, new TypeReference<List<User>>() {});
 
         return responseBody;
     }
