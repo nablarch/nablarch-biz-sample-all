@@ -1,10 +1,10 @@
 package please.change.me.common.log.logbook;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.zalando.logbook.Logbook;
 import org.zalando.logbook.jaxrs.LogbookClientFilter;
+import org.zalando.logbook.json.JsonPathBodyFilters;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -18,59 +18,117 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-import static org.zalando.logbook.json.JsonPathBodyFilters.jsonPath;
-
-@Path("/logging")
+@Path("/logbook")
 public class LoggingAction {
 
-    /** ObjectMapper（未定義のプロパティは無視するように設定） */
-    private final ObjectMapper objectMapper = new ObjectMapper()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
     @GET
-    @Path("/")
+    @Path("/get")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Content> get() throws Exception{
-        // Logbookを生成（マスクしない場合）
+    public List<User> getAll() throws Exception{
+        // Logbookを生成（デフォルト設定）
         Logbook logbook = Logbook.builder().build();
 
-        // Jersey ClientのFilterにLogbookを登録
+        // JAX-RSクライアントにLogbookを登録
         Client client = ClientBuilder.newClient()
                 .register(new LogbookClientFilter(logbook));
 
-        // Jersey Clientでリクエスト送信
+        // JAX-RSクライアントでリクエスト送信
         Response response = client.target("http://localhost:3000")
-                .path("posts")
+                .path("/users")
                 .request()
                 .get();
 
         // レスポンスをオブジェクトに変換
         String json = response.readEntity(String.class);
-        return objectMapper.readValue(json, new TypeReference<List<Content>>() {});
+        List<User> responseBody = new ObjectMapper().readValue(json, new TypeReference<>() {});
+
+        return responseBody;
     }
 
-    @POST
-    @Path("/")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @GET
+    @Path("/get/mask")
     @Produces(MediaType.APPLICATION_JSON)
-    public User post(UserInput userInput) throws Exception {
-        // Logbookを生成（マスクする場合）
+    public List<User> getMasked() throws Exception{
+        // Logbookを生成（ボディにある配列内の id と username 項目をマスクする設定）
         Logbook logbook = Logbook.builder()
-                .bodyFilter(jsonPath("$.id").replace("*****"))
+                .bodyFilter(JsonPathBodyFilters.jsonPath("$[*].id").replace("*****"))
+                .bodyFilter(JsonPathBodyFilters.jsonPath("$[*].username").replace("*****"))
                 .build();
 
-        // Jersey ClientのFilterにLogbookを登録
+        // JAX-RSクライアントにLogbookを登録
         Client client = ClientBuilder.newClient()
                 .register(new LogbookClientFilter(logbook));
 
-        // Jersey Clientでリクエスト送信
+        // JAX-RSクライアントでリクエスト送信
         Response response = client.target("http://localhost:3000")
-                .path("users")
+                .path("/users")
                 .request()
-                .post(Entity.entity(userInput, MediaType.APPLICATION_JSON_TYPE));
+                .get();
 
         // レスポンスをオブジェクトに変換
         String json = response.readEntity(String.class);
-        return objectMapper.readValue(json, User.class);
+        List<User> responseBody = new ObjectMapper().readValue(json, new TypeReference<>() {});
+
+        return responseBody;
+    }
+
+    @POST
+    @Path("/post")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public User post(User input) throws Exception {
+        // Logbookを生成（デフォルト設定）
+        Logbook logbook = Logbook.builder().build();
+
+        // JAX-RSクライアントにLogbookを登録
+        Client client = ClientBuilder.newClient()
+                .register(new LogbookClientFilter(logbook));
+
+        User requestBody = new User();
+        requestBody.setId(input.getId());
+        requestBody.setUsername(input.getUsername());
+
+        // JAX-RSクライアントでリクエスト送信
+        Response response = client.target("http://localhost:3000")
+                .path("/users")
+                .request()
+                .post(Entity.json(requestBody));
+
+        // レスポンスをオブジェクトに変換
+        String json = response.readEntity(String.class);
+        User responseBody = new ObjectMapper().readValue(json, User.class);
+
+        return responseBody;
+    }
+
+    @POST
+    @Path("/post/mask")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public User postMasked(User input) throws Exception {
+        // Logbookを生成（ボディの id 項目をマスクする設定）
+        Logbook logbook = Logbook.builder()
+                .bodyFilter(JsonPathBodyFilters.jsonPath("$.id").replace("*****"))
+                .build();
+
+        // JAX-RSクライアントにLogbookを登録
+        Client client = ClientBuilder.newClient()
+                .register(new LogbookClientFilter(logbook));
+
+        User requestBody = new User();
+        requestBody.setId(input.getId());
+        requestBody.setUsername(input.getUsername());
+
+        // JAX-RSクライアントでリクエスト送信
+        Response response = client.target("http://localhost:3000")
+                .path("/users")
+                .request()
+                .post(Entity.json(requestBody));
+
+        // レスポンスをオブジェクトに変換
+        String json = response.readEntity(String.class);
+        User responseBody = new ObjectMapper().readValue(json, User.class);
+
+        return responseBody;
     }
 }
