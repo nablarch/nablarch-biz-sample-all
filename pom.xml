@@ -6,7 +6,6 @@
 
   <groupId>com.nablarch.applib</groupId>
   <artifactId>nablarch-biz-sample-all</artifactId>
-  <version>5-NEXT-SNAPSHOT</version>
   <version>2.1.0</version>
   <description>業務サンプル</description>
 
