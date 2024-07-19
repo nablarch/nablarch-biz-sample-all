@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==========================================================================
+  メッセージ送信シミュレータの設定。
+
+  シミュレータは都度起動バッチとして起動する。
+=========================================================================== -->
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  ./component-configuration.xsd">
+
+  <config-file file="outgoing-simulator.config" />
+  <config-file file="outgoing/messageSenderSettings.config" />
+
+  <!-- テストデータ解析クラス -->
+  <import file="dataParser.xml"/>
+
+
+  <!-- デフォルト設定で使用するSyncMessageConvertorのコンポーネント定義 -->
+  <component name="defaultSyncMessageConvertor" class="nablarch.fw.messaging.SyncMessageConvertor" />
+
+  <!-- 日付関連設定（ログ出力などに必要） -->
+  <import file="common/date.xml" />
+
+  <!-- スレッド制御用ハンドラ -->
+  <component name="multiThreadExecutionHandler" class="nablarch.fw.handler.MultiThreadExecutionHandler">
+    <property name="concurrentNumber" value="${threadCount}" />
+  </component>
+
+  <!-- ハンドラーキュー構成 -->
+  <list name="handlerQueue">
+
+    <!-- ステータスコード変換ハンドラ -->
+    <component class="nablarch.fw.handler.StatusCodeConvertHandler" />
+
+    <!-- グローバルエラーハンドラ (メインスレッド用) -->
+    <component class="nablarch.fw.handler.GlobalErrorHandler" />
+
+    <!-- リクエストパスベースディスパッチハンドラ -->
+    <component class="nablarch.fw.handler.RequestPathJavaPackageMapping">
+      <property name="basePackage" value="please.change.me.simulator.outgoing.action.OutgoingSimulatorAction" />
+      <property name="immediate" value="false" />
+    </component>
+
+    <!-- スレッド実行ハンドラ -->
+    <component-ref name="multiThreadExecutionHandler" />
+
+
+    <!-- リクエストスレッドループハンドラ -->
+    <component class="nablarch.fw.handler.RequestThreadLoopHandler" />
+
+    <!-- データリードハンドラ -->
+    <component class="nablarch.fw.handler.DataReadHandler" />
+
+  </list>
+
+  <!-- HTTP通信用クライアント -->
+  <component name="defaultMessageSenderClient" class="nablarch.fw.messaging.realtime.http.client.HttpMessagingClient">
+  </component>
+
+  <component name="filePathSetting" class="nablarch.core.util.FilePathSetting">
+    <property name="basePathSettings">
+      <map>
+        <!-- リクエストデータ一覧CSVファイルの格納ディレクトリ -->
+        <entry key="input" value="file:${input-file-dir}" />
+        <entry key="format" value="file:${format-file-dir}" />
+        <entry key="sendSyncTestData" value="file:${input-file-dir}" />
+      </map>
+    </property>
+    <property name="fileExtensions">
+      <map>
+        <entry key="sendSyncTestData" value="xls" />
+        <entry key="format" value="fmt" />
+      </map>
+    </property>
+  </component>
+
+
+
+</component-configuration>

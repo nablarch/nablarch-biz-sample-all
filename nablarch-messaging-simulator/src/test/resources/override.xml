@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+リクエスト単体テストを実施する為の設定
+
+本設定ファイルでは、main/resource/配下の設定を上書きするための情報を定義する。
+-->
+<component-configuration
+        xmlns="http://tis.co.jp/nablarch/component-configuration"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ./component-configuration.xsd">
+
+    <import file="override/date.xml" />
+    <import file="override/file.xml" />
+</component-configuration>

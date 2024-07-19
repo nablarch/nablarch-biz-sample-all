@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==========================================================================
+  MOM同期応答メッセージ受信シミュレータの設定。
+
+  シミュレータは常駐バッチとして起動する。
+=========================================================================== -->
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  ./component-configuration.xsd">
+
+  <config-file file="incoming-mom-simulator.config" />
+
+  <!-- テストデータ解析クラス -->
+  <import file="dataParser.xml"/>
+
+  <!-- MOM同期応答メッセージ受信のメッセージングプロバイダ定義 -->
+  <import file="incoming/messagingProviders.xml" />
+
+  <!-- 日付関連設定（ログ出力などに必要） -->
+  <import file="common/date.xml" />
+
+  <!-- スレッド制御用ハンドラ -->
+  <component name="multiThreadExecutionHandler" class="nablarch.fw.handler.MultiThreadExecutionHandler">
+    <property name="concurrentNumber" value="${threadCount}" />
+  </component>
+
+  <!-- データリーダ定義 -->
+  <component name="dataReader"
+             class="nablarch.fw.messaging.reader.MessageReader">
+    <property name="receiveQueueName" value="${receiveQueueName}" />
+    <property name="readTimeout" value="${readTimeout}" />
+  </component>
+
+  <!-- ハンドラーキュー構成 -->
+  <list name="handlerQueue">
+
+    <!-- ステータスコード変換ハンドラ -->
+    <component class="nablarch.fw.handler.StatusCodeConvertHandler" />
+
+    <!-- グローバルエラーハンドラ (メインスレッド用) -->
+    <component class="nablarch.fw.handler.GlobalErrorHandler" />
+
+    <!-- スレッド実行ハンドラ -->
+    <component-ref name="multiThreadExecutionHandler" />
+
+    <!-- メッセージコンテキスト管理ハンドラ -->
+    <component class="nablarch.fw.messaging.handler.MessagingContextHandler" />
+
+    <!-- リクエストスレッドループハンドラ -->
+    <component class="nablarch.fw.handler.RequestThreadLoopHandler" />
+
+    <!-- データリードハンドラ -->
+    <component class="nablarch.fw.handler.DataReadHandler" />
+
+    <component class="please.change.me.simulator.incoming.mom.action.MomIncomingSimulateAction" />
+
+  </list>
+  <component name="filePathSetting" class="nablarch.core.util.FilePathSetting">
+    <property name="basePathSettings">
+      <map>
+        <!-- レスポンスデータの格納ディレクトリ -->
+        <entry key="sendSyncTestData" value="file:${input-file-dir}" />
+      </map>
+    </property>
+    <property name="fileExtensions">
+      <map>
+        <entry key="sendSyncTestData" value="xls" />
+      </map>
+    </property>
+  </component>
+  </component-configuration>

@@ -1,0 +1,13 @@
+#
+# 共通定義部
+#
+file-type:      "JSON"    # ファイルタイプ
+text-encoding:  "UTF-8"  # 文字エンコーディング
+
+#
+# 登録データ
+#
+[response]                                       #レスポンス
+1            failureCode                 N       #failureCode
+2            userInfoId                  N       #userInfoId
+3            dataKbn                     N       #dataKbn
