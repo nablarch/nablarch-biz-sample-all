@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ./component-configuration.xsd">
+
+  <!-- mainの設定情報を読み込み -->
+  <import file="statistics-batch.xml" />
+
+  <!-- テスト用の設定を上書き読み込み -->
+  <import file="override/override.xml" />
+</component-configuration>

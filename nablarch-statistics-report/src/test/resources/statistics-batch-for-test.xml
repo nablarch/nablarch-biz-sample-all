@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ./component-configuration.xsd">
+
+  <config-file file="statistics/statistics.config" />
+
+  <!-- ハンドラ設定 -->
+  <import file="statistics/handler.xml" />
+  <!-- ファイル設定 -->
+  <import file="statistics/file.xml" />
+  <!-- オンラインアクセスログ解析設定 -->
+  <import file="statistics/onlineStatisticsDefinition.xml" />
+  <import file="statistics/date.xml" />
+
+  <import file="override/override.xml" />
+
+</component-configuration>
+

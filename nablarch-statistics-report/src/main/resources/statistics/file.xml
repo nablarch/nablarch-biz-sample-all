@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../component-configuration.xsd">
+
+  <component name="filePathSetting" class="nablarch.core.util.FilePathSetting">
+    <property name="fileExtensions">
+      <map>
+        <entry key="format" value="fmt" />
+      </map>
+    </property>
+    <property name="basePathSettings">
+      <map>
+        <entry key="format" value="${format.file.dir}" />
+        <entry key="requestInfo.dir" value="${request-info.dir}" />
+        <entry key="requestInfoSummary.dir" value="${request-info-summary.dir}" />
+      </map>
+    </property>
+  </component>
+
+</component-configuration>

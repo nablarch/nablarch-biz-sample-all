@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+リクエストID抽出の設定
+-->
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../component-configuration.xsd">
+
+  <!-- リクエストID抽出設定-->
+  <component name="requestIdExtractor" class="nablarch.common.util.ShortRequestIdExtractor" />
+
+</component-configuration>

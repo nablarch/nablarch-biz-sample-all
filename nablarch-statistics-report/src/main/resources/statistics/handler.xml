@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../component-configuration.xsd">
+
+  <import file="statistics/handlers/statusCodeConvertHandler.xml" />
+  <import file="statistics/handlers/globalErrorHandler.xml" />
+  <import file="statistics/handlers/threadContextHandler.xml" />
+  <import file="statistics/handlers/fileRecordWriterDisposeHandler.xml" />
+  <import file="statistics/handlers/requestPathJavaPackageMapping.xml" />
+  <import file="statistics/handlers/multiThreadExecutionHandler.xml" />
+  <import file="statistics/handlers/loopHandler.xml" />
+  <import file="statistics/handlers/dataReadHandler.xml" />
+
+  <list name="handlerQueue">
+    <!-- メインスレッド -->
+    <component-ref name="statusCodeConvertHandler" />
+    <component-ref name="globalErrorHandler" />
+    <component-ref name="threadContextHandler" />
+    <component-ref name="fileRecordWriterDisposeHandler" />
+    <component-ref name="requestPathJavaPackageMapping" />
+    <component-ref name="multiThreadExecutionHandler" />
+    <!-- 子スレッド -->
+    <component-ref name="loopHandler" />
+    <component-ref name="dataReadHandler" />
+  </list>
+
+</component-configuration>

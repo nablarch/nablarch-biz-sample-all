@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../component-configuration.xsd">
+
+  <component name="onlineAccessLogParseDefinition"
+      class="please.change.me.statistics.action.settings.OnlineStatisticsDefinition">
+    <property name="accessLogDir" value="${access-log.dir}" />
+    <property name="accessLogFileNamePattern" value="${access-log.name.pattern}" />
+    <property name="accessLogParseDir" value="${access-log.parse.temp.dir}" />
+    <property name="endLogPattern" value="@@@@ END @@@@" />
+    <property name="includeRequestIdList">
+      <list>
+        <value>RGH6AAM105</value>
+        <value>RGH6AAR302</value>
+        <value>RGH6AAR402</value>
+      </list>
+    </property>
+    <property name="findRequestIdPattern" value="rid = \[([^\]]+)\]" />
+    <property name="findProcessNamePattern" value="process_name = \[([A-Z0-9]+)\]" />
+    <property name="findStatusCodePattern" value="status_code = \[([0-9]+)\]" />
+    <property name="logOutputDateTimeStartPosition" value="0" />
+    <property name="logOutputDateTimeEndPosition" value="23" />
+    <property name="logOutputDateTimeFormat" value="yyyy-MM-dd hh:mm:ss.SSS" />
+    <property name="findExecutionTimePattern" value="execution_time = \[([0-9]+)\]" />
+    <property name="requestInfoFormatName" value="requestInfo" />
+    <property name="requestInfoBaseName" value="requestInfo.dir" />
+
+    <property name="requestInfoSummaryBaseName" value="requestInfoSummary.dir" />
+    <property name="requestInfoSummaryFormatName" value="requestInfoAggregate" />
+    <property name="thresholdExecutionTime" value="1000" />
+    <property name="aggregatePeriod" value="${aggregate-period}" />
+
+  </component>
+</component-configuration>
+

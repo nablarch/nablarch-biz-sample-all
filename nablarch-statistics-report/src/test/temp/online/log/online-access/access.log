@@ -1,0 +1,7 @@
+2012-09-04 16:58:12.505 -INFO- ACC [11201209031658124614424] process_name = [11] @@@@ END @@@@ rid = [RGH6AAR402] uid = [2000000001] sid = [gGv8QGjQwXj7dp1s6JdhG6vxgXysQSM2pvGYkwLdQPTkhLqzgLBP!-1639425173!1346659088675] url = [http://10.34.4.103:80/platinum/action/ssH6AA/GH6AAR4Action/RGH6AAR401] status_code = [400] content_path = [servlet:///ssH6AA/GH6AAR401.jsp]
+	start_time     = [2012-09-03 16:58:12.463]
+	end_time       = [2012-09-03 16:58:12.505]
+	execution_time = [1024]
+	max_memory     = [1908932608]
+	free_memory    = [1350842488]
+
