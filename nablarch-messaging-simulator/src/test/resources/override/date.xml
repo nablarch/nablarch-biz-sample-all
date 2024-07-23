@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../component-configuration.xsd">
+
+
+  <component name="systemTimeProvider"
+      class="nablarch.test.FixedSystemTimeProvider">
+    <property name="fixedDate" value="20100913123456" />
+  </component>
+
+
+  <component name="businessDateProvider"
+      class="nablarch.test.FixedBusinessDateProvider">
+    <property name="fixedDate">
+      <map>
+        <entry key="00" value="20100914" />
+      </map>
+    </property>
+    <property name="defaultSegment" value="00" />
+  </component>
+
+
+</component-configuration>

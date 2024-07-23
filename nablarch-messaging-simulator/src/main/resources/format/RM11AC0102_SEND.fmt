@@ -1,0 +1,12 @@
+#
+# 共通定義部
+#
+file-type:      "XML"    # ファイルタイプ
+text-encoding:  "Shift-JIS"  # 文字エンコーディング
+
+#
+# 登録データ
+#
+[request]                                        #リクエスト
+1            a                           N       #a
+2            b                           N       #b

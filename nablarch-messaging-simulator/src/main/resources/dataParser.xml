@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+        xmlns="http://tis.co.jp/nablarch/component-configuration"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ./component-configuration.xsd">
+
+  <!-- TestDataParser -->
+  <component name="messagingTestDataParser" class="nablarch.test.core.reader.BasicTestDataParser">
+    <property name="testDataReader">
+      <component name="xlsReaderForPoi" class="nablarch.test.core.reader.PoiXlsReader"/>
+    </property>
+    <property name="interpreters" ref="messagingTestInterpreters" />
+  </component>
+
+  <!-- テストデータ記法の解釈を行うクラス群 -->
+  <list name="messagingTestInterpreters">
+    <!-- null変換 -->
+    <component class="nablarch.test.core.util.interpreter.NullInterpreter"/>
+    <!-- 引用符を外す -->
+    <component class="nablarch.test.core.util.interpreter.QuotationTrimmer"/>
+    <!-- 文字列増幅 -->
+    <component class="nablarch.test.core.util.interpreter.CompositeInterpreter">
+      <property name="interpreters">
+        <list>
+          <component class="nablarch.test.core.util.interpreter.BasicJapaneseCharacterInterpreter"/>
+        </list>
+      </property>
+    </component>
+  </list>
+  
+  
+</component-configuration>

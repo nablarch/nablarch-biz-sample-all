@@ -1,0 +1,15 @@
+#
+# 共通定義部
+#
+file-type:      "Variable"    # ファイルタイプ
+text-encoding:  "Shift-JIS"  # 文字エンコーディング
+record-separator: "\n"        # レコード区切り文字
+field-separator:  ","         # フィールド区切り文字
+
+#
+# 登録データ
+#
+[data]                                        #リクエスト
+1            a                           N       #a
+2            b                           N       #b
+3            c                           N       #c

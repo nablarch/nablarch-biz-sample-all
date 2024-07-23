@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+内蔵メッセージングサーバによるリクエスト単体テスト向け設定
+-->
+<component-configuration
+  xmlns="http://tis.co.jp/nablarch/component-configuration"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../component-configuration.xsd">
+
+  <!-- メッセージングプロバイダ定義 -->
+  <component name="defaultMessagingProvider"
+             class="nablarch.test.core.messaging.RequestTestingMessagingProvider" />
+
+  <!-- HTTP通信用クライアント -->
+  <component name="defaultMessageSenderClient" class="nablarch.test.core.messaging.RequestTestingMessagingClient">
+  </component>
+
+</component-configuration>

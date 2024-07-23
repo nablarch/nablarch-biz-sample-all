@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MOMメッセージング受信のメッセージングプロバイダ定義 -->
+<!-- 打鍵テスト用のメッセージングプロバイダ -->
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  ../component-configuration.xsd">
+  <!-- 設定ファイル -->
+  <config-file file="incoming/messagingProviders.config" />
+
+  <!-- ユニットテスト用の組み込みMOMを使用する設定 -->
+  <!-- キュー名設定について -->
+  <!-- 
+  1. サービス側にある要求受信キューの論理名
+  2. 要求受信キュー
+  3. 要求電文退避キュー
+  4. 応答受信キュー
+  5. 応答電文退避キュー
+   -->
+  <!-- defaultTimeToLiveは、 送信メッセージの有効期間 (テスト用のため消さない。)-->
+  <!--  
+  <component name="messagingProvider"
+             class="nablarch.test.core.messaging.EmbeddedMessagingProvider">
+    <property name="queueNames">
+      <list>
+        <value>TEST.REQUEST</value>
+        <value>TEST.REQUEST.POISON</value>
+        <value>TEST.RESPONSE</value>
+        <value>TEST.RESPONSE.POISON</value>
+      </list>
+    </property>
+    <property name="defaultTimeToLive" value="0" />
+  </component>
+  -->
+  <!-- IBM MQを使用するための設定(詳細は、fw_integration_sampleのdocを参照) -->
+  <component name="messagingProvider"
+      class="nablarch.integration.messaging.wmq.provider.WmqMessagingProvider">
+    <property name="useXa" value="${useXA}" />
+    <property name="queueManagerName" value="${queueManagerName}" />
+    <property name="receivedQueueName" value="${receiveQueueName}" />
+    <property name="sendingQueueNames">
+      <list>
+        <value>${sendQueueName}</value>
+      </list>
+    </property>
+    <property name="poisonQueueName" value="${poisonQueueName}" />
+    <property name="backoutLimit" value="${backoutLimit}" />
+    <property name="defaultResponseTimeout" value="${readTimeout}" />
+    <property name="useProductSystemErrorOutput" value="${useProductSystemErrorOutput}" />
+  </component>
+
+</component-configuration>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==========================================================================
+  HTTPメッセージ受信シミュレータの設定。
+
+  シミュレータは NTFの内蔵サーバ (nablarch.fw.web.HttpServer) を使用して
+  HTTPサーバを起動する。
+=========================================================================== -->
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  ./component-configuration.xsd">
+
+  <!-- テストデータ解析クラス -->
+  <import file="dataParser.xml"/>
+
+  <!-- HTTPメッセージ受信シミュレータの設定ファイル -->
+  <config-file file="incoming-http-simulator.config" />
+
+  <!-- HTTPメッセージ受信シミュレータのコンポーネント定義 -->
+  <component name="server" class="nablarch.fw.web.httpserver.HttpServerJetty12">
+    <property name="handlerQueue" ref="handlerQueue" />
+    <property name="port" value="${port}" />
+    
+    <property name="warBasePath" value="${webAppRoot}"/>
+  </component>
+
+  <!-- HTTPメッセージ受信シミュレータで使用するハンドラキュー -->
+  <list name="handlerQueue">
+
+    <component class="nablarch.fw.handler.GlobalErrorHandler" />
+
+    <!-- HTTP文字エンコーディング制御 -->
+    <component class ="nablarch.fw.web.handler.HttpCharacterEncodingHandler">
+      <property name="defaultEncoding" value="${defaultEncoding}" />
+    </component>
+
+    <!-- HTTPレスポンス出力 -->
+    <component class="nablarch.fw.web.handler.HttpResponseHandler" />
+
+    <!-- HTTPアクセスログ出力 -->
+    <component class="nablarch.common.web.handler.HttpAccessLogHandler" />
+
+    <!-- マルチパートリクエスト読み込み -->
+    <component class="nablarch.fw.web.upload.MultipartHandler">
+      <property name="uploadSettings">
+        <component class="nablarch.fw.web.upload.UploadSettings">
+          <property name="autoCleaning" value="true" />
+          <property name="contentLengthLimit" value="1000000" />
+        </component>
+      </property>
+    </component>
+
+    <!-- HTTPメッセージ受信シミュレートアクション -->
+    <component class="please.change.me.simulator.incoming.http.action.HttpIncomingSimulateAction" />
+
+  </list>
+
+  <component name="filePathSetting" class="nablarch.core.util.FilePathSetting">
+    <property name="basePathSettings">
+      <map>
+        <!-- アップロードファイルの一時格納場所 -->
+        
+        <entry key="sendSyncTestData" value="file:${input-file-dir}" />
+      </map>
+    </property>
+    <property name="fileExtensions">
+      <map>
+        <entry key="sendSyncTestData" value="xls" />
+      </map>
+    </property>
+  </component>
+</component-configuration>
