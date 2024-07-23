@@ -1,0 +1,19 @@
+#-------------------------------------------------------------------------------
+# リクエスト情報集計結果CSVのフォーマット定義
+#-------------------------------------------------------------------------------
+file-type:        "Variable" # 可変長(CSVファイル)
+text-encoding:    "ms932"    # 文字列型フィールドの文字エンコーディング
+field-separator:  ","        # フィールド区切り文字
+record-separator: "\r\n"     # 改行コード(CRLF)
+quoting-delimiter: "\""      # 囲み文字
+
+[data]
+1   requestId                    X      # リクエストID
+2   aggregateUnitValue           X      # 単位値(年月,日1-31,時0-23)
+3   processName                  X      # プロセス名
+4   requestCount                 X      # リクエスト数
+5   thresholdOverCount           X      # 閾値超のリクエスト数
+6   average                      X      # 処理時間(平均)
+7   median                       X      # 処理時間(中央値)
+8   max                          X      # 処理時間(最大)
+

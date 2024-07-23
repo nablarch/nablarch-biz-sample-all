@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+日付用の設定
+-->
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../component-configuration.xsd">
+
+  <!-- システム日時取得コンポーネントの設定 -->
+  <component name="systemTimeProvider"
+      class="nablarch.core.date.BasicSystemTimeProvider" />
+
+</component-configuration>

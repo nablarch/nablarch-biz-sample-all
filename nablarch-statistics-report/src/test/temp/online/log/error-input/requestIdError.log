@@ -1,0 +1,50 @@
+2012-09-03 17:14:55.244 -INFO- ACC [11201209031714551985628] process_name = [11] @@@@ END @@@@ rid = RGH6AAR401 uid = [2000000001] sid = [81yBQGmbvfgCSZplqn6FMcgWGm234CXgcpqY71QkPrRxyvLwP3Lh!-1639425173!1346660091572] url = [http://10.34.4.103:80/platinum/action/ssH6AA/GH6AAR4Action/RGH6AAR401] status_code = [200] content_path = [servlet:///ssH6AA/GH6AAR401.jsp]
+	start_time     = [2012-09-03 17:14:55.200]
+	end_time       = [2012-09-03 17:14:55.243]
+	execution_time = [43]
+	max_memory     = [1908932608]
+	free_memory    = [1442054840]
+2012-09-03 17:14:55.732 -INFO- ACC [11201209031714557295629] process_name = [11] @@@@ BEGIN @@@@ rid = [RGH6AAR402] uid = [2000000001] sid = [81yBQGmbvfgCSZplqn6FMcgWGm234CXgcpqY71QkPrRxyvLwP3Lh!-1639425173!1346660091572]
+	url          = [http://10.34.4.103:80/platinum/action/ssH6AA/GH6AAR4Action/RGH6AAR402]
+	method       = [POST]
+	port         = [80]
+	client_ip    = [10.34.5.60]
+	client_host  = [PLEDPWA0111]
+	browser_info = [Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.1)]
+2012-09-03 17:14:55.769 -INFO- ACC [11201209031714557295629] process_name = [11] @@@@ PARAMETERS @@@@
+	parameters  = [{
+		GH6AAR4.pageNumber = [1],
+		GH6AAR4.sortId = [1],
+		GH6AAR4.triToOyaNo = [0091256],
+		GH6AAR4.kensakuTani = [0],
+		GH6AAR4.triToNameKn = [],
+		GH6AAR4.kaishaSentaku = [001],
+		GH6AAR4.teikokuKigyoNo = [],
+		mul_SubWindowStatus_openerBtnId = [triToPicker_Single]}]
+2012-09-03 17:14:55.771 -INFO- ACC [11201209031714557295629] process_name = [11] @@@@ DISPATCHING CLASS @@@@ class = [jp.mufg.lf.direct.platinum.ssH6AA.GH6AAR4Action]
+2012-09-03 17:14:55.780 -INFO- ACC [11201209031714557295629] process_name = [11] @@@@ END @@@@ rid = [RGH6AAR402] uid = [2000000001] sid = [81yBQGmbvfgCSZplqn6FMcgWGm234CXgcpqY71QkPrRxyvLwP3Lh!-1639425173!1346660091572] url = [http://10.34.4.103:80/platinum/action/ssH6AA/GH6AAR4Action/RGH6AAR402] status_code = [200] content_path = [servlet:///ssH6AA/GH6AAR401.jsp]
+	start_time     = [2012-09-03 17:14:55.732]
+	end_time       = [2012-09-03 17:14:55.780]
+	execution_time = [48]
+	max_memory     = [1908932608]
+	free_memory    = [1437588088]
+2012-09-03 17:14:56.007 -INFO- ACC [11201209031714560045630] process_name = [11] @@@@ BEGIN @@@@ rid = [RGHYAAR101] uid = [2000000001] sid = [ygBxQGnQBnnhSlnZSD7tYh2ggvdHcQvVlGlQ7TTNTW1KLycCCGrP!-1639425173!1346660096004]
+	url          = [http://10.34.4.103:80/platinum/action/ssHYAA/GHYAAR1Action/RGHYAAR101]
+	method       = [GET]
+	port         = [80]
+	client_ip    = [10.34.5.60]
+	client_host  = [PLEDPWA0111]
+	browser_info = [Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 3.0.04506.30; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.1)]
+2012-09-03 17:14:56.041 -INFO- ACC [11201209031714560045630] process_name = [11] @@@@ PARAMETERS @@@@
+	parameters  = [{
+		PHPSESSID = [uum8vnhl0v91u4e7j0i6ht48q3]}]
+2012-09-03 17:14:56.048 -INFO- ACC [11201209031714560045630] process_name = [11] @@@@ DISPATCHING CLASS @@@@ class = [jp.mufg.lf.direct.platinum.ssHYAA.GHYAAR1Action]
+2012-09-03 17:14:56.088 -INFO- ACC [11201209031714560045630] process_name = [11] @@@@ DISPATCHING CLASS @@@@ class = [jp.mufg.lf.direct.platinum.ssH7AB.GH7ABR6Action]
+2012-09-03 17:14:56.999 -INFO- ACC [11201209031714569965631] process_name = [11] @@@@ BEGIN @@@@ rid = [RGH6AAM105] uid = [2000000001] sid = [81yBQGmbvfgCSZplqn6FMcgWGm234CXgcpqY71QkPrRxyvLwP3Lh!-1639425173!1346660091572]
+	url          = [http://10.34.4.103:80/platinum/action/ssH6AA/GH6AAM1Action/RGH6AAM105]
+	method       = [POST]
+	port         = [80]
+	client_ip    = [10.34.5.60]
+	client_host  = [PLEDPWA0111]
+	browser_info = [Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50727; .NET CLR 3.0.4506.2152; .NET CLR 3.5.30729; InfoPath.1)]
+
