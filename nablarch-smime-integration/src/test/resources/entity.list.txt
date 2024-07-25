@@ -1,0 +1,6 @@
+please.change.me.common.mail.testsupport.entity.MailSendRequest
+please.change.me.common.mail.testsupport.entity.MailRecipient
+please.change.me.common.mail.testsupport.entity.MailAttachedFile
+please.change.me.common.mail.testsupport.entity.MailTemplate
+please.change.me.common.mail.testsupport.entity.MailMessage
+please.change.me.common.mail.testsupport.entity.IdGenerator

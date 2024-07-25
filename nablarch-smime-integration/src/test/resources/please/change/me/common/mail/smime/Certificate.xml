@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration">
+
+  <component name="01" class="please.change.me.common.mail.smime.CertificateWrapper">
+    <property name="password" value="password" />
+    <property name="keyPassword" value="password" />
+    <property name="certificateFileName" value="classpath:please/change/me/common/mail/smime/data/pkcs12.p12" />
+    <property name="keyStoreType" value="PKCS12" />
+  </component>
+  <component name="02" class="please.change.me.common.mail.smime.CertificateWrapper">
+    <property name="password" value="keystorePass" />
+    <property name="keyPassword" value="testAliasPass" />
+    <property name="certificateFileName" value="classpath:please/change/me/common/mail/smime/data/test.dat" />
+    <property name="keyStoreType" value="JKS" />
+  </component>
+  <component name="03" class="please.change.me.common.mail.smime.CertificateWrapper">
+    <property name="password" value="password" />
+    <property name="keyPassword" value="password" />
+    <property name="certificateFileName" value="classpath:please/change/me/common/mail/smime/data/invalid.dat" />
+    <property name="keyStoreType" value="JKS" />
+  </component>
+  <component name="04" class="please.change.me.common.mail.smime.CertificateWrapper">
+    <property name="password" value="password" />
+    <property name="keyPassword" value="password" />
+    <property name="certificateFileName" value="classpath:please/change/me/common/mail/smime/data/verisign.p12" />
+    <property name="keyStoreType" value="PKCS12" />
+  </component>
+
+  <map name="certificateList">
+    <entry key="01" value-name="01" />
+    <entry key="02" value-name="02" />
+    <entry key="03" value-name="03" />
+    <entry key="04" value-name="04" />
+  </map>
+
+</component-configuration>

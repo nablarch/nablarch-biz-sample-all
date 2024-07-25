@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+メッセージ用設定ファイル
+-->
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  ../component-configuration.xsd">
+
+  <!-- 文字列リソースのロードモジュール -->
+  <component name="stringResourceLoader" class="nablarch.core.message.BasicStringResourceLoader">
+    <property name="dbManager" ref="dbManager" />
+    <property name="tableName" value="MAIL_MESSAGE" />
+    <property name="idColumnName" value="MESSAGE_ID" />
+    <property name="langColumnName" value="LANG" />
+    <property name="valueColumnName" value="MESSAGE" />
+  </component>
+
+  <!-- 文字列リソースのキャッシュ -->
+  <component name="stringResourceCache"
+      class="nablarch.core.cache.BasicStaticDataCache">
+    <property name="loader" ref="stringResourceLoader" />
+    <!-- 初期ロード -->
+    <property name="loadOnStartup" value="false" />
+  </component>
+
+  <!-- 文字列リソースの保持クラス -->
+  <component name="stringResourceHolder"
+      class="nablarch.core.message.StringResourceHolder">
+    <property name="stringResourceCache" ref="stringResourceCache" />
+  </component>
+</component-configuration>
+

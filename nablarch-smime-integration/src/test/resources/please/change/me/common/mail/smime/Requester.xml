@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration">
+
+  <component name="mailRequester" class="nablarch.common.mail.MailRequester">
+    <property name="mailRequestConfig" ref="mailRequestConfig" />
+  </component>
+
+  <component name="mailRequestConfig" class="nablarch.common.mail.MailRequestConfig">
+    <property name="defaultCharset" value="utf-8" />
+    <property name="defaultReplyTo" value="rep@rep.com" />
+    <property name="defaultReturnPath" value="return@return.com" />
+    <property name="maxAttachedFileSize" value="10000" />
+    <property name="maxRecipientCount" value="5000" />
+  </component>
+
+</component-configuration>
