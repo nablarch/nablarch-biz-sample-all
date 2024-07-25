@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+データベース接続ハンドラの設定ファイル
+-->
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../component-configuration.xsd">
+
+  <!-- 透過的トランザクションの設定 -->
+  <component name="transactionManagementHandler"
+      class="nablarch.common.handler.TransactionManagementHandler">
+    <property name="transactionFactory" ref="jdbcTransactionFactory" />
+  </component>
+
+  <!-- データベースコネクションを実現するハンドラ -->
+  <component name="dbConnectionManagementHandler"
+      class="nablarch.common.handler.DbConnectionManagementHandler">
+    <property name="connectionFactory" ref="connectionFactory" />
+  </component>
+
+</component-configuration>

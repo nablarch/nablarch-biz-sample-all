@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+メール送信に関するテーブルのスキーマ定義ファイル
+-->
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../../Nablarch/resources/component-configuration.xsd">
+
+    <!-- メール送信要求管理テーブルのスキーマ情報 -->
+    <component name="mailRequestTable" class="nablarch.common.mail.MailRequestTable">
+        <!--メール送信要求管理テーブルの名前 -->
+        <property name="tableName" value="MAIL_REQUEST" />
+        <!-- メール送信要求管理テーブルの要求IDカラムの名前 -->
+        <property name="mailRequestIdColumnName" value="MAIL_REQUEST_ID" />
+        <!-- メール送信要求管理テーブルの件名カラムの名前 -->
+        <property name="subjectColumnName" value="SUBJECT" />
+        <!--メール送信要求管理テーブルの送信者メールアドレスカラムの名前 -->
+        <property name="fromColumnName" value="MAIL_FROM" />
+        <!--メール送信要求管理テーブルの返信先メールアドレスカラムの名前 -->
+        <property name="replyToColumnName" value="REPLY_TO" />
+        <!-- メール送信要求管理テーブルの差し戻し先メールアドレスカラムの名前 -->
+        <property name="returnPathColumnName" value="RETURN_PATH" />
+        <!-- メール送信要求管理テーブルの文字セットカラムの名前 -->
+        <property name="charsetColumnName" value="CHARSET" />
+        <!-- メール送信要求管理テーブルのステータスカラムの名前 -->
+        <property name="statusColumnName" value="STATUS" />
+        <!--メール送信要求管理テーブルの要求日時カラムの名前 -->
+        <property name="requestDateTimeColumnName" value="REQUEST_DATETIME" />
+        <!-- メール送信要求管理テーブルのメール送信日時カラムの名前 -->
+        <property name="sendDateTimeColumnName" value="SEND_DATETIME" />
+        <!--メール送信要求管理テーブルの本文カラムの名前 -->
+        <property name="mailBodyColumnName" value="MAIL_BODY" />
+    </component>
+    <component name="htmlMailTable" class="please.change.me.common.mail.html.HtmlMailTable" />
+
+    <!-- メール送信先管理テーブルのスキーマ情報 -->
+    <component name="mailRecipientTable" class="nablarch.common.mail.MailRecipientTable">
+        <!-- メール送信先管理テーブルの名前 -->
+        <property name="tableName" value="MAIL_RECIPIENT" />
+        <!-- メール送信先管理テーブルの要求管理IDカラムの名前 -->
+        <property name="mailRequestIdColumnName" value="MAIL_REQUEST_ID" />
+        <!-- メール送信先管理テーブルの連番カラムの名前 -->
+        <property name="serialNumberColumnName" value="SERIAL_NUMBER" />
+        <!-- メール送信先管理テーブルの送信区分カラムの名前 -->
+        <property name="recipientTypeColumnName" value="RECIPIENT_TYPE" />
+        <!-- メール送信先管理テーブルのメールアドレスカラムの名前 -->
+        <property name="mailAddressColumnName" value="MAIL_ADDRESS" />
+    </component>
+
+    <!-- 添付ファイル管理テーブルのスキーマ情報 -->
+    <component name="mailAttachedFileTable"
+        class="nablarch.common.mail.MailAttachedFileTable">
+        <!-- 添付ファイル管理テーブルの名前 -->
+        <property name="tableName" value="MAIL_ATTACHED_FILE" />
+        <!-- 添付ファイル管理テーブルの要求管理IDカラムの名前 -->
+        <property name="mailRequestIdColumnName" value="MAIL_REQUEST_ID" />
+        <!-- 添付ファイル管理テーブルの連番カラムの名前 -->
+        <property name="serialNumberColumnName" value="SERIAL_NUMBER" />
+        <!-- 添付ファイル管理テーブルのファイル名カラムの名前 -->
+        <property name="fileNameColumnName" value="FILE_NAME" />
+        <!-- 添付ファイル管理テーブルのContent-Typeカラムの名前 -->
+        <property name="contentTypeColumnName" value="CONTENT_TYPE" />
+        <!-- 添付ファイル管理テーブルの添付ファイルカラムの名前 -->
+        <property name="fileColumnName" value="ATTACHED_FILE" />
+    </component>
+
+    <!-- メールテンプレート管理テーブルのスキーマ情報 -->
+    <component name="mailTemplateTable" class="nablarch.common.mail.MailTemplateTable">
+        <!-- メールテンプレート管理テーブルの名前 -->
+        <property name="tableName" value="MAIL_TEMPLATE" />
+        <!-- メールテンプレート管理テーブルのテンプレートIDカラムの名前 -->
+        <property name="mailTemplateIdColumnName" value="MAIL_TEMPLATE_ID" />
+        <!-- メールテンプレート管理テーブルの言語カラムの名前 -->
+        <property name="langColumnName" value="LANG" />
+        <!-- メールテンプレート管理テーブルの件名カラムの名前 -->
+        <property name="subjectColumnName" value="SUBJECT" />
+        <!-- メールテンプレート管理テーブルの文字セットカラムの名前 -->
+        <property name="charsetColumnName" value="CHARSET" />
+        <!--メールテンプレート管理テーブルの本文カラムの名前 -->
+        <property name="mailBodyColumnName" value="MAIL_BODY" />
+    </component>
+
+</component-configuration>

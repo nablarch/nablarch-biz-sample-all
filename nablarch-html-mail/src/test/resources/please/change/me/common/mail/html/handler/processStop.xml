@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+プロセス停止ハンドラの設定ファイル
+-->
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../component-configuration.xsd">
+
+
+  <component name="processStopHandler" class="nablarch.fw.handler.BasicProcessStopHandler">
+    <property name="checkInterval" value="10" />
+    <property name="dbTransactionManager">
+      <component
+          class="nablarch.core.db.transaction.SimpleDbTransactionManager">
+        <property name="dbTransactionName" value="ProcessStopHandler" />
+        <!-- トランザクションファクトリ -->
+        <property name="transactionFactory" ref="jdbcTransactionFactory" />
+        <!-- コネクションファクトリ -->
+        <property name="connectionFactory" ref="connectionFactory" />
+      </component>
+    </property>
+    <property name="tableName" value="${requestTable}" />
+    <property name="requestIdColumnName" value="${requestIdColumnName}" />
+    <property name="processHaltColumnName" value="PROCESS_HALT_FLG" />
+    <property name="exitCode" value="50" />
+  </component>
+
+</component-configuration>
