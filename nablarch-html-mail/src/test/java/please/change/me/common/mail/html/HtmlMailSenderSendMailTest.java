@@ -104,7 +104,7 @@ public class HtmlMailSenderSendMailTest {
             setProperty("mail.smtp.host", getEnv("mail.smtp.host", "localhost"));
             setProperty("mail.host",      getEnv("mail.host", "localhost"));
             setProperty("mail.pop3.host", getEnv("mail.pop3.host", "localhost"));
-            setProperty("mail.pop3.port", getEnv("mail.pop3.port", "10110"));
+            setProperty("mail.pop3.port", getEnv("mail.pop3.port", "3110"));
         }};
 
         /**
@@ -131,7 +131,8 @@ public class HtmlMailSenderSendMailTest {
             Session session = Session.getInstance(props, new Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(account.split("@")[0], PASSWORD);
+                    return new PasswordAuthentication(account, PASSWORD);
+//                    return new PasswordAuthentication(account.split("@")[0], PASSWORD);
                 }
             });
             session.setDebug(debug);
