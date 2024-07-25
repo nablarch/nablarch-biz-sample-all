@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration">
+
+  <component name="mailConfig" class="nablarch.common.mail.MailConfig">
+    <!-- メール送信要求ID関連の設定 -->
+    <property name="mailRequestSbnId" value="99" />
+    <!-- 送信区分の設定 -->
+    <property name="recipientTypeTO" value="TO" />
+    <property name="recipientTypeCC" value="CC" />
+    <property name="recipientTypeBCC" value="BCC" />
+    <!-- メール送信ステータスの設定 -->
+    <property name="statusUnsent" value="A" />
+    <property name="statusSent" value="B" />
+    <property name="statusFailure" value="Z" />
+    <property name="mailRequestCountMessageId" value="001" />
+    <property name="sendSuccessMessageId" value="002" />
+    <property name="abnormalEndExitCode" value="199" />
+    <property name="sendFailureCode" value="ZZZ" />
+  </component>
+
+  <!-- メール送信要求ID採番用のジェネレータ -->
+  <component name="mailRequestIdGenerator" class="nablarch.common.idgenerator.FastTableIdGenerator">
+    <property name="tableName" value="id_generator" />
+    <property name="idColumnName" value="id" />
+    <property name="noColumnName" value="generated_value" />
+    <property name="dbTransactionManager">
+      <component class="nablarch.core.db.transaction.SimpleDbTransactionManager">
+        <property name="connectionFactory" ref="connectionFactory" />
+        <property name="transactionFactory" ref="jdbcTransactionFactory" />
+        <property name="dbTransactionName" value="MailRequestIdGenerator" />
+      </component>
+    </property>
+  </component>
+
+  <!-- メール送信要求テーブルの設定 -->
+  <component name="mailRequestTable" class="nablarch.common.mail.MailRequestTable">
+    <property name="mailSendPatternIdColumnName" value="mail_send_pattern_id" />
+    <property name="tableName" value="mail_send_request" />
+    <property name="mailRequestIdColumnName" value="mail_request_id" />
+    <property name="subjectColumnName" value="mail_subject" />
+    <property name="fromColumnName" value="from_mail_address" />
+    <property name="replyToColumnName" value="reply_mail_address" />
+    <property name="returnPathColumnName" value="return_mail_address" />
+    <property name="charsetColumnName" value="charset" />
+    <property name="statusColumnName" value="status" />
+    <property name="requestDateTimeColumnName" value="request_timestamp" />
+    <property name="sendDateTimeColumnName" value="sending_timestamp" />
+    <property name="mailBodyColumnName" value="body" />
+  </component>
+
+  <!-- メール送信先テーブルの設定 -->
+  <component name="mailRecipientTable" class="nablarch.common.mail.MailRecipientTable">
+    <property name="tableName" value="mail_recipient_table" />
+    <property name="mailRequestIdColumnName" value="mail_request_id" />
+    <property name="serialNumberColumnName" value="recipient_no" />
+    <property name="recipientTypeColumnName" value="recipient_type" />
+    <property name="mailAddressColumnName" value="mail_address" />
+  </component>
+
+  <!-- メール添付ファイルテーブルの設定 -->
+  <component name="mailAttachedFileTable" class="nablarch.common.mail.MailAttachedFileTable">
+    <property name="tableName" value="mail_attached_file" />
+    <property name="mailRequestIdColumnName" value="mail_request_id" />
+    <property name="serialNumberColumnName" value="attached_no" />
+    <property name="fileNameColumnName" value="file_name" />
+    <property name="contentTypeColumnName" value="content_type" />
+    <property name="fileColumnName" value="attached_file" />
+  </component>
+
+  <!-- メールテンプレートテーブルの設定 -->
+  <component name="mailTemplate" class="nablarch.common.mail.MailTemplateTable">
+    <property name="tableName" value="mail_template" />
+    <property name="mailTemplateIdColumnName" value="template_id" />
+    <property name="langColumnName" value="lang" />
+    <property name="subjectColumnName" value="subject" />
+    <property name="mailBodyColumnName" value="body" />
+    <property name="charsetColumnName" value="charset" />
+  </component>
+
+</component-configuration>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration">
+
+  <import file="db.xml" />
+  <import file="please/change/me/common/mail/MailSchema.xml" />
+  <import file="please/change/me/common/mail/smime/MailSenderConfig.xml" />
+  <import file="please/change/me/common/mail/smime/Certificate.xml" />
+  <import file="please/change/me/common/mail/smime/Requester.xml" />
+  <config-file file="please/change/me/common/mail/smime/mail-batch.config" />
+  <config-file file="please/change/me/common/mail/smime/mail-session.config" />
+
+  <!-- スレッドコンテキストに保持される共通属性を管理するハンドラ -->
+  <import file="please/change/me/common/mail/smime/handler/threadcontext.xml" />
+  <!-- データベース接続ハンドラ -->
+  <import file="please/change/me/common/mail/smime/handler/db.xml" />
+
+  <import file="please/change/me/common/mail/smime/message.xml" />
+
+  <!--コミットログ実装 -->
+  <component name="commitLogger" class="nablarch.core.log.app.BasicCommitLogger">
+    <property name="interval" value="500" />
+  </component>
+
+  <!-- ステータス更新用のトランザクション -->
+  <component name="statusUpdateTransaction" class="nablarch.core.db.transaction.SimpleDbTransactionManager">
+    <property name="dbTransactionName" value="statusUpdateTransaction" />
+    <property name="connectionFactory" ref="connectionFactory" />
+    <property name="transactionFactory" ref="jdbcTransactionFactory" />
+  </component>
+
+  <!-- ハンドラキュー構成 -->
+  <list name="handlerQueue">
+    <!-- ステータスコードを終了コードに変換するハンドラ -->
+    <component class="nablarch.fw.handler.StatusCodeConvertHandler" />
+    <!-- グローバルエラーハンドラ -->
+    <component class="nablarch.fw.handler.GlobalErrorHandler" />
+    <!-- エラー検証用の専用ハンドラ -->
+    <component class="please.change.me.common.mail.testsupport.MailExceptionHandler" />
+    <!-- スレッドコンテキスト設定ハンドラ -->
+    <component-ref name="threadContextHandler" />
+    <!-- リトライハンドラ -->
+    <component name="retryHandler" class="nablarch.fw.handler.RetryHandler">
+      <property name="retryLimitExceededFailureCode" value="" />
+      <property name="retryContextFactory">
+        <component class="nablarch.fw.handler.retry.CountingRetryContextFactory">
+          <property name="retryCount" value="1" />          <!-- 1回リトライを行う -->
+          <property name="retryIntervals" value="500" />   <!-- リトライを実行するまで0.5秒待機する -->
+        </component>
+      </property>
+    </component>
+    <!-- 常駐化ハンドラ (Retryも含めてテストする) -->
+    <component name="processResidentHandler"
+        class="nablarch.fw.handler.ProcessResidentHandler">
+      <property name="dataWatchInterval" value="1000" />
+    </component>
+    <!-- データベース接続ハンドラ -->
+    <component-ref name="dbConnectionManagementHandler" />
+    <!--トランザクションマネージャ -->
+    <component-ref name="transactionManagementHandler" />
+    <!-- ディスパッチ -->
+    <component class="nablarch.fw.handler.RequestPathJavaPackageMapping">
+      <property name="basePackage" value="." />
+      <property name="immediate" value="false" />
+    </component>
+    <!-- スレッド実行ハンドラ -->
+    <component class="nablarch.fw.handler.MultiThreadExecutionHandler">
+      <property name="concurrentNumber" value="1" />
+      <property name="commitLogger" ref="commitLogger" />
+    </component>
+
+    <!-- データベース接続ハンドラ -->
+    <component-ref name="dbConnectionManagementHandler" />
+
+    <!-- ループ・トランザクション制御ハンドラ -->
+    <component class="nablarch.fw.handler.LoopHandler">
+      <property name="commitInterval" value="${commitInterval}" />
+      <property name="transactionFactory" ref="jdbcTransactionFactory" />
+    </component>
+
+    <!-- データリードハンドラ -->
+    <component class="nablarch.fw.handler.DataReadHandler">
+      <property name="maxCount" value="${maxCount}" />
+    </component>
+  </list>
+
+  <component name="initializer"
+      class="nablarch.core.repository.initialization.BasicApplicationInitializer">
+    <property name="initializeList">
+      <list>
+        <component-ref name="01" />
+        <component-ref name="02" />
+        <component-ref name="03" />
+        <component-ref name="04" />
+        <component-ref name="mailRequestTable" />
+        <component-ref name="mailRequestIdGenerator" />
+        <component-ref name="mailRecipientTable" />
+        <component-ref name="mailAttachedFileTable" />
+        <component-ref name="mailTemplate" />
+        <component-ref name="stringResourceCache" />
+      </list>
+    </property>
+  </component>
+  <component name="systemTimeProvider" class="nablarch.core.date.BasicSystemTimeProvider" />
+</component-configuration>
+

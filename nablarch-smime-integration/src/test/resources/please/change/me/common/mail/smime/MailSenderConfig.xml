@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration">
+
+  <component name="mailSessionConfig" class="nablarch.common.mail.MailSessionConfig">
+    <property name="mailSmtpHost" value="${mail.smtp.host}" />
+    <property name="mailHost" value="${mail.host}" />
+    <property name="mailSmtpPort" value="${mail.smtp.port}" />
+    <property name="mailSmtpConnectionTimeout" value="${mail.smtp.connectiontimeout}" />
+    <property name="mailSmtpTimeout" value="${mail.smtp.timeout}" />
+    <property name="option">
+      <map>
+        <entry key="mail.debug" value="true" />
+      </map>
+    </property>
+  </component>
+</component-configuration>

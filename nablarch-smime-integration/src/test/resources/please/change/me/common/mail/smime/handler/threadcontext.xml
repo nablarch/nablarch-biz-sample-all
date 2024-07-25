@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+スレッドコンテキスト初期化ハンドラの設定ファイル
+-->
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  ../../component-configuration.xsd">
+
+  <!-- ユーザID設定用コンポーネント -->
+  <component name="userIdAttribute"
+      class="nablarch.common.handler.threadcontext.UserIdAttribute">
+    <property name="sessionKey" value="user.id" />
+  </component>
+  <!-- リクエストID設定用コンポーネント -->
+  <component name="requestIdAttribute"
+      class="nablarch.common.handler.threadcontext.RequestIdAttribute" />
+  <!-- 言語設定用コンポーネント -->
+  <component name="languageAttribute"
+      class="nablarch.common.handler.threadcontext.LanguageAttribute">
+    <property name="defaultLanguage" value="ja" />
+  </component>
+  <!-- 実行時ID設定用コンポーネント -->
+  <component name="executionIdAttribute"
+      class="nablarch.common.handler.threadcontext.ExecutionIdAttribute" />
+
+
+  <!-- バッチプロセス用のスレッドコンテキスト設定コンポーネント -->
+  <component name="threadContextHandler"
+      class="nablarch.common.handler.threadcontext.ThreadContextHandler">
+    <property name="attributes">
+      <list>
+        <!-- ユーザID -->
+        <component-ref name="userIdAttribute" />
+        <!-- リクエストID -->
+        <component-ref name="requestIdAttribute" />
+        <!-- 言語 -->
+        <component-ref name="languageAttribute" />
+        <!-- 実行時ID -->
+        <component-ref name="executionIdAttribute" />
+      </list>
+    </property>
+  </component>
+
+  <!-- 子スレッド用のスレッドコンテキスト設定コンポーネント -->
+  <component name="childThreadThreadContextHandler"
+      class="nablarch.common.handler.threadcontext.ThreadContextHandler">
+    <property name="attributes">
+      <list>
+        <!-- ユーザID -->
+        <component-ref name="userIdAttribute" />
+        <!-- リクエストID -->
+        <component-ref name="requestIdAttribute" />
+        <!-- 言語 -->
+        <component-ref name="languageAttribute" />
+        <!-- 実行時ID -->
+        <component-ref name="executionIdAttribute" />
+      </list>
+    </property>
+  </component>
+</component-configuration>
