@@ -54,17 +54,6 @@ import org.junit.runner.RunWith;
  *  MailAccountManagerで設定するアカウントを設定すること。
  * </p>
  *
- * James 2系であれば
- * <ol>
- *   <li>アーカイブを取得、任意のディレクトリに展開する。(JAMES_HOME)</li>
- *   <li>%JAMES_HOME%/bin/run.batを実行する。</li>
- *   <li>SMTP,POP3のポートの設定がMailSessionやテスト内の設定とあっているか確認する。</li>
- *   <li>telnet localhost %MANAGE_PORT% で管理コンソールから必要なユーザーを登録する。</li>
- *   <li>テストを実行する。</li>
- * </ol>
- *
- * その他のメールサーバーを利用する場合は、利用方法を確認すること。
- *
  * @author tani takanori
  */
 @RunWith(DatabaseTestRunner.class)
@@ -132,7 +121,6 @@ public class HtmlMailSenderSendMailTest {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(account, PASSWORD);
-//                    return new PasswordAuthentication(account.split("@")[0], PASSWORD);
                 }
             });
             session.setDebug(debug);
