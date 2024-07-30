@@ -23,50 +23,6 @@
 
   </properties>
 
-  <!--
-    このプロファイルは環境を指定するものであり、相互に排他的である。
-    複数のプロファイルを同時に指定してはならない。
-  -->
-  <profiles>
-    <!-- 開発環境 -->
-    <profile>
-      <id>development</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <properties>
-        <env.name>開発環境</env.name>
-        <!-- Mavenの環境別リソースのディレクトリ名 -->
-        <env.dir>dev</env.dir>
-        <env.classifier>dev</env.classifier>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>com.nablarch.framework</groupId>
-          <artifactId>nablarch-fw-web-hotdeploy</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>com.h2database</groupId>
-          <artifactId>h2</artifactId>
-          <version>2.1.214</version>
-          <scope>runtime</scope>
-        </dependency>
-        <dependency>
-          <groupId>com.zaxxer</groupId>
-          <artifactId>HikariCP</artifactId>
-          <version>3.3.1</version>
-          <scope>runtime</scope>
-        </dependency>
-        <dependency>
-          <groupId>com.nablarch.integration</groupId>
-          <artifactId>slf4j-nablarch-adaptor</artifactId>
-          <scope>runtime</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-
-  </profiles>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -166,6 +122,28 @@
     <dependency>
       <groupId>org.glassfish.jersey.inject</groupId>
       <artifactId>jersey-hk2</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.nablarch.framework</groupId>
+      <artifactId>nablarch-fw-web-hotdeploy</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>2.2.220</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>3.3.1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.nablarch.integration</groupId>
+      <artifactId>slf4j-nablarch-adaptor</artifactId>
+      <scope>runtime</scope>
     </dependency>
 
   </dependencies>
