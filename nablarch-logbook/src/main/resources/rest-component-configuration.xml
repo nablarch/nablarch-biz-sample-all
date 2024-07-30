@@ -27,17 +27,11 @@
   <config-file file="env.properties"/>
 
   <!-- データベース設定 -->
-  <!--
-  下記設定ファイルを使用することで、JNDIを用いてコネクションがルックアップされる
-  ルックアップに使用する名前は、configファイル中で、「nablarch.connectionFactory.jndiResourceName」というプレースホルダーに設定する。
-
-  ローカルのデータソースからコネクションを取得したい場合は、アーキタイプから生成した直後のプロジェクトに含まれるdb-for-webui_dev.xmlを参考に設定すること。
-  -->
   <import file="nablarch/webui/db-for-webui.xml"/>
+  <import file="db-for-webui.xml"/>
 
   <!-- スレッドコンテキストハンドラ -->
   <import file="nablarch/webui/threadcontext-for-webui.xml"/>
-
 
   <!--パッケージマッピングの設定 -->
   <component name="packageMapping" class="nablarch.integration.router.PathOptionsProviderRoutesMapping">
