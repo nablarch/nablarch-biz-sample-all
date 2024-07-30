@@ -1,4 +1,4 @@
-package com.example;
+package please.change.me;
 
 public class User {
 

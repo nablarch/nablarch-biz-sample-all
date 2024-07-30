@@ -17,7 +17,7 @@
   <import file="nablarch/core/validation/charset-definition.xml" />
 
   <!-- DomainManager 実装クラス設定 -->
-  <component name="domainManager" class="com.example.domain.SampleDomainManager"/>
+  <component name="domainManager" class="please.change.me.domain.SampleDomainManager"/>
 
   <!-- BeanValidation実装クラス -->
   <component name="validationStrategy" class="nablarch.common.web.validator.BeanValidationStrategy" />

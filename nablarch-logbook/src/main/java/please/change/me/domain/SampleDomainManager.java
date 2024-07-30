@@ -1,4 +1,4 @@
-package com.example.domain;
+package please.change.me.domain;
 
 import nablarch.core.validation.ee.DomainManager;
 

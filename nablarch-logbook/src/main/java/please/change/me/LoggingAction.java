@@ -1,4 +1,4 @@
-package com.example;
+package please.change.me;
 
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.type.TypeReference;
