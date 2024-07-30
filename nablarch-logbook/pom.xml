@@ -21,14 +21,6 @@
     <!-- 環境ごとのリソースディレクトリ(プロファイルにより切り替わる) -->
     <env.resources>${project.basedir}/src/env/${env.dir}/resources</env.resources>
 
-    <!-- gsp-dba-maven-pluginが使用するデータベース設定 -->
-    <nablarch.db.jdbcDriver>org.h2.Driver</nablarch.db.jdbcDriver>
-    <nablarch.db.url>jdbc:h2:./h2/db/SAMPLE</nablarch.db.url>
-    <nablarch.db.adminUser>SAMPLE</nablarch.db.adminUser>
-    <nablarch.db.adminPassword>SAMPLE</nablarch.db.adminPassword>
-    <nablarch.db.user>SAMPLE</nablarch.db.user>
-    <nablarch.db.password>SAMPLE</nablarch.db.password>
-    <nablarch.db.schema>PUBLIC</nablarch.db.schema>
   </properties>
 
   <!--
@@ -53,7 +45,6 @@
           <groupId>com.nablarch.framework</groupId>
           <artifactId>nablarch-fw-web-hotdeploy</artifactId>
         </dependency>
-        <!-- TODO: プロジェクトで使用するDB製品にあわせたJDBCドライバに修正してください。 -->
         <dependency>
           <groupId>com.h2database</groupId>
           <artifactId>h2</artifactId>
@@ -74,183 +65,6 @@
       </dependencies>
     </profile>
 
-    <!-- 本番環境 -->
-    <profile>
-      <id>prod</id>
-      <properties>
-        <env.name>本番環境</env.name>
-        <env.dir>prod</env.dir>
-        <env.classifier>prod</env.classifier>
-      </properties>
-    </profile>
-
-    <!--
-    Nablarchのマスタデータ復旧機能用にデータを格納する際に使用するプロファイル。
-    使用の際は、以下を参照すること。
-    https://github.com/coastland/gsp-dba-maven-plugin/blob/master/recipe/backupToDifferentSchema.md
-
-    gsp-dba-pluginでは、H2の場合はデフォルトスキーマのPUBLICしか扱えないためバックアップスキーマ名にPUBLICを指定しています。
-    gsp-dba-pluginで任意のスキーマ名を指定出来るDBの場合は、バックアップスキーマ名を指定して下さい。
-    -->
-    <profile>
-      <id>BACKUP</id>
-      <properties>
-        <env.dir>dev</env.dir>
-        <nablarch.db.schema>PUBLIC</nablarch.db.schema>
-      </properties>
-      <build>
-        <directory>${dba.gsp-target-dir}</directory>
-        <plugins>
-          <plugin>
-            <groupId>jp.co.tis.gsp</groupId>
-            <artifactId>gsp-dba-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>default-cli</id>
-                <phase>generate-resources</phase>
-                <goals>
-                  <goal>generate-ddl</goal>
-                  <goal>execute-ddl</goal>
-                  <goal>load-data</goal>
-                </goals>
-              </execution>
-            </executions>
-            <dependencies>
-              <!-- プロジェクトで使用するDB製品にあわせたJDBCドライバに上書きする -->
-              <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>2.1.214</version>
-                <scope>runtime</scope>
-              </dependency>
-              <dependency>
-                <groupId>jakarta.activation</groupId>
-                <artifactId>jakarta.activation-api</artifactId>
-              </dependency>
-              <dependency>
-                <groupId>jakarta.xml.bind</groupId>
-                <artifactId>jakarta.xml.bind-api</artifactId>
-              </dependency>
-              <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-core</artifactId>
-              </dependency>
-              <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-impl</artifactId>
-                <version>2.3.0</version>
-              </dependency>
-              <dependency>
-                <groupId>jakarta.annotation</groupId>
-                <artifactId>jakarta.annotation-api</artifactId>
-              </dependency>
-            </dependencies>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <!-- gsp-dba-plugin -->
-    <profile>
-      <id>gsp</id>
-      <activation>
-      </activation>
-      <build>
-        <directory>${dba.gsp-target-dir}</directory>
-        <plugins>
-          <plugin>
-            <groupId>jp.co.tis.gsp</groupId>
-            <artifactId>gsp-dba-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>default-cli</id>
-                <phase>generate-resources</phase>
-                <goals>
-                  <goal>generate-ddl</goal>
-                  <goal>execute-ddl</goal>
-                  <goal>generate-entity</goal>
-                  <goal>load-data</goal>
-                  <goal>export-schema</goal>
-                </goals>
-              </execution>
-            </executions>
-            <dependencies>
-              <!-- プロジェクトで使用するDB製品にあわせたJDBCドライバに上書きする -->
-              <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>2.1.214</version>
-                <scope>runtime</scope>
-              </dependency>
-              <dependency>
-                <groupId>jakarta.activation</groupId>
-                <artifactId>jakarta.activation-api</artifactId>
-              </dependency>
-              <dependency>
-                <groupId>jakarta.xml.bind</groupId>
-                <artifactId>jakarta.xml.bind-api</artifactId>
-              </dependency>
-              <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-core</artifactId>
-              </dependency>
-              <dependency>
-                <groupId>com.sun.xml.bind</groupId>
-                <artifactId>jaxb-impl</artifactId>
-                <version>2.3.0</version>
-              </dependency>
-              <dependency>
-                <groupId>jakarta.annotation</groupId>
-                <artifactId>jakarta.annotation-api</artifactId>
-              </dependency>
-            </dependencies>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-install-plugin</artifactId>
-            <version>${version.plugins.install}</version>
-            <executions>
-              <!-- gsp-dba-maven-pluginで生成したdumpファイルをinstallするための設定 -->
-              <execution>
-                <id>default-cli</id>
-                <goals>
-                  <goal>install-file</goal>
-                </goals>
-                <configuration>
-                  <file>${dba.gsp-target-dir}/output/${dba.testDataArtifactId}-${dba.dump.version}.jar</file>
-                  <groupId>${project.groupId}</groupId>
-                  <version>${dba.dump.version}</version>
-                  <artifactId>${dba.testDataArtifactId}</artifactId>
-                  <packaging>jar</packaging>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-deploy-plugin</artifactId>
-            <version>${version.plugins.deploy}</version>
-            <executions>
-              <!-- gsp-dba-maven-pluginで生成したdumpファイルをdeployするための設定 -->
-              <execution>
-                <id>default-cli</id>
-                <goals>
-                  <goal>deploy-file</goal>
-                </goals>
-                <configuration>
-                  <file>${dba.gsp-target-dir}/output/${dba.testDataArtifactId}-${dba.dump.version}.jar</file>
-                  <groupId>${project.groupId}</groupId>
-                  <version>${dba.dump.version}</version>
-                  <artifactId>${dba.testDataArtifactId}</artifactId>
-                  <repositoryId>${project.distributionManagement.repository.id}</repositoryId>
-                  <url>${project.distributionManagement.repository.url}</url>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
   </profiles>
 
   <dependencyManagement>
@@ -276,46 +90,14 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      <dependency>
-        <groupId>org.junit</groupId>
-        <artifactId>junit-bom</artifactId>
-        <version>5.8.2</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
     </dependencies>
   </dependencyManagement>
-
 
   <dependencies>
 
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>2.0.11</version>
-    </dependency>
-
-    <dependency>
       <groupId>com.nablarch.configuration</groupId>
       <artifactId>nablarch-main-default-configuration</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.nablarch.framework</groupId>
-      <artifactId>nablarch-testing-rest</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.nablarch.framework</groupId>
-      <artifactId>nablarch-testing-jetty12</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.nablarch.configuration</groupId>
-      <artifactId>nablarch-testing-default-configuration</artifactId>
-      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -335,38 +117,13 @@
 
     <dependency>
       <groupId>com.nablarch.framework</groupId>
-      <artifactId>nablarch-fw-web</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.nablarch.framework</groupId>
       <artifactId>nablarch-core-validation-ee</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.nablarch.framework</groupId>
-      <artifactId>nablarch-core-beans</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.nablarch.framework</groupId>
-      <artifactId>nablarch-common-jdbc</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.nablarch.framework</groupId>
-      <artifactId>nablarch-common-dao</artifactId>
     </dependency>
 
     <!-- コード管理機能 -->
     <dependency>
       <groupId>com.nablarch.framework</groupId>
       <artifactId>nablarch-common-code-jdbc</artifactId>
-    </dependency>
-    <!-- UniversalDao使用時、DBに自動採番型が存在しない場合に使用するモジュールが存在している。 -->
-    <dependency>
-      <groupId>com.nablarch.framework</groupId>
-      <artifactId>nablarch-common-idgenerator-jdbc</artifactId>
     </dependency>
 
     <dependency>
@@ -380,75 +137,6 @@
       <version>2.14.1</version>
     </dependency>
 
-    <dependency>
-      <groupId>org.hibernate.validator</groupId>
-      <artifactId>hibernate-validator</artifactId>
-      <version>8.0.0.Final</version>
-      <scope>runtime</scope>
-    </dependency>
-
-    <!-- Nablarchのテスティングフレームワークを実行するために必要なライブラリ -->
-    <dependency>
-      <groupId>com.nablarch.framework</groupId>
-      <artifactId>nablarch-fw-batch</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.nablarch.framework</groupId>
-      <artifactId>nablarch-fw-messaging</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.nablarch.framework</groupId>
-      <artifactId>nablarch-fw-messaging-http</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- JUnit5 でテスティングフレームワークを実行するために必要なライブラリ -->
-    <dependency>
-      <groupId>com.nablarch.framework</groupId>
-      <artifactId>nablarch-testing-junit5</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- ================ここから任意で使用するアサートライブラリの設定================ -->
-    <!--  TODO PJ要件に合わせてアサートライブラリを選定してください。  -->
-    <!--  JSONをアサートするライブラリ  -->
-    <dependency>
-      <groupId>org.skyscreamer</groupId>
-      <artifactId>jsonassert</artifactId>
-      <version>1.5.0</version>
-      <scope>test</scope>
-    </dependency>
-    <!--  JSONPath形式でのアサートに使用するライブラリ  -->
-    <dependency>
-      <groupId>com.jayway.jsonpath</groupId>
-      <artifactId>json-path-assert</artifactId>
-      <version>2.4.0</version>
-      <scope>test</scope>
-    </dependency>
-
-    <!--  XMLをアサートするライブラリ  -->
-    <dependency>
-      <groupId>org.xmlunit</groupId>
-      <artifactId>xmlunit-core</artifactId>
-      <version>2.7.0</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.xmlunit</groupId>
-      <artifactId>xmlunit-matchers</artifactId>
-      <version>2.7.0</version>
-      <scope>test</scope>
-    </dependency>
-    <!-- ================ここまで任意で使用するツールの設定================ -->
-
     <!-- Logbook -->
     <dependency>
       <groupId>org.zalando</groupId>
@@ -458,11 +146,6 @@
     <dependency>
       <groupId>org.zalando</groupId>
       <artifactId>logbook-jaxrs</artifactId>
-      <version>3.9.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.zalando</groupId>
-      <artifactId>logbook-json</artifactId>
       <version>3.9.0</version>
     </dependency>
     <dependency>
@@ -483,29 +166,6 @@
     <dependency>
       <groupId>org.glassfish.jersey.inject</groupId>
       <artifactId>jersey-hk2</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>jakarta.activation</groupId>
-      <artifactId>jakarta.activation-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.xml.bind</groupId>
-      <artifactId>jakarta.xml.bind-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-core</artifactId>
-      <version>4.0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-impl</artifactId>
-      <version>4.0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.annotation</groupId>
-      <artifactId>jakarta.annotation-api</artifactId>
     </dependency>
 
   </dependencies>
@@ -551,23 +211,6 @@
           </archive>
         </configuration>
       </plugin>
-      <!-- ================ここから任意で使用するツールの設定================ -->
-      <!-- gsp-dba-maven-pluginで自動生成したソースをビルド時に使用するための設定 -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-      </plugin>
-      <!-- カバレッジ取得 -->
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-      </plugin>
-      <!-- SpotBugs -->
-      <plugin>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-maven-plugin</artifactId>
-      </plugin>
-      <!-- ================ここまで任意で使用するツールの設定================ -->
     </plugins>
   </build>
 </project>
