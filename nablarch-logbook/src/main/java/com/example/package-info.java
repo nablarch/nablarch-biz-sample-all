@@ -1,0 +1,2 @@
+/** サンプルアプリケーション。 */
+package com.example;
