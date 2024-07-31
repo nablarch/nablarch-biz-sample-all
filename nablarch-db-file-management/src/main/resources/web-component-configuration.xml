@@ -42,7 +42,7 @@
   <import file="nablarch/webui/error-page-for-webui.xml" />
 
   <!-- ファイルパス設置 -->
-  <import file="nablarch/webui/filepath-for-webui.xml" />
+  <import file="filepath-for-webui.xml" />
 
   <!-- インターセプタの実行順定義 -->
   <import file="nablarch/webui/interceptors.xml" />
@@ -104,6 +104,33 @@
   <!-- CSRF対策 -->
   <component name="csrfTokenVerificationHandler"
              class="nablarch.fw.web.handler.CsrfTokenVerificationHandler" />
+
+  <!-- ファイル管理機能(論理名fileManagementのコンポーネントを、FileManagementUtilクラスが使用する) -->
+  <component name="fileManagement" class="please.change.me.common.file.management.DbFileManagement">
+
+    <!-- 格納ファイルの最大長(単位：バイト) -->
+    <property name="maxFileSize" value="10000000"/>
+
+    <!-- 採番機能で、DbFileManagement用の採番である旨を識別するためのKey -->
+    <property name="fileIdKey" value="FILE_CONTROL_SEQ" />
+
+    <!-- 採番機能 -->
+    <property name="idGenerator" ref="sequenceIdGenerator" />
+
+    <!-- 採番時に使用するフォーマッタ -->
+    <property name="idFormatter" ref="dbFileManagementFormatter" />
+  </component>
+
+  <!-- 採番機能(ファイル管理機能から使用) -->
+  <component name="sequenceIdGenerator" class="nablarch.common.idgenerator.SequenceIdGenerator" />
+
+  <!-- 採番時に使用するフォーマッタ(ファイル管理機能から使用) -->
+  <component name="dbFileManagementFormatter" class="nablarch.common.idgenerator.formatter.LpadFormatter">
+    <!-- 桁数 -->
+    <property name="length" value="18" />
+    <!-- 不足している桁を埋める文字 -->
+    <property name="paddingChar" value="0" />
+  </component>
 
   <!-- ハンドラキュー構成 -->
   <component name="webFrontController"

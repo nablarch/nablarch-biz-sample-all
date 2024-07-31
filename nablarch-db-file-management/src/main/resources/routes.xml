@@ -1,4 +1,5 @@
 <routes>
-    <root to="Sample#index"/>
-    <get path="/action/sample/index" to="Sample#index"/>
+    <root to="DbFileManagement#index"/>
+    <get path="/action/dbFileManagement" to="DbFileManagement#index"/>
+    <match path="/action/:controller/:action"/>
 </routes>
