@@ -1,0 +1,4 @@
+<routes>
+    <root to="Sample#index"/>
+    <get path="/action/sample/index" to="Sample#index"/>
+</routes>
