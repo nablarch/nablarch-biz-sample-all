@@ -4,12 +4,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://tis.co.jp/nablarch/component-configuration"
     xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  https://nablarch.github.io/schema/component-configuration.xsd">
 
-  <!-- テーブル定義 -->
-  <import file="nablarch/schema-config.xml" />
-
-  <!-- コード機能 -->
-  <import file="nablarch/common/code.xml"/>
-
   <!-- メッセージ機能の設定 -->
   <import file="nablarch/core/message-by-property-files.xml"/>
 
@@ -25,10 +19,6 @@
   <!-- 環境設定ファイル -->
   <config-file file="common.properties"/>
   <config-file file="env.properties"/>
-
-  <!-- データベース設定 -->
-  <import file="nablarch/webui/db-for-webui.xml"/>
-  <import file="db-for-webui.xml"/>
 
   <!-- スレッドコンテキストハンドラ -->
   <import file="nablarch/webui/threadcontext-for-webui.xml"/>
@@ -89,10 +79,6 @@
 
         <component class="nablarch.fw.jaxrs.JaxRsAccessLogHandler"/>
 
-        <component-ref name="dbConnectionManagementHandler"/>
-
-        <component-ref name="transactionManagementHandler"/>
-
         <component-ref name="packageMapping"/>
       </list>
     </property>
@@ -104,10 +90,6 @@
       <list>
         <!-- パッケージマッピング -->
         <component-ref name="packageMapping" />
-        <!-- コードのローダ -->
-        <component-ref name="codeLoader" />
-        <!-- コードのキャッシュ -->
-        <component-ref name="codeCache" />
         <!-- リソースのキャッシュ -->
         <component-ref name="stringResourceCache" />
       </list>
