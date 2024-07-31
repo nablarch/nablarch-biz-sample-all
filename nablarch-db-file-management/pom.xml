@@ -147,6 +147,21 @@
           <plugin>
             <groupId>jp.co.tis.gsp</groupId>
             <artifactId>gsp-dba-maven-plugin</artifactId>
+            <configuration>
+              <driver>org.h2.Driver</driver>
+              <url>${nablarch.db.url}</url>
+              <adminUser>${nablarch.db.adminUser}</adminUser>
+              <adminPassword>${nablarch.db.adminUser}</adminPassword>
+              <user>${nablarch.db.user}</user>
+              <password>${nablarch.db.user}</password>
+              <schema>PUBLIC</schema>
+              <useAccessor>true</useAccessor>
+              <rootPackage>please.change.me</rootPackage>
+              <entityPackageName>entity</entityPackageName>
+              <dataDirectory>src/test/resources/data/h2</dataDirectory>
+              <erdFile>src/main/resources/entity/data-model.edm</erdFile>
+              <extraDdlDirectory>src/main/resources/extraDdl/h2</extraDdlDirectory>
+            </configuration>
             <executions>
               <execution>
                 <id>default-cli</id>
