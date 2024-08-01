@@ -2,4 +2,9 @@
     <root to="DbFileManagement#index"/>
     <get path="/action/dbFileManagement" to="DbFileManagement#index"/>
     <match path="/action/:controller/:action"/>
+    <match path="/action/:controller/:action/:fileControlId">
+        <requirements>
+            <requirement name="fileControlId" value="\d+$" />
+        </requirements>
+    </match>
 </routes>

@@ -1,7 +1,7 @@
 package please.change.me;
 
+import nablarch.common.dao.UniversalDao;
 import nablarch.common.web.download.StreamResponse;
-import nablarch.common.web.token.OnDoubleSubmission;
 import nablarch.core.date.SystemTimeUtil;
 import nablarch.core.message.ApplicationException;
 import nablarch.core.util.DateUtil;
@@ -12,6 +12,7 @@ import nablarch.fw.web.interceptor.OnError;
 import nablarch.fw.web.upload.PartInfo;
 import nablarch.fw.web.upload.util.UploadHelper;
 import please.change.me.common.file.management.FileManagementUtil;
+import please.change.me.entity.FileControl;
 
 import java.sql.Blob;
 import java.util.List;
@@ -29,7 +30,9 @@ public class DbFileManagementAction {
      * @return HTTPレスポンス
      */
     public HttpResponse index(HttpRequest request, ExecutionContext context) {
-        return new HttpResponse("/WEB-INF/test/dbFileManagement.jsp");
+        List<FileControl> searchResult = UniversalDao.findAll(FileControl.class);
+        context.setRequestScopedVar("searchResult", searchResult);
+        return new HttpResponse("/WEB-INF/dbFileManagement/index.jsp");
     }
 
     /**
@@ -39,36 +42,23 @@ public class DbFileManagementAction {
      * @param context 実行コンテキスト
      * @return HTTPレスポンス
      */
-    @OnDoubleSubmission
-    @OnError(type = ApplicationException.class, path = "/WEB-INF/test/dbFileManagement.jsp")
+    @OnError(type = ApplicationException.class, path = "/WEB-INF/dbFileManagement/index.jsp")
     public HttpResponse upload(HttpRequest request, ExecutionContext context) {
 
         // アップロードファイルの取得
         List<PartInfo> partInfoList = request.getPart("uploadFile");
         if (partInfoList.isEmpty()) {
-            return new HttpResponse("/WEB-INF/test/dbFileManagement.jsp");
+            return new HttpResponse("/WEB-INF/dbFileManagement/index.jsp");
         }
         PartInfo partInfo = partInfoList.get(0);
 
         // ファイルの登録
-        // String fileId =
         FileManagementUtil.save(partInfo);
 
-//
-//        LoginUserPrincipal userContext = SessionUtil.get(context, "userContext");
-//
-//        List<Project> projects = readFileAndValidate(partInfo, userContext);
-//
-//        // DBへ一括登録する
-//        insertProjects(projects);
-//
-//        // 完了メッセージの追加
-//        context.setRequestScopedVar("uploadProjectSize", projects.size());
-//
         // ファイルの保存
         saveFile(partInfo);
 
-        return new HttpResponse("/WEB-INF/test/dbFileManagement.jsp");
+        return new HttpResponse(303, "redirect:///action/dbFileManagement");
     }
 
     /**
@@ -78,19 +68,17 @@ public class DbFileManagementAction {
      * @param context 実行コンテキスト
      * @return HTTPレスポンス
      */
-    @OnError(type = ApplicationException.class, path = "/WEB-INF/test/dbFileManagement.jsp")
+    @OnError(type = ApplicationException.class, path = "/WEB-INF/dbFileManagement/index.jsp")
     public HttpResponse download(HttpRequest request, ExecutionContext context) {
-
         //ダウンロードに使用するファイルID
-        String fileId = "000000000000000019";
+        String fileControlId = request.getParam("fileControlId")[0];
 
         // ファイルをDBから取得
-        Blob blob = FileManagementUtil.find(fileId);
+        Blob blob = FileManagementUtil.find(fileControlId);
 
         // レスポンス情報を設定
         StreamResponse response = new StreamResponse(blob);
-        response.setContentType("text/csv; charset=Shift_JIS");
-        response.setContentDisposition("プロジェクト一覧.csv");
+        response.setContentDisposition(fileControlId);
 
         return response;
     }

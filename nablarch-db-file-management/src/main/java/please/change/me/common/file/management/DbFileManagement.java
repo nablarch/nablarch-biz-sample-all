@@ -4,7 +4,7 @@ import nablarch.common.dao.UniversalDao;
 import nablarch.common.idgenerator.IdFormatter;
 import nablarch.common.idgenerator.IdGenerator;
 import nablarch.fw.web.upload.PartInfo;
-import please.change.me.common.file.management.entity.FileControl;
+import please.change.me.entity.FileControl;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.*;
