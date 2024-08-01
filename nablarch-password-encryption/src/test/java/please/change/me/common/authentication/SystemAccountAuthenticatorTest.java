@@ -350,14 +350,16 @@ class SystemAccountAuthenticatorTest {
         //**********************************************************************
         createPasswordAuthenticator("20130802").authenticate("active user2", "pass!!!");
 
-        PreparedStatement statement = con.prepareStatement("select * from system_account where user_id = ?");
-        statement.setString(1, "5");
-        ResultSet resultSet = statement.executeQuery();
-        assertThat(resultSet.next(), is(true));
-        assertThat("ユーザはロック中のまま", resultSet.getString("USER_ID_LOCKED"), is("FALSE"));
-        assertThat("失敗回数は変わらない", resultSet.getInt("FAILED_COUNT"), is(0));
-        assertThat("最終ログイン日時が更新されること", resultSet.getTimestamp("LAST_LOGIN_DATE_TIME"),
-                is(Timestamp.valueOf("2013-08-02 00:11:22.000")));
+        try(PreparedStatement statement = con.prepareStatement("select * from system_account where user_id = ?")) {
+            statement.setString(1, "5");
+            try(ResultSet resultSet = statement.executeQuery()) {
+                assertThat(resultSet.next(), is(true));
+                assertThat("ユーザはロック中のまま", resultSet.getString("USER_ID_LOCKED"), is("FALSE"));
+                assertThat("失敗回数は変わらない", resultSet.getInt("FAILED_COUNT"), is(0));
+                assertThat("最終ログイン日時が更新されること", resultSet.getTimestamp("LAST_LOGIN_DATE_TIME"),
+                        is(Timestamp.valueOf("2013-08-02 00:11:22.000")));
+            }
+        }
 
         //**********************************************************************
         // 現在日付がユーザの有効期限（終了日）と同日
