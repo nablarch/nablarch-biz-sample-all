@@ -1,6 +1,6 @@
 package please.change.me.common.authentication;
 
-import please.change.me.common.authentication.entity.SystemAccount;
+import please.change.me.entity.SystemAccount;
 import please.change.me.common.authentication.encrypt.PasswordEncryptor;
 import please.change.me.common.authentication.exception.AuthenticationFailedException;
 import please.change.me.common.authentication.exception.PasswordExpiredException;

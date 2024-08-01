@@ -1,4 +1,4 @@
-package please.change.me.common.authentication.entity;
+package please.change.me.entity;
 
 import jakarta.annotation.Generated;
 import jakarta.persistence.*;
