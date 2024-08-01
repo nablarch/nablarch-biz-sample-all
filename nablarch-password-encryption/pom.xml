@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.nablarch.tool</groupId>
-  <artifactId>password-encryption-sample-using-database</artifactId>
+  <artifactId>nablarch-password-encryption</artifactId>
   <version>6-NEXT-SNAPSHOT</version>
   <description>データベースを用いたパスワード認証機能サンプル</description>
 
