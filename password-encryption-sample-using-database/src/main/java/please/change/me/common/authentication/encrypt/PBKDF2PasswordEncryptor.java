@@ -4,7 +4,7 @@ import nablarch.core.util.Base64Util;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
@@ -141,7 +141,7 @@ public class PBKDF2PasswordEncryptor implements PasswordEncryptor {
         if (fixed == null) {
             throw new IllegalStateException("Fixed salt string is not set.");
         }
-        return (fixed + saltSeed).getBytes(Charset.forName("UTF-8"));
+        return (fixed + saltSeed).getBytes(StandardCharsets.UTF_8);
     }
 
     /**
