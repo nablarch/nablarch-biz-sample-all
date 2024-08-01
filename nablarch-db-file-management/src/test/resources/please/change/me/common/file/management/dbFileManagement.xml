@@ -23,7 +23,7 @@
     <!-- 格納ファイルの最大長(単位：バイト) -->
     <property name="maxFileSize" value="10000000"/>
     <!-- 採番機能で、DbFileManagement用の採番である旨を識別するためのKey -->
-    <property name="fileIdKey" value="1103" />
+    <property name="fileIdKey" value="FILE_CONTROL_SEQ" />
     <!-- 採番機能 -->
     <property name="idGenerator" ref="mockIdGenerator" />
     <!-- 採番時に使用するフォーマッター -->
