@@ -36,7 +36,7 @@ class SystemAccountAuthenticatorTest {
     private static Connection con;
 
     /** パスワード暗号化コンポーネント */
-    private static PasswordEncryptor encryptor = getEncryptor();
+    private static final PasswordEncryptor encryptor = getEncryptor();
 
     /**
      * 必要な初期設定を行った {@link PasswordEncryptor} を返却する。
@@ -54,7 +54,7 @@ class SystemAccountAuthenticatorTest {
 
     /**
      * セットアップ。
-     *
+     * <p>
      * テスト時に使用するデータベース接続の生成及びテスト用のテーブルのセットアップを行う。
      *
      * @throws SQLException 例外
@@ -368,7 +368,7 @@ class SystemAccountAuthenticatorTest {
     /**
      * 対象のユーザが未ロックだが、認証失敗しロックされた場合{@link UserIdLockedException}が送出されること。
      * また、対象のユーザのロック状態が未ロックからロックに変更されること。
-     *
+     * <p>
      * 以下の順でテストを実施する。
      * <ol>
      *     <li>認証が成功することを確認</li>
@@ -515,7 +515,7 @@ class SystemAccountAuthenticatorTest {
         // テストのために固定日付で動作させる。
         final FixedSystemTimeProvider systemTimeProvider = new FixedSystemTimeProvider();
         systemTimeProvider.setFixedDate(sysDate + "001122");
-        SystemRepository.load(() -> new HashMap<String, Object>() {
+        SystemRepository.load(() -> new HashMap<>() {
             {
                 put("systemTimeProvider", systemTimeProvider);
             }

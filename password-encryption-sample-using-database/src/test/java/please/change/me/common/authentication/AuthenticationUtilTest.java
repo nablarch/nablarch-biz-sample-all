@@ -2,7 +2,6 @@ package please.change.me.common.authentication;
 
 import please.change.me.common.authentication.encrypt.PasswordEncryptor;
 import please.change.me.common.authentication.exception.AuthenticationException;
-import nablarch.core.repository.ObjectLoader;
 import nablarch.core.repository.SystemRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -39,15 +38,10 @@ class AuthenticationUtilTest {
      * @param encryptor {@link SystemRepository} に登録する {@link PasswordEncryptor}
      */
     private static void setupAuthenticationComponents(final PasswordAuthenticator authenticator, final PasswordEncryptor encryptor) {
-        SystemRepository.load(new ObjectLoader() {
-            @Override
-            public Map<String, Object> load() {
-                return new HashMap<String, Object>() {
-                    {
-                        put("authenticator", authenticator);
-                        put("passwordEncryptor", encryptor);
-                    }
-                };
+        SystemRepository.load(() -> new HashMap<>() {
+            {
+                put("authenticator", authenticator);
+                put("passwordEncryptor", encryptor);
             }
         });
     }
