@@ -30,7 +30,7 @@ public interface FileManagement {
     /**
      * ファイルを削除する。
      * @param fileId ファイル管理ID
-     * @exception RuntimeException 削除対象のファイルが見つからなかった場合。
+     * @throws RuntimeException 削除対象のファイルが見つからなかった場合。
      */
     void delete(String fileId) throws RuntimeException;
     
@@ -38,7 +38,7 @@ public interface FileManagement {
      * ファイルを取得する。
      * @param fileId ファイル管理ID
      * @return ファイルのデータ。
-     * @exception RuntimeException 指定したファイルが見つからなかった場合
+     * @throws RuntimeException 指定したファイルが見つからなかった場合
      */
     Blob find(String fileId) throws RuntimeException;
 }
