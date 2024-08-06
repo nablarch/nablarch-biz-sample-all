@@ -20,7 +20,7 @@ jetty-ee10-maven-pluginを実行し、組み込みTomcatを起動させます。
 
     $ mvn jetty:run
 
-起動に成功したら、ブラウザで`http://localhost:8080/` を開いてください。  
+起動に成功したら、ブラウザで`http://localhost:9080/` を開いてください。  
 データベースを用いたファイル管理機能のサンプル画面が表示されます。  
 
 
