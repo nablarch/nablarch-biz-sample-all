@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://tis.co.jp/nablarch/component-configuration"
+        xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration https://nablarch.github.io/schema/component-configuration.xsd">
+
+  <import file="rest-component-configuration.xml" />
+
+  <!-- テスティングフレームワークの設定 -->
+  <import file="nablarch/test/test-data.xml"/>
+  <import file="nablarch/test/test-transaction.xml"/>
+  <import file="nablarch/test/rest-request-test.xml"/>
+
+  <!-- 汎用のDB設定 -->
+  <component name="dbInfo" class="nablarch.test.core.db.GenericJdbcDbInfo">
+    <property name="dataSource" ref="dataSource"/>
+    <property name="schema" value="${nablarch.db.schema}"/>
+  </component>
+
+  <!-- テスト用HttpServerにJetty6を定義する -->
+  <component name="httpServerFactory" class="nablarch.fw.web.httpserver.HttpServerFactoryJetty12"/>
+
+  <!-- テストの設定で本ハンドラのコンポーネント定義を上書く。
+       コンポーネント名を合わせることで上書きを行う。 -->
+
+  <!-- テスト用にCSRF対策を無効化 -->
+  <component name="csrfTokenVerificationHandler" class="nablarch.test.NopHandler" />
+
+  <!-- テスト用に署名アルゴリズムを無しに変更 -->
+  <component name="idTokenVerifier" class="please.change.me.common.oidc.verification.cognito.mock.IdTokenVerifierMock" />
+  <component name="adb2cIdTokenVerifier" class="please.change.me.common.oidc.verification.adb2c.mock.IdTokenVerifierMock" />
+
+  <component name="defaultProcessor" class="nablarch.test.core.http.NablarchSIDManager"/>
+
+  <!-- RESTfulウェブサービスのテスト時にもunit-test.xmlで上書きできる修正が入った後に削除予定 -->
+  <!-- HTML5の仕様で記述しているため既存のHTMLチェッカを外す -->
+  <component name="httpTestConfiguration" class="nablarch.test.core.http.HttpTestConfiguration">
+    <property name="checkHtml" value="false" />
+  </component>
+
+</component-configuration>

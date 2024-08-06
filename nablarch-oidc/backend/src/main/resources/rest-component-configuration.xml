@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<component-configuration
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  https://nablarch.github.io/schema/component-configuration.xsd">
+
+  <!-- テーブル定義 -->
+  <import file="nablarch/schema-config.xml" />
+
+  <!-- コード機能 -->
+  <import file="nablarch/common/code.xml"/>
+
+  <!-- メッセージ機能の設定 -->
+  <import file="nablarch/core/message-by-property-files.xml"/>
+
+  <!-- 精査に使用する文字集合定義 -->
+  <import file="nablarch/core/validation/charset-definition.xml" />
+
+  <!-- BeanValidation実装クラス -->
+  <component name="validationStrategy" class="nablarch.common.web.validator.BeanValidationStrategy" />
+
+  <!-- 環境設定ファイル -->
+  <config-file file="common.properties"/>
+  <config-file file="env.properties"/>
+
+  <!-- データベース設定 -->
+  <import file="nablarch/core/db-base.xml" />
+  <import file="nablarch/core/db/connection-factory-datasource.xml"/>
+  <component name="dataSource"
+             class="com.zaxxer.hikari.HikariDataSource" autowireType="None">
+    <property name="driverClassName" value="${nablarch.db.jdbcDriver}"/>
+    <property name="jdbcUrl"         value="${nablarch.db.url}"/>
+    <property name="username"        value="${nablarch.db.user}"/>
+    <property name="password"        value="${nablarch.db.password}"/>
+    <property name="maximumPoolSize" value="${nablarch.db.maxPoolSize}"/>
+  </component>
+
+  <!-- スレッドコンテキストハンドラ -->
+  <import file="nablarch/webui/threadcontext-for-webui-in-sessionstore.xml"/>
+
+  <!--パッケージマッピングの設定 -->
+  <component name="packageMapping" class="nablarch.integration.router.PathOptionsProviderRoutesMapping">
+    <property name="pathOptionsProvider">
+      <component class="nablarch.integration.router.jaxrs.JaxRsPathOptionsProvider">
+        <property name="applicationPath" value="${nablarch.webApi.applicationPath}"/>
+        <property name="basePackage" value="${nablarch.commonProperty.basePackage}"/>
+      </component>
+    </property>
+    <property name="methodBinderFactory">
+      <component class="nablarch.fw.jaxrs.JaxRsMethodBinderFactory">
+        <property name="handlerList">
+          <component class="nablarch.integration.jaxrs.jersey.JerseyJaxRsHandlerListFactory"/>
+        </property>
+      </component>
+    </property>
+  </component>
+
+  <!-- ダイアレクト設定 -->
+  <component name="dialect" class="nablarch.core.db.dialect.H2Dialect" />
+
+  <!-- セッションストア機能 -->
+  <component name="sessionManager" class="nablarch.common.web.session.SessionManager">
+    <property name="defaultStoreName" value="${nablarch.sessionManager.defaultStoreName}" />
+    <property name="availableStores">
+      <list>
+        <!-- HTTPセッション上に保存するセッションストア -->
+        <component-ref name="httpSessionStore" />
+      </list>
+    </property>
+  </component>
+
+  <!-- HTTPセッション上に保存するセッションストア -->
+  <component name="httpSessionStore" class="nablarch.common.web.session.store.HttpSessionStore">
+    <property name="expires" value="${nablarch.sessionManager.expires}"/>
+    <property name="stateEncoder" ref="serializeEncoder" />
+  </component>
+
+  <!-- HTTPセッションストアの直列化に使用するコンポーネント -->
+  <component name="serializeEncoder" class="nablarch.common.web.session.encoder.JavaSerializeStateEncoder" />
+
+  <!-- セッション変数保存ハンドラ -->
+  <component name="sessionStoreHandler" class="nablarch.common.web.session.SessionStoreHandler">
+    <property name="sessionManager" ref="sessionManager"/>
+    <property name="cookieName"   value="${nablarch.sessionStoreHandler.cookieName}"/>
+    <property name="cookiePath"   value="${nablarch.sessionStoreHandler.cookiePath}"/>
+    <property name="cookieSecure" value="${nablarch.sessionStoreHandler.cookieSecure}"/>
+  </component>
+
+  <!-- CSRFトークンの検証ハンドラ -->
+  <component name="csrfTokenVerificationHandler" class="nablarch.fw.web.handler.CsrfTokenVerificationHandler" />
+
+  <!-- ハンドラキュー構成 -->
+  <component name="webFrontController" class="nablarch.fw.web.servlet.WebFrontController">
+    <property name="handlerQueue">
+      <list>
+        <component class="nablarch.fw.web.handler.HttpCharacterEncodingHandler"/>
+
+        <component class="nablarch.common.handler.threadcontext.ThreadContextClearHandler"/>
+
+        <component class="nablarch.fw.handler.GlobalErrorHandler"/>
+
+        <component class="nablarch.fw.jaxrs.JaxRsResponseHandler" >
+          <property name="responseFinishers">
+            <list>
+              <component class="nablarch.fw.jaxrs.AdoptHandlerResponseFinisher">
+                <property name="handler">
+                  <component class="nablarch.fw.web.handler.SecureHandler">
+                    <property name="secureResponseHeaderList">
+                      <list>
+                        <component class="nablarch.fw.web.handler.secure.ContentTypeOptionsHeader" />
+                        <component class="nablarch.fw.web.handler.secure.ReferrerPolicyHeader" />
+                        <component class="nablarch.fw.web.handler.secure.CacheControlHeader" />
+                      </list>
+                    </property>
+                  </component>
+                </property>
+              </component>
+            </list>
+          </property>
+        </component>
+
+        <component-ref name="sessionStoreHandler" />
+
+        <component-ref name="threadContextHandler"/>
+
+        <!-- CSRFトークン検証ハンドラ -->
+        <component-ref name="csrfTokenVerificationHandler"/>
+
+        <component class="nablarch.common.web.handler.HttpAccessLogHandler"/>
+
+        <component-ref name="dbConnectionManagementHandler"/>
+
+        <component-ref name="transactionManagementHandler"/>
+
+        <component-ref name="packageMapping"/>
+      </list>
+    </property>
+  </component>
+
+  <!-- 初期化が必要なコンポーネント -->
+  <component name="initializer" class="nablarch.core.repository.initialization.BasicApplicationInitializer">
+    <property name="initializeList">
+      <list>
+        <!-- パッケージマッピング -->
+        <component-ref name="packageMapping" />
+        <!-- コードのローダ -->
+        <component-ref name="codeLoader" />
+        <!-- コードのキャッシュ -->
+        <component-ref name="codeCache" />
+        <!-- リソースのキャッシュ -->
+        <component-ref name="stringResourceCache" />
+        <!-- RSA公開鍵プロバイダ（AWS） -->
+        <component-ref name="rsaKeyProvider" />
+        <!-- RSA公開鍵プロバイダ（Azure） -->
+        <component-ref name="adb2cRsaKeyProvider" />
+      </list>
+    </property>
+  </component>
+
+  <component name="idTokenVerifier" class="please.change.me.common.oidc.verification.cognito.jwt.CognitoIdTokenVerifier">
+    <property name="region" value="${aws.cognito.region}" />
+    <property name="userPoolId" value="${aws.cognito.userPool.id}" />
+    <property name="clientId" value="${aws.cognito.userPool.clientId}" />
+    <property name="signatureAlgorithmProvider" ref="signatureAlgorithmProvider" />
+  </component>
+  <component name="signatureAlgorithmProvider" class="please.change.me.common.oidc.verification.cognito.jwt.CognitoSignatureAlgorithmProvider">
+    <property name="rsaKeyProvider" ref="rsaKeyProvider" />
+  </component>
+  <component name="rsaKeyProvider" class="please.change.me.common.oidc.verification.cognito.jwt.CognitoRSAKeyProvider">
+    <property name="region" value="${aws.cognito.region}" />
+    <property name="userPoolId" value="${aws.cognito.userPool.id}" />
+  </component>
+
+  <component name="adb2cIdTokenVerifier" class="please.change.me.common.oidc.verification.adb2c.jwt.Adb2cIdTokenVerifier">
+    <property name="tenant" value="${azure.adb2c.tenant}" />
+    <property name="applicationId" value="${azure.adb2c.applicationId}" />
+    <property name="directoryId" value="${azure.adb2c.directoryId}" />
+    <property name="signatureAlgorithmProvider" ref="adb2cSignatureAlgorithmProvider" />
+  </component>
+  <component name="adb2cSignatureAlgorithmProvider" class="please.change.me.common.oidc.verification.adb2c.jwt.Adb2cSignatureAlgorithmProvider">
+    <property name="rsaKeyProvider" ref="adb2cRsaKeyProvider" />
+  </component>
+  <component name="adb2cRsaKeyProvider" class="please.change.me.common.oidc.verification.adb2c.jwt.Adb2cRSAKeyProvider">
+    <property name="tenant" value="${azure.adb2c.tenant}" />
+    <property name="signInPolicy" value="${azure.adb2c.signInPolicy}" />
+  </component>
+
+</component-configuration>
