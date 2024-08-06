@@ -21,13 +21,6 @@
     <!-- 環境ごとのリソースディレクトリ(プロファイルにより切り替わる) -->
     <env.resources>${project.basedir}/src/env/${env.dir}/resources</env.resources>
 
-    <!-- toolsディレクトリへのパス -->
-    <nablarch.tools.dir>${project.basedir}/tools</nablarch.tools.dir>
-    <!-- JSP静的解析ツールにおいて、「チェック対象外とするディレクトリ（ファイル）名を正規表現で設定する」ための項目。
-         本設定を有効にする場合は、toolsプロジェクト中のnablarch-tools.xml中の設定のコメントアウトも解除すること。
-    <jspanalysis.excludePatterns></jspanalysis.excludePatterns>
-    -->
-
     <!-- gsp-dba-maven-pluginが使用するデータベース設定 -->
     <nablarch.db.jdbcDriver>org.h2.Driver</nablarch.db.jdbcDriver>
     <nablarch.db.url>jdbc:h2:./h2/db/SAMPLE</nablarch.db.url>
@@ -79,16 +72,6 @@
           <scope>runtime</scope>
         </dependency>
       </dependencies>
-    </profile>
-
-    <!-- 本番環境 -->
-    <profile>
-      <id>prod</id>
-      <properties>
-        <env.name>本番環境</env.name>
-        <env.dir>prod</env.dir>
-        <env.classifier>prod</env.classifier>
-      </properties>
     </profile>
 
     <!--
@@ -450,23 +433,11 @@
           </filesets>
         </configuration>
       </plugin>
-      <!-- ================ここから任意で使用するツールの設定================ -->
       <!-- gsp-dba-maven-pluginで自動生成したソースをビルド時に使用するための設定 -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
       </plugin>
-      <!-- ant経由でJSP静的解析ツールを起動する -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-      </plugin>
-      <!-- カバレッジ取得 -->
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-      </plugin>
-      <!-- ================ここまで任意で使用するツールの設定================ -->
     </plugins>
   </build>
 </project>
