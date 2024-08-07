@@ -1,8 +1,8 @@
 import { Box, Button, Container, Heading, Stack, Text } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MsalProvider, useIsAuthenticated, useMsal } from '@azure/msal-react';
-import { PublicClientApplication } from '@azure/msal-browser';
+import { Configuration, PublicClientApplication } from '@azure/msal-browser';
 import TokenClaimsTable from './TokenClaimsTable';
 import BackendSignInButton from './BackendSignInButton';
 
@@ -16,7 +16,7 @@ type IdToken = {
 //   https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/initialization.md
 // Viteでは import.meta.env で環境変数にアクセスできる
 //   https://ja.vitejs.dev/guide/env-and-mode.html
-const msalConfig = {
+const configuration: Configuration = {
   auth: {
     clientId: import.meta.env.VITE_ADB2C_APPLICATION_ID,
     authority: `https://${import.meta.env.VITE_ADB2C_TENANT}.b2clogin.com/${import.meta.env.VITE_ADB2C_TENANT}.onmicrosoft.com/${import.meta.env.VITE_ADB2C_SIGNIN_POLICY}`,
@@ -34,7 +34,7 @@ const loginRequest = {
 }
 
 function Adb2cPage() {
-  const msalInstance = new PublicClientApplication(msalConfig);
+  const msalInstance = new PublicClientApplication(configuration);
   // MsalProvider配下では認証状態コンテキストにアクセスできるため、主コンテンツでアクセスできるように別コンポーネントに分けておく
   return (
     <MsalProvider instance={msalInstance}>

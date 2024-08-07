@@ -1,14 +1,15 @@
 import { Auth, Hub } from 'aws-amplify';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Button, Container, Heading, Stack, Text } from '@chakra-ui/react';
 import { CognitoIdToken } from 'amazon-cognito-identity-js';
 import TokenClaimsTable from './TokenClaimsTable';
 import { useNavigate } from 'react-router-dom';
 import BackendSignInButton from './BackendSignInButton';
 
+// Amplifyは Gen2 がリリースされているが、ここでは Gen1 v5 は使用する
 // 環境情報の設定項目についてはガイドを参照する
-//   https://docs.amplify.aws/gen1/react/prev/tools/libraries/configure-categories/#authentication-amazon-cognito
-// Amplify.configure がガイドで案内されているが、Auth関連しか使わないので Auth.configure を使っている
+//   https://docs.amplify.aws/gen1/react/prev/tools/libraries/configure-categories/#scoped-configuration
+// Auth関連しか使わないので、 Amplify.configure ではなく Auth.configure を使っている
 //   https://github.com/aws-amplify/amplify-js/issues/3635#issuecomment-686530160
 // Viteでは import.meta.env で環境変数にアクセスできる
 //   https://ja.vitejs.dev/guide/env-and-mode.html
@@ -41,7 +42,7 @@ function CognitoPage() {
     // 認証イベントにコールバックを設定できるので、操作に応じた処理を登録しておく。
     // 認証失敗など細かいハンドリングを本来はすべきだが、ここでは簡易的に成功した場合のみ実装しておく。
     // なお、認証イベントの一覧については以下のガイドに記載されている。
-    //   https://docs.amplify.aws/lib/auth/auth-events/q/platform/js/
+    //   https://docs.amplify.aws/gen1/javascript/prev/build-a-backend/auth/auth-events/
     Hub.listen('auth', async (data) => {
       switch (data.payload.event) {
         case 'cognitoHostedUI':
@@ -57,7 +58,7 @@ function CognitoPage() {
 
   const signIn = () => {
     // ユーザープールの Hosted UI を使用している想定のため、federatedSignIn の方を使う
-    //   https://docs.amplify.aws/lib/auth/advanced/q/platform/js/#identity-pool-federation
+    //   https://docs.amplify.aws/gen1/javascript/prev/build-a-backend/auth/advanced-workflows/#identity-pool-federation
     Auth.federatedSignIn();
   }
 

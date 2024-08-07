@@ -1,4 +1,4 @@
-import { Button, Container, Heading, Stack, Text } from '@chakra-ui/react';
+import { Button, Container, Heading, Stack } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 function Top() {

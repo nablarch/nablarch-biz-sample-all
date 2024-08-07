@@ -1,13 +1,8 @@
 # OIDCを用いて認証するサンプルアプリケーションのフロントエンド
 
-## 動作確認の環境
-
-* Node : 20.15.1
-* npm : 10.7.0
-
 ## 主な技術スタック
 
-- [React](https://react.dev/)
+- [React](https://ja.reactjs.org/)
 - [Chakra UI](https://chakra-ui.com)
 - [React Router](https://reactrouter.com/en/main)
 - [Vite](https://ja.vitejs.dev/)
