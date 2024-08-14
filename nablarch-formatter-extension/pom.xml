@@ -179,6 +179,14 @@
       <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>com.nablarch.dev</groupId>
+      <artifactId>nablarch-test-support</artifactId>
+      <version>6-NEXT-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
