@@ -1,0 +1,24 @@
+#-------------------------------------------------------------------------------
+# プロジェクト登録電文の業務データ部レイアウト定義
+#-------------------------------------------------------------------------------
+file-type:        "Fixed" # 固定長
+text-encoding:    "MS932" # 文字列型フィールドの文字エンコーディング
+record-length:    2120    # 各レコードの長さ
+record-separator: "\r\n"  # 改行コード
+
+[data]
+1    projectName                   XN(256)     # プロジェクト名
+257  projectType                    X(128)     # プロジェクト種別
+385  projectClass                   X(128)     # プロジェクト分類
+513  projectStartDate               X(8)       # プロジェクト開始日付
+521  projectEndDate                 X(8)       # プロジェクト終了日付
+529  clientId                       X(9)       # 顧客ID
+538  projectManager                XN(256)     # プロジェクトマネージャー
+794  projectLeader                 XN(256)     # プロジェクトリーダー
+1050 userId                         X(9)       # ユーザID
+1059 note                          XN(1024)    # 備考
+2083 sales                          X(9)       # 売上高
+2092 costOfGoodsSold                X(9)       # 売上原価
+2101 sga                            X(9)       # 販管費
+2110 allocationOfCorpExpenses       X(9)       # 本社配賦
+2119 ?filler1                       X(2)       # 空白領域

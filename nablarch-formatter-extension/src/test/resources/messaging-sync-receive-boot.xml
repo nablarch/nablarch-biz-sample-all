@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration https://nablarch.github.io/schema/component-configuration.xsd">
+
+  <!-- プロダクション用の設定読み込み -->
+  <import file="messaging-sync-receive-component-configuration.xml"/>
+
+  <import file="nablarch/core/date_test.xml"/>
+
+  <!-- マルチスレッド実行制御ハンドラの無効化 -->
+  <component name ="multiThreadExecutionHandler" class="nablarch.test.NopHandler" />
+
+  <!-- リクエストスレッド側のループハンドラの無効化 -->
+  <component name="requestThreadLoopHandler" class="nablarch.test.NopHandler" />
+
+  <!-- テスト用のフォーマットファクトリ -->
+  <component name="formatterFactory" class="nablarch.core.dataformat.FormatterFactory">
+    <property name="cacheLayoutFileDefinition" value="false" />
+  </component>
+
+  <!-- フレームワーク制御ヘッダー定義(テスト用) -->
+  <component name="fwHeaderDefinition"
+      class="nablarch.fw.messaging.StandardFwHeaderDefinition">
+    <property name="formatFileName" value="header" />
+  </component>
+
+  <!-- テスト用メッセージングプロバイダ -->
+  <component name="messagingProvider"
+      class="nablarch.test.core.messaging.EmbeddedMessagingProvider">
+    <!-- キュー定義 -->
+    <property name="queueNames">
+      <list>
+        <!-- サービス側にある要求受信キューの論理名 -->
+        <value>TEST.REQUEST</value>
+        <value>TEST.RESPONSE</value>
+      </list>
+    </property>
+  </component>
+
+  <!-- 初期化が必要なコンポーネント -->
+  <component name="initializer"
+             class="nablarch.core.repository.initialization.BasicApplicationInitializer">
+    <property name="initializeList">
+      <list>
+        <!-- batch/handler/processStop.xml:処理停止ハンドラ -->
+        <component-ref name="processStopHandler" />
+        <!-- メッセージングプロバイダ -->
+        <component-ref name="messagingProvider" />
+      </list>
+    </property>
+  </component>
+
+</component-configuration>
