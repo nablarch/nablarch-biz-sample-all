@@ -83,6 +83,15 @@
   </component>
   <!-- メッセージング用コンポーネント定義ここまで============================================================================================= -->
 
+  <component name="formatterFactory" class="please.change.me.core.dataformat.FormUrlEncodedDataFormatterFactory"/>
+
+  <component name="fixedLengthConvertorSetting"
+             class="nablarch.core.dataformat.convertor.FixedLengthConvertorSetting">
+    <property name="fixedLengthConvertorFactory">
+      <component class="please.change.me.core.dataformat.CustomFixedLengthConvertorFactory" />
+    </property>
+  </component>
+
   <!-- ハンドラキュー構成 -->
   <list name="handlerQueue">
 

@@ -14,9 +14,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <db.adminUser>SAMPLE</db.adminUser>
-    <db.user>SAMPLE</db.user>
-    
     <activemq.version>2.28.0</activemq.version>
   </properties>
 
@@ -192,47 +189,6 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>jp.co.tis.gsp</groupId>
-        <artifactId>gsp-dba-maven-plugin</artifactId>
-        <version>5.0.0-SNAPSHOT</version>
-        <configuration>
-          <adminUser>${db.adminUser}</adminUser>
-          <adminPassword>${db.adminUser}</adminPassword>
-          <user>${db.user}</user>
-          <password>${db.user}</password>
-          <driver>org.h2.Driver</driver>
-          <url>jdbc:h2:./h2/db/SAMPLE</url>
-
-          <dataDirectory>src/test/resources/data</dataDirectory>
-          <erdFile>src/main/resources/entity/data-model.edm</erdFile>
-
-          <rootPackage>please.change.me</rootPackage>
-          <entityPackageName>entity</entityPackageName>
-          <useAccessor>true</useAccessor>
-          <javaFileDestDir>${project.build.directory}/generated-sources/entity</javaFileDestDir>
-          <schema>PUBLIC</schema>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>2.2.220</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <id>generate-ddl</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>generate-ddl</goal>
-              <goal>execute-ddl</goal>
-              <goal>generate-entity</goal>
-              <goal>load-data</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.5</version>
@@ -314,25 +270,5 @@
       </extension>
     </extensions>
   </build>
-
-  <reporting>
-    <plugins>
-<!--      <plugin>-->
-<!--        <groupId>org.apache.maven.plugins</groupId>-->
-<!--        <artifactId>maven-surefire-report-plugin</artifactId>-->
-<!--      </plugin>-->
-<!--      <plugin>-->
-<!--        <groupId>org.apache.maven.plugins</groupId>-->
-<!--        <artifactId>maven-javadoc-plugin</artifactId>-->
-<!--        <configuration>-->
-<!--          <additionalparam>-Xdoclint:none</additionalparam>-->
-<!--        </configuration>-->
-<!--      </plugin>-->
-<!--      <plugin>-->
-<!--        <groupId>org.jacoco</groupId>-->
-<!--        <artifactId>jacoco-maven-plugin</artifactId>-->
-<!--      </plugin>-->
-    </plugins>
-  </reporting>
 
 </project>

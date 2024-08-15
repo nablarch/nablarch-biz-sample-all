@@ -7,6 +7,17 @@
 
   <import file="messaging-sync-receive-boot.xml"/>
 
+  <component name="fixedLengthConvertorSetting"
+             class="nablarch.core.dataformat.convertor.FixedLengthConvertorSetting">
+    <property name="fixedLengthConvertorFactory">
+      <component class="please.change.me.core.dataformat.CustomFixedLengthConvertorFactory" />
+    </property>
+  </component>
+
+  <!-- テストデータコンバータ定義 -->
+  <component name="TestDataConverter_FormUrlEncoded"
+             class="please.change.me.test.core.file.FormUrlEncodedTestDataConverter"/>
+
   <!-- 汎用のDB設定 -->
   <component name="dbInfo" class="nablarch.test.core.db.GenericJdbcDbInfo">
     <property name="dataSource" ref="dataSource"/>

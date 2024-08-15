@@ -39,6 +39,8 @@
     </property>
   </component>
 
+  <component name="formatterFactory" class="please.change.me.core.dataformat.FormUrlEncodedDataFormatterFactory"/>
+
   <!-- 初期化が必要なコンポーネント -->
   <component name="initializer"
              class="nablarch.core.repository.initialization.BasicApplicationInitializer">
