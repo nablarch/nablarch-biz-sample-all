@@ -17,18 +17,6 @@
     <activemq.version>2.28.0</activemq.version>
   </properties>
 
-  <profiles>
-    <profile>
-      <id>dev-deploy</id>
-      <distributionManagement>
-        <site>
-          <id>dev-deploy</id>
-          <url>${develop_test_report_url}</url>
-        </site>
-      </distributionManagement>
-    </profile>
-  </profiles>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
