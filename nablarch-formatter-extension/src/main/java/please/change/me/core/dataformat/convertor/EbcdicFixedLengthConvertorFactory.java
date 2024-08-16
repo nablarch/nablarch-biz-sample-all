@@ -1,4 +1,4 @@
-package please.change.me.core.dataformat;
+package please.change.me.core.dataformat.convertor;
 
 import nablarch.core.dataformat.convertor.FixedLengthConvertorFactory;
 import nablarch.core.util.map.CaseInsensitiveMap;
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * EBCDIC(CP930)用のデータタイプを追加した固定長フォーマット用のコンバータファクトリ。
  */
-public class CustomFixedLengthConvertorFactory extends FixedLengthConvertorFactory {
+public class EbcdicFixedLengthConvertorFactory extends FixedLengthConvertorFactory {
     @Override
     protected Map<String, Class<?>> getDefaultConvertorTable() {
         final Map<String, Class<?>> defaultConvertorTable = new CaseInsensitiveMap<Class<?>>(

@@ -10,7 +10,7 @@
   <component name="fixedLengthConvertorSetting"
              class="nablarch.core.dataformat.convertor.FixedLengthConvertorSetting">
     <property name="fixedLengthConvertorFactory">
-      <component class="please.change.me.core.dataformat.CustomFixedLengthConvertorFactory" />
+      <component class="please.change.me.core.dataformat.convertor.EbcdicFixedLengthConvertorFactory" />
     </property>
   </component>
 
