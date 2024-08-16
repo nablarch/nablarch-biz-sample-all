@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://tis.co.jp/nablarch/component-configuration"
+        xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration https://nablarch.github.io/schema/component-configuration.xsd">
+
+
+  <import file="messaging-sync-receive-boot.xml"/>
+
+  <component name="fixedLengthConvertorSetting"
+             class="nablarch.core.dataformat.convertor.FixedLengthConvertorSetting">
+    <property name="fixedLengthConvertorFactory">
+      <component class="please.change.me.core.dataformat.convertor.EbcdicFixedLengthConvertorFactory" />
+    </property>
+  </component>
+
+  <!-- テストデータコンバータ定義 -->
+  <component name="TestDataConverter_FormUrlEncoded"
+             class="please.change.me.test.core.file.FormUrlEncodedTestDataConverter"/>
+
+  <!-- 汎用のDB設定 -->
+  <component name="dbInfo" class="nablarch.test.core.db.GenericJdbcDbInfo">
+    <property name="dataSource" ref="dataSource"/>
+    <property name="schema" value="${nablarch.db.schema}"/>
+  </component>
+
+  <!-- テスティングフレームワークの設定 -->
+  <import file="nablarch/test/test-data.xml"/>
+  <import file="nablarch/test/test-transaction.xml"/>
+
+  <!--
+  マスタデータ復旧設定
+  マスタデータ復旧を使用する際には、いくつかの手順が必要になります。
+  設定追加・変更手順を参照して設定してください。
+  -->
+  <component name="masterDataRestorer"
+             class="nablarch.test.core.db.MasterDataRestorer">
+    <!-- バックアップスキーマ -->
+    <property name="backupSchema" value="PUBLIC"/>
+    <!-- 監視対象テーブル一覧 -->
+    <property name="tablesTobeWatched">
+      <list>
+        <value>ID_GENERATE</value>
+      </list>
+    </property>
+  </component>
+
+  <!-- エンティティテスト設定 -->
+  <component name="entityTestConfiguration" class="nablarch.test.core.entity.EntityTestConfiguration">
+    <property name="maxMessageId" value="{nablarch.core.validation.ee.Length.max.message}"/>
+    <property name="maxAndMinMessageId" value="{nablarch.core.validation.ee.Length.min.max.message}"/>
+    <property name="fixLengthMessageId" value="{nablarch.core.validation.ee.Length.fixed.message}"/>
+    <property name="underLimitMessageId" value="{nablarch.core.validation.ee.Length.min.max.message}"/>
+    <property name="minMessageId" value="{nablarch.core.validation.ee.Length.min.message}"/>
+    <property name="emptyInputMessageId" value="{nablarch.core.validation.ee.Required.message}"/>
+    <property name="characterGenerator">
+      <component name="characterGenerator"
+                 class="nablarch.test.core.util.generator.BasicJapaneseCharacterGenerator"/>
+    </property>
+    <property name="validationTestStrategy">
+      <component class="nablarch.test.core.entity.BeanValidationTestStrategy"/>
+    </property>
+  </component>
+</component-configuration>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<component-configuration
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  https://nablarch.github.io/schema/component-configuration.xsd">
+
+  <!-- テーブル定義 -->
+  <import file="nablarch/schema-config.xml" />
+
+  <!-- 環境設定ファイル -->
+  <config-file file="common.properties" />
+  <config-file file="env.properties" />
+
+  <!--
+  バッチ固有の設定読み込み
+  -->
+  <!-- データベース接続・トランザクション設定-->
+  <import file="nablarch/batch/db-for-batch.xml" />
+  <import file="data-source.xml"/>
+
+  <!-- ファイルパス設定 -->
+  <import file="nablarch/batch/filepath-for-batch.xml" />
+  <!-- スレッドコンテキスト機能 -->
+  <import file="nablarch/batch/threadcontext-for-batch.xml" />
+  <!-- 処理停止機能 -->
+  <import file="nablarch/common/standalone/process-stop.xml" />
+  <!-- プロセス多重起動防止機能 -->
+  <import file="nablarch/common/standalone/duplicate-process-check.xml" />
+  <!-- コミットログ機能 -->
+  <import file="nablarch/common/standalone/commit-log.xml" />
+  <!-- マルチスレッド実行制御機能 -->
+  <import file="nablarch/common/standalone/multi-thread.xml" />
+  <!-- プロセス常駐化機能 -->
+  <import file="nablarch/common/standalone/process-service.xml" />
+  <!-- リトライ機能 -->
+  <import file="nablarch/common/standalone/standalone-retry.xml" />
+  <!-- データリード機能 -->
+  <import file="nablarch/batch/batch-data-read.xml" />
+
+  <import file="nablarch/core/validation/charset-definition.xml"/>
+
+  <!-- メッセージング用コンポーネント定義ここから============================================================================================= -->
+  <!-- メッセージ応答制御ハンドラ -->
+  <component name="messageReplyHandler" class="nablarch.fw.messaging.handler.MessageReplyHandler" />
+
+  <component name="messagingProvider"
+      class="com.nablarch.example.sample.mom.EmbeddedMessagingProvider">
+    <property name="url"  value="tcp://localhost:61616" />
+    <!-- キュー定義 -->
+    <property name="queueNames">
+      <list>
+        <!-- サービス側にある要求受信キューの論理名 -->
+        <value>TEST.REQUEST</value>
+        <value>TEST.RESPONSE</value>
+      </list>
+    </property>
+  </component>
+
+  <!-- データリーダ定義 -->
+  <component
+    name  = "dataReader"
+    class = "nablarch.fw.messaging.reader.FwHeaderReader">
+    <!-- メッセージリーダ定義 -->
+    <property name = "messageReader">
+      <component
+        class = "nablarch.fw.messaging.reader.MessageReader">
+        <!-- 受信監視キューの論理名 -->
+        <property
+          name  = "receiveQueueName"
+          value = "${nablarch.receiveQueueName}"
+        />
+        <!-- 受信監視タイムアウト時間(msec) -->
+        <property
+          name  = "readTimeout"
+          value = "${nablarch.readTimeout}"
+        />
+      </component>
+    </property>
+  </component>
+  <!-- メッセージング用コンポーネント定義ここまで============================================================================================= -->
+
+  <component name="formatterFactory" class="please.change.me.core.dataformat.FormUrlEncodedDataFormatterFactory"/>
+
+  <component name="fixedLengthConvertorSetting"
+             class="nablarch.core.dataformat.convertor.FixedLengthConvertorSetting">
+    <property name="fixedLengthConvertorFactory">
+      <component class="please.change.me.core.dataformat.convertor.EbcdicFixedLengthConvertorFactory" />
+    </property>
+  </component>
+
+  <!-- ハンドラキュー構成 -->
+  <list name="handlerQueue">
+
+    <!-- ステータスコードを終了コードに変換するハンドラ -->
+    <component class="nablarch.fw.handler.StatusCodeConvertHandler" />
+
+    <!-- スレッドコンテキスト変数削除ハンドラ -->
+    <component class="nablarch.common.handler.threadcontext.ThreadContextClearHandler" />
+
+    <!-- グローバルエラーハンドラ -->
+    <component class="nablarch.fw.handler.GlobalErrorHandler" />
+
+    <!-- スレッドコンテキスト設定ハンドラ -->
+    <component-ref name="threadContextHandler" />
+
+    <!-- マルチスレッド実行制御ハンドラ -->
+    <component-ref name="multiThreadExecutionHandler" />
+
+    <!-- リトライハンドラ -->
+    <component-ref name="retryHandler" />
+
+    <!-- メッセージングコンテキストハンドラ -->
+    <component class="nablarch.fw.messaging.handler.MessagingContextHandler" />
+
+    <!-- データベース接続管理ハンドラ（業務初期処理・終端処理用） -->
+    <component-ref name="dbConnectionManagementHandler" />
+
+    <!-- リクエストスレッドループ -->
+    <component-ref name="requestThreadLoopHandler" />
+
+    <!-- 処理停止制御ハンドラ -->
+    <component-ref name="processStopHandler" />
+
+    <!-- 電文応答制御ハンドラ -->
+    <component-ref name="messageReplyHandler" />
+
+    <!-- データリードハンドラ -->
+    <component-ref name="dataReadHandler" />
+
+    <!-- ディスパッチ -->
+    <component class="nablarch.fw.handler.RequestPathJavaPackageMapping">
+      <property name="basePackage" value="${nablarch.commonProperty.basePackage}" />
+      <property name="classNameSuffix" value="Action" />
+      <property name="immediate" value="false" />
+    </component>
+
+    <!-- トランザクション制御ハンドラ -->
+    <component-ref name="transactionManagementHandler" />
+
+  </list>
+
+  <!-- 初期化が必要なコンポーネント -->
+  <component name="initializer"
+             class="nablarch.core.repository.initialization.BasicApplicationInitializer">
+    <property name="initializeList">
+      <list>
+        <!-- common/date.xml:業務日付コンポーネント -->
+        <component-ref name="businessDateProvider" />
+        <!-- batch/handler/processStop.xml:処理停止ハンドラ -->
+        <component-ref name="processStopHandler" />
+        <!-- メッセージングプロバイダ -->
+        <component-ref name="messagingProvider" />
+      </list>
+    </property>
+  </component>
+</component-configuration>
