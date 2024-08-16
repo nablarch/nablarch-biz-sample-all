@@ -40,9 +40,6 @@
 
   <import file="nablarch/core/validation/charset-definition.xml"/>
 
-  <!-- DomainManager 実装クラス設定 -->
-  <component name="domainManager" class="please.change.me.domain.ExampleDomainManager"/>
-
   <!-- メッセージング用コンポーネント定義ここから============================================================================================= -->
   <!-- メッセージ応答制御ハンドラ -->
   <component name="messageReplyHandler" class="nablarch.fw.messaging.handler.MessageReplyHandler" />
