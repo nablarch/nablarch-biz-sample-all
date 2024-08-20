@@ -6,7 +6,7 @@
 
 データベースのセットアップ及びエンティティクラスの作成を行います。以下のコマンドを実行してください。
   
-    $ mvn generate-resources
+    $ mvn -Pgsp generate-resources
 
 ### 2. アプリケーションのビルド
 
