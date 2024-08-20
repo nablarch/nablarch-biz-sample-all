@@ -172,15 +172,6 @@
       <groupId>com.nablarch.framework</groupId>
       <artifactId>nablarch-testing</artifactId>
       <scope>test</scope>
-      <!--NablarchのテスティングフレームワークがJSPのビルド時に使用するコンパイラを差し替えるために、
-      依存関係からデフォルトのecjを除去。
-      -->
-      <exclusions>
-        <exclusion>
-          <groupId>org.eclipse.jdt.core.compiler</groupId>
-          <artifactId>ecj</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -188,17 +179,6 @@
       <artifactId>nablarch-testing-jetty12</artifactId>
       <scope>test</scope>
     </dependency>
-
-    <!--
-    NablarchのテスティングフレームワークがJSPのビルド時に使用するコンパイラを差し替え。
-    -->
-    <dependency>
-      <groupId>org.eclipse.jdt.core.compiler</groupId>
-      <artifactId>ecj</artifactId>
-      <version>4.5.1</version>
-      <scope>test</scope>
-    </dependency>
-
 
     <dependency>
       <groupId>com.nablarch.configuration</groupId>
