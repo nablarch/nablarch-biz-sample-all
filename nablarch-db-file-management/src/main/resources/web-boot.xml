@@ -7,5 +7,4 @@
   <!-- プロダクション用の設定読み込み -->
   <import file="web-component-configuration.xml"/>
 
-
 </component-configuration>
