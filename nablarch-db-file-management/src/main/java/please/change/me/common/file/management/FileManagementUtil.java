@@ -59,9 +59,8 @@ public final class FileManagementUtil {
     /**
      * ファイルを論理削除する。
      * @param fileId ファイル管理ID
-     * @throws RuntimeException 削除対象のファイルが見つからなかった場合。
      */
-    public static void delete(String fileId) throws RuntimeException {
+    public static void delete(String fileId) {
         getFileManagement().delete(fileId);
     }
     
@@ -69,9 +68,8 @@ public final class FileManagementUtil {
      * ファイルを取得する。
      * @param fileId ファイル管理ID
      * @return ファイルのデータ。
-     * @throws RuntimeException 指定したファイルが見つからなかった場合
      */
-    public static Blob find(String fileId) throws RuntimeException {
+    public static Blob find(String fileId) {
         return getFileManagement().find(fileId);
     }
 }

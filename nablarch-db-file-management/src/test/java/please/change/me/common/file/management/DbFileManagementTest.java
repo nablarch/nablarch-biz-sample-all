@@ -11,13 +11,22 @@ import nablarch.core.util.BinaryUtil;
 import nablarch.core.util.FileUtil;
 import nablarch.fw.web.upload.PartInfo;
 import org.h2.jdbcx.JdbcDataSource;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.sql.*;
+import java.nio.charset.StandardCharsets;
+import java.sql.Blob;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,7 +45,7 @@ public class DbFileManagementTest {
     /**
      * セットアップ。
      *
-     * テスト時に使用するデータベース接続の生成及びテスト用のテーブルのセットアップを行う。
+     * <p>テスト時に使用するデータベース接続の生成及びテスト用のテーブルのセットアップを行う。
      *
      * @throws SQLException 例外
      */
@@ -76,13 +85,13 @@ public class DbFileManagementTest {
         // 有効なレコード
         PreparedStatement insert = con.prepareStatement("insert into FILE_CONTROL values (?, ?, ?)");
         insert.setString(1, "900000000000000001");
-        insert.setBlob(2, new SerialBlob("abc".getBytes("utf-8")));
+        insert.setBlob(2, new SerialBlob("abc".getBytes(StandardCharsets.UTF_8)));
         insert.setString(3, "0");
         insert.execute();
 
         // 論理削除済みレコード
         insert.setString(1, "900000000000000002");
-        insert.setBlob(2, new SerialBlob("def".getBytes("utf-8")));
+        insert.setBlob(2, new SerialBlob("def".getBytes(StandardCharsets.UTF_8)));
         insert.setString(3, "1");
         insert.execute();
 
@@ -117,7 +126,8 @@ public class DbFileManagementTest {
 
     /**
      * 有効なレコードに対する取得テスト。
-     * @throws Exception
+     *
+     * @throws Exception 例外
      */
     @Test
     public void testFindExist() throws Exception {
@@ -125,7 +135,7 @@ public class DbFileManagementTest {
         byte[] byteArray = BinaryUtil.toByteArray(blob.getBinaryStream());
 
         // 存在するファイル管理IDを指定した場合は、ファイルの内容を取得できる。
-        assertThat(new String(byteArray, "UTF-8"), is("abc"));
+        assertThat(new String(byteArray, StandardCharsets.UTF_8), is("abc"));
     }
 
     /**
@@ -165,7 +175,8 @@ public class DbFileManagementTest {
 
     /**
      * Fileオブジェクト登録のテスト(正常系)。
-     * @throws Exception
+     *
+     * @throws Exception 例外
      */
     @Test
     public void testSaveFileNormal() throws Exception {
@@ -180,12 +191,13 @@ public class DbFileManagementTest {
         // 登録したオブジェクトを取り出せるか確認する。
         Blob blob = FileManagementUtil.find(fileControlId);
         byte[] byteArray = BinaryUtil.toByteArray(blob.getBinaryStream());
-        assertThat(new String(byteArray, "UTF-8"), is("abcde"));
+        assertThat(new String(byteArray, StandardCharsets.UTF_8), is("abcde"));
     }
 
     /**
      * PartInfoオブジェクトデータ登録のテスト(正常系)。
-     * @throws Exception
+     *
+     * @throws Exception 例外
      */
     @Test
     public void testSavePartInfoNormal() throws Exception {
@@ -204,7 +216,7 @@ public class DbFileManagementTest {
         InputStream inputStream = null;
         Blob blob = FileManagementUtil.find(fileId);
         byte[] byteArray = BinaryUtil.toByteArray(blob.getBinaryStream());
-        assertThat(new String(byteArray, "UTF-8"), is("abcde"));
+        assertThat(new String(byteArray, StandardCharsets.UTF_8), is("abcde"));
     }
 
     /**
@@ -218,27 +230,24 @@ public class DbFileManagementTest {
 
     /**
      * nullのFileを登録しようとした際に、例外が送出されるテスト。
-     * @throws Exception
      */
     @Test
     public void testSaveNullFile() {
-        File nullFile = null;
-        assertThrows(IllegalArgumentException.class, () -> FileManagementUtil.save(nullFile));
+        assertThrows(IllegalArgumentException.class, () -> FileManagementUtil.save((File) null));
     }
 
     /**
      * nullのpartInfoを登録しようとした際に、例外が送出されるテスト。
-     * @throws Exception
      */
     @Test
     public void testSaveIllegal() {
-        PartInfo nullPartInfo = null;
-        assertThrows(IllegalArgumentException.class, () -> FileManagementUtil.save(nullPartInfo));
+        assertThrows(IllegalArgumentException.class, () -> FileManagementUtil.save((PartInfo) null));
     }
 
     /**
      * 制限サイズと同じサイズの際に、Fileが登録できることを確認するテスト。
-     * @throws Exception
+     *
+     * @throws Exception 例外
      */
     @Test
     public void testSaveFileSizeNormal() throws Exception {
@@ -255,7 +264,8 @@ public class DbFileManagementTest {
 
     /**
      * 制限サイズよりファイルが大きい際に、File登録に失敗することを確認するテスト。
-     * @throws Exception
+     *
+     * @throws Exception 例外
      */
     @Test
     public void testSaveFileSizeIllegal() throws Exception {
@@ -270,7 +280,8 @@ public class DbFileManagementTest {
 
     /**
      * 制限サイズと同じサイズの際に、PartInfoが登録できることを確認するテスト。
-     * @throws Exception
+     *
+     * @throws Exception 例外
      */
     @Test
     public void testSavePartInfoSizeNormal() throws Exception {
@@ -291,7 +302,8 @@ public class DbFileManagementTest {
 
     /**
      * 制限サイズと同じサイズの際に、PartInfoが登録できることを確認するテスト。
-     * @throws Exception
+     *
+     * @throws Exception 例外
      */
     @Test
     public void testSavePartInfoSizeIllegal() throws Exception {
@@ -329,7 +341,7 @@ public class DbFileManagementTest {
         FileOutputStream fileOutputStream = null;
         try{
             fileOutputStream = new FileOutputStream(uploadFile);
-            fileOutputStream.write(data.getBytes("UTF-8"));
+            fileOutputStream.write(data.getBytes(StandardCharsets.UTF_8));
         }finally{
             FileUtil.closeQuietly(fileOutputStream);
         }
