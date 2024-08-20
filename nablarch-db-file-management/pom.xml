@@ -249,6 +249,24 @@
       <scope>runtime</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>2.2.220</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>3.3.1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.nablarch.integration</groupId>
+      <artifactId>slf4j-nablarch-adaptor</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
     <!-- Nablarchのテスティングフレームワークを実行するために必要なライブラリ -->
     <dependency>
       <groupId>com.nablarch.framework</groupId>
@@ -282,9 +300,6 @@
 
   <build>
     <resources>
-      <resource>
-        <directory>${env.resources}</directory>
-      </resource>
       <resource>
         <directory>src/main/resources</directory>
       </resource>
