@@ -18,9 +18,6 @@
     <!-- ソース及びclassファイルが準拠するJavaのバージョン-->
     <java.version>17</java.version>
 
-    <!-- 環境ごとのリソースディレクトリ(プロファイルにより切り替わる) -->
-    <env.resources>${project.basedir}/src/env/${env.dir}/resources</env.resources>
-
     <!-- gsp-dba-maven-pluginが使用するデータベース設定 -->
     <nablarch.db.jdbcDriver>org.h2.Driver</nablarch.db.jdbcDriver>
     <nablarch.db.url>jdbc:h2:./h2/db/SAMPLE</nablarch.db.url>
@@ -31,95 +28,7 @@
     <nablarch.db.schema>PUBLIC</nablarch.db.schema>
   </properties>
 
-  <!--
-    このプロファイルは環境を指定するものであり、相互に排他的である。
-    複数のプロファイルを同時に指定してはならない。
-  -->
   <profiles>
-    <!-- 開発環境 -->
-    <profile>
-      <id>development</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <properties>
-        <env.name>開発環境</env.name>
-        <!-- Mavenの環境別リソースのディレクトリ名 -->
-        <env.dir>dev</env.dir>
-        <env.classifier>dev</env.classifier>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>com.nablarch.framework</groupId>
-          <artifactId>nablarch-fw-web-hotdeploy</artifactId>
-        </dependency>
-        <!-- TODO: プロジェクトで使用するDB製品にあわせたJDBCドライバに修正してください。 -->
-        <dependency>
-          <groupId>com.h2database</groupId>
-          <artifactId>h2</artifactId>
-          <version>2.2.220</version>
-          <scope>runtime</scope>
-        </dependency>
-        <dependency>
-          <groupId>com.zaxxer</groupId>
-          <artifactId>HikariCP</artifactId>
-          <version>3.3.1</version>
-          <scope>runtime</scope>
-        </dependency>
-        <dependency>
-          <groupId>com.nablarch.integration</groupId>
-          <artifactId>slf4j-nablarch-adaptor</artifactId>
-          <scope>runtime</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-
-    <!--
-    Nablarchのマスタデータ復旧機能用にデータを格納する際に使用するプロファイル。
-    使用の際は、以下を参照すること。
-    https://github.com/coastland/gsp-dba-maven-plugin/blob/master/recipe/backupToDifferentSchema.md
-
-    gsp-dba-pluginでは、H2の場合はデフォルトスキーマのPUBLICしか扱えないためバックアップスキーマ名にPUBLICを指定しています。
-    gsp-dba-pluginで任意のスキーマ名を指定出来るDBの場合は、バックアップスキーマ名を指定して下さい。
-    -->
-    <profile>
-      <id>BACKUP</id>
-      <properties>
-        <env.dir>dev</env.dir>
-        <nablarch.db.schema>PUBLIC</nablarch.db.schema>
-      </properties>
-      <build>
-        <directory>${dba.gsp-target-dir}</directory>
-        <plugins>
-          <plugin>
-            <groupId>jp.co.tis.gsp</groupId>
-            <artifactId>gsp-dba-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>default-cli</id>
-                <phase>generate-resources</phase>
-                <goals>
-                  <goal>generate-ddl</goal>
-                  <goal>execute-ddl</goal>
-                  <goal>load-data</goal>
-                </goals>
-              </execution>
-            </executions>
-            <dependencies>
-              <!-- プロジェクトで使用するDB製品にあわせたJDBCドライバに上書きする -->
-              <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>2.2.220</version>
-                <scope>runtime</scope>
-              </dependency>
-            </dependencies>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <!-- gsp-dba-plugin -->
     <profile>
       <id>gsp</id>
       <activation>
@@ -403,19 +312,6 @@
           <httpConnector>
             <port>9080</port>
           </httpConnector>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-          <webXml>${webxml.path}</webXml>
-          <classifier>${env.classifier}</classifier>
-          <archive>
-            <manifestEntries>
-              <Target-Environment>${env.name}</Target-Environment>
-            </manifestEntries>
-          </archive>
         </configuration>
       </plugin>
       <!--
