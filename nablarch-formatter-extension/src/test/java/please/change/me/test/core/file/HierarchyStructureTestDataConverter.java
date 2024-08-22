@@ -13,9 +13,9 @@ import nablarch.test.core.file.TestDataConverter;
 
 /**
  * 階層構造データ用のテストデータコンバータ。
- * <p/>
+ * <p>
  * 本実装では、Excelファイルから読み込んだデータを元にレイアウト定義を生成する。
- *
+ * <p>
  * 使用方法<br/>
  * <pre>
  * 1.Excelのメッセージングデータの期待値にfile-typeを設定する。

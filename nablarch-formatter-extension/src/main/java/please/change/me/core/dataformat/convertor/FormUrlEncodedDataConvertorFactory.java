@@ -28,7 +28,7 @@ public class FormUrlEncodedDataConvertorFactory extends ConvertorFactorySupport 
     
     /** デフォルトのコンバータ名とコンバータ実装クラスの対応表*/
     private static final Map<String, Class<?>>
-    DEFAULT_CONVERTOR_TABLE = new CaseInsensitiveMap<Class<?>>() {
+    DEFAULT_CONVERTOR_TABLE = new CaseInsensitiveMap<>() {
         {
             // ------------------------------ DataType
             put("X",         NullableString.class);

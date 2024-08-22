@@ -1,13 +1,10 @@
-/**
- * 
- */
 package please.change.me.core.dataformat;
 
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -21,6 +18,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +62,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
 
     /**
      * フォーマット定義ファイル名を取得します
-     * @return
+     * @return フォーマット定義ファイル名
      */
     protected String getFormatFileName() {
         FilePathSetting fps = FilePathSetting.getInstance()
@@ -140,11 +138,12 @@ public class FormUrlEncodedDataRecordFormatterTest {
             }
         }
     }
-    
+
+    @SuppressWarnings("UnusedReturnValue")
     private File createTempFile(String filename, List<String> data) throws IOException {
         File file = new File(filename);
         file.deleteOnExit();
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8));
         try {
             for (String str : data) {
                 bw.write(str);
@@ -162,7 +161,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testInitializeFomatterDupl() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -192,7 +191,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
      * @throws IOException 入出力に伴うエラーが発生した場合
      */
     private void readTest(String targetStr, Map<String, Object> expectedMap) throws IOException {
-        ByteArrayInputStream bais = new ByteArrayInputStream(targetStr.getBytes("UTF-8"));
+        ByteArrayInputStream bais = new ByteArrayInputStream(targetStr.getBytes(StandardCharsets.UTF_8));
         DataRecordFormatter readFormatter = createFormatter(bais);
         DataRecord record = readFormatter.readRecord();
         readFormatter.close();
@@ -210,7 +209,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
         DataRecordFormatter writeFormatter = createFormatter(baos);
         writeFormatter.writeRecord(targetMap);
         writeFormatter.close();
-        assertEquals(expectedStr, baos.toString("UTF-8"));
+        assertEquals(expectedStr, baos.toString(StandardCharsets.UTF_8));
     }
     
     /**
@@ -219,7 +218,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testNormalReadAndWrite() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -235,8 +234,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key1=value1&key2=value2";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key2", "value2");
                 }}
@@ -246,8 +245,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key2", "value2");
                 }}
@@ -267,7 +266,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testURLEncoded() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -283,8 +282,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key1=%e3%83%90%e3%83%aa%e3%83%a5%e3%83%bc%ef%bc%91&key2=%e3%83%90%e3%83%aa%e3%83%a5%e3%83%bc%ef%bc%92";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", "バリュー１");
                     put("key2", "バリュー２");
                 }}
@@ -294,8 +293,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "バリュー１");
                     put("key2", "バリュー２");
                 }}
@@ -314,7 +313,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testArray() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -330,9 +329,9 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key1=value1-1&key1=value1-2&key2=value2";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
-                    put("key1", new String[]{"value1-1","value1-2"});
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
+                    put("key1", new String[]{"value1-1", "value1-2"});
                     put("key2", "value2");
                 }}
         ;
@@ -341,9 +340,9 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
-                    put("key1", new String[]{"value1-1","value1-2"});
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
+                    put("key1", new String[]{"value1-1", "value1-2"});
                     put("key2", "value2");
                 }}
         ;
@@ -361,7 +360,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testLargeArray() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -377,9 +376,9 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key1=value1-1&key1=value1-2&key1=value1-3&key2=value2";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
-                    put("key1", new String[]{"value1-1","value1-2"});
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
+                    put("key1", new String[]{"value1-1", "value1-2"});
                     put("key2", "value2");
                 }}
         ;
@@ -394,9 +393,9 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
-                    put("key1", new String[]{"value1-1","value1-2","value1-3"});
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
+                    put("key1", new String[]{"value1-1", "value1-2", "value1-3"});
                     put("key2", "value2");
                 }}
         ;
@@ -420,7 +419,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testSmallArray() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -436,9 +435,9 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key1=value1-1&key1=value1-2&key2=value2";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
-                    put("key1", new String[]{"value1-1","value1-2","value1-3"});
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
+                    put("key1", new String[]{"value1-1", "value1-2", "value1-3"});
                     put("key2", "value2");
                 }}
         ;
@@ -453,9 +452,9 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
-                    put("key1", new String[]{"value1-1","value1-2"});
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
+                    put("key1", new String[]{"value1-1", "value1-2"});
                     put("key2", "value2");
                 }}
         ;
@@ -479,7 +478,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testArrayButUnitItem() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -495,9 +494,9 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key1=value1-1&key2=value2";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
-                    put("key1", new String[]{"value1-1","value1-2","value1-3"});
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
+                    put("key1", new String[]{"value1-1", "value1-2", "value1-3"});
                     put("key2", "value2");
                 }}
         ;
@@ -512,8 +511,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key2", "value2");
                 }}
@@ -538,7 +537,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testUnitItemButArray() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -554,8 +553,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key1=value1-1&key1=value1-2&key2=value2";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key2", "value2");
                 }}
@@ -571,8 +570,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", new String[]{"value1-1", "value1-2"});
                     put("key2", "value2");
                 }}
@@ -597,7 +596,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testRequiredItemNone() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -613,8 +612,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key2=value2";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key2", "value2");
                 }}
@@ -630,8 +629,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key2", "value2");
                 }}
         ;
@@ -655,7 +654,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testNoRequiredItemNone() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -671,8 +670,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key2=value2";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key2", "value2");
                 }}
         ;
@@ -682,8 +681,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key2", "value2");
                 }}
         ;
@@ -701,7 +700,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testNoRequiredItemNoneMulti1() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -719,8 +718,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key4=value4";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key4", "value4");
                 }}
         ;
@@ -730,8 +729,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key4", "value4");
                 }}
         ;
@@ -749,7 +748,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testNoRequiredItemNoneMulti2() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -767,8 +766,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key1=value1";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                 }}
         ;
@@ -778,8 +777,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                 }}
         ;
@@ -797,7 +796,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testNoRequiredItemNoneMulti3() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -816,8 +815,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key1=value1&key5=value5";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key5", "value5");
                 }}
@@ -828,8 +827,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key5", "value5");
                 }}
@@ -848,7 +847,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testNoRequiredItemNoneMulti4() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -867,8 +866,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key1=value1&key2=value2&key5=value5";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key2", new String[]{"value2"});
                     put("key5", "value5");
@@ -880,8 +879,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key2", new String[]{"value2"});
                     put("key5", "value5");
@@ -901,7 +900,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testNoRequiredItemNoneMulti5() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -920,8 +919,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key1=value1&key3=value3&key5=value5";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key3", new String[]{"value3"});
                     put("key5", "value5");
@@ -933,8 +932,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key3", new String[]{"value3"});
                     put("key5", "value5");
@@ -954,7 +953,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testNoRequiredItemNoneMulti6() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -973,8 +972,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key1=value1&key4=value4&key5=value5";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key4", new String[]{"value4"});
                     put("key5", "value5");
@@ -986,8 +985,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key4", new String[]{"value4"});
                     put("key5", "value5");
@@ -1007,7 +1006,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testLastElementKeyOnly() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -1023,8 +1022,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key1=value1&key2=";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key2", "");
                 }}
@@ -1035,8 +1034,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key2", "");
                 }}
@@ -1055,7 +1054,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testBeforeInitialize() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -1091,7 +1090,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testHasNext() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -1106,7 +1105,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
         String targetStr = 
                 "key1=value1&key2=";
         
-        ByteArrayInputStream bais = new ByteArrayInputStream(targetStr.getBytes("UTF-8"));
+        ByteArrayInputStream bais = new ByteArrayInputStream(targetStr.getBytes(StandardCharsets.UTF_8));
         DataRecordFormatter readFormatter = createFormatter(bais);
         
         // 読む前はtrue
@@ -1125,7 +1124,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testConverterDefaultValue() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -1141,8 +1140,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key2=value2";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key2", "value2");
                 }}
         ;
@@ -1151,8 +1150,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key2", "value2");
                 }}
         ;
@@ -1170,7 +1169,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testConverterNumber() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -1186,8 +1185,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key1=123&key2=value2";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", new BigDecimal(123));
                     put("key2", "value2");
                 }}
@@ -1197,8 +1196,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", new BigDecimal(123));
                     put("key2", "value2");
                 }}
@@ -1217,7 +1216,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testConverterSignedNumber() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -1233,8 +1232,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key1=-123&key2=value2";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", new BigDecimal(-123));
                     put("key2", "value2");
                 }}
@@ -1244,8 +1243,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", new BigDecimal(-123));
                     put("key2", "value2");
                 }}
@@ -1271,7 +1270,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
         SystemRepository.load(container);
         
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -1295,8 +1294,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                 }}
         ;
@@ -1347,7 +1346,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testReadTwice() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"FormUrlEncoded\"");
                 add("text-encoding: \"UTF-8\"");
@@ -1363,14 +1362,14 @@ public class FormUrlEncodedDataRecordFormatterTest {
                 "key1=%e3%83%90%e3%83%aa%e3%83%a5%e3%83%bc%ef%bc%91&key2=%e3%83%90%e3%83%aa%e3%83%a5%e3%83%bc%ef%bc%92";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", "バリュー１");
                     put("key2", "バリュー２");
                 }}
         ;
         
-        ByteArrayInputStream bais = new ByteArrayInputStream(targetStr.getBytes("UTF-8"));
+        ByteArrayInputStream bais = new ByteArrayInputStream(targetStr.getBytes(StandardCharsets.UTF_8));
         DataRecordFormatter readFormatter = createFormatter(bais);
         DataRecord record = readFormatter.readRecord();
         assertMap(expectedMap, record);
@@ -1385,7 +1384,7 @@ public class FormUrlEncodedDataRecordFormatterTest {
     @Test
     public void testFixedDataReadWrite() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"Fixed\"");
                 add("text-encoding: \"MS932\"");
@@ -1401,8 +1400,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         String targetStr = "value1value2";
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key2", "value2");
                 }}
@@ -1412,8 +1411,8 @@ public class FormUrlEncodedDataRecordFormatterTest {
         
         // 書き込みテスト
         // 変換対象データ
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "value1");
                     put("key2", "value2");
                 }}

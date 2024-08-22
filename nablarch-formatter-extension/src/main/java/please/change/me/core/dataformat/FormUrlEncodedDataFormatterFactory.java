@@ -31,7 +31,7 @@ public class FormUrlEncodedDataFormatterFactory extends FormatterFactory {
     @Override
     protected DataRecordFormatter createFormatter(String fileType,
             String formatFilePath) {
-        DataRecordFormatter formatter = null;
+        DataRecordFormatter formatter;
         if ("FormUrlEncoded".equals(fileType)) {
             formatter = new FormUrlEncodedDataRecordFormatter();
         } else {

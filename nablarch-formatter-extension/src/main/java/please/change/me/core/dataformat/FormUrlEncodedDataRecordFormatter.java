@@ -60,7 +60,7 @@ public class FormUrlEncodedDataRecordFormatter extends DataRecordFormatterSuppor
     private static final Pattern SCANNER_DELIMITER = Pattern.compile("[" + FIELD_SEPARATOR + KEY_VALUE_SEPARATOR + "]");
 
     /** コンバータの設定情報保持クラス */
-    private FormUrlEncodedDataConvertorSetting convertorSetting;
+    private final FormUrlEncodedDataConvertorSetting convertorSetting;
 
     /** 入力ストリーム。 */
     private InputStream source;
@@ -146,7 +146,7 @@ public class FormUrlEncodedDataRecordFormatter extends DataRecordFormatterSuppor
         Charset encoding = getDefaultEncoding();
         
         // いったん全てのパラメータを読み込む
-        Map<String, List<String>> map = new HashMap<String, List<String>>();
+        Map<String, List<String>> map = new HashMap<>();
         while (sc.hasNext()) {
             String key = sc.next();
             String value;
@@ -328,7 +328,7 @@ public class FormUrlEncodedDataRecordFormatter extends DataRecordFormatterSuppor
         
         // 配列を分解し、リスト化
         Object data = record.get(fieldName);
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         if (data != null && data instanceof String[]) {
             for (String str : (String[]) data) {
                 list.add(str);
@@ -375,18 +375,18 @@ public class FormUrlEncodedDataRecordFormatter extends DataRecordFormatterSuppor
                 for (ValueConvertor convertor : field.getConvertors()) {
                     obj = convertor.convertOnWrite(obj);
                 }
-                
+
                 // データタイプを実行する       
-                CharacterStreamDataString dataType = 
+                CharacterStreamDataString dataType =
                         (CharacterStreamDataString) field.getDataType();
-                
+
                 outData = dataType.convertOnWrite(obj);
-                
+
             } catch (InvalidDataFormatException e) {
                 // コンバータで発生した例外に対してフィールド名の情報を付与する
                 throw e.setFieldName(fieldName);
             }
-            
+
             if (obj == null) {
                 if (field.isRequired()) {
                     // 必須項目がnull
@@ -394,12 +394,12 @@ public class FormUrlEncodedDataRecordFormatter extends DataRecordFormatterSuppor
                 } else {
                     continue;
                 }
-                
+
             } else {
                 if (isWroteBefore) {
                     writer.write(FIELD_SEPARATOR);
                 }
-                
+
                 writer.write(fieldName);
                 writer.write(KEY_VALUE_SEPARATOR);
                 writer.write(URLEncoder.encode(outData, encoding.name()));
