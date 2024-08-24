@@ -7,22 +7,17 @@
   <groupId>com.nablarch.applib</groupId>
   <artifactId>nablarch-biz-sample-all</artifactId>
   <version>6-NEXT-SNAPSHOT</version>
-  <description>業務サンプル</description>
-
-  <scm>
-    <connection>scm:git:git://github.com/nablarch/${project.artifactId}.git</connection>
-    <developerConnection>scm:git:git://github.com/nablarch/${project.artifactId}.git</developerConnection>
-    <url>https://github.com/nablarch/${project.artifactId}/tree/master</url>
-  </scm>
-
-  <parent>
-    <groupId>com.nablarch</groupId>
-    <artifactId>nablarch-parent</artifactId>
-    <version>6-NEXT-SNAPSHOT</version>
-  </parent>
+  <packaging>pom</packaging>
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>com.nablarch.profile</groupId>
+        <artifactId>nablarch-bom</artifactId>
+        <version>6-NEXT-SNAPSHOT</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
@@ -37,158 +32,25 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency>
+        <groupId>com.nablarch.dev</groupId>
+        <artifactId>nablarch-test-support</artifactId>
+        <version>6-NEXT-SNAPSHOT</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
-  <dependencies>
-    <dependency>
-      <groupId>com.nablarch.profile</groupId>
-      <artifactId>nablarch-web</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.nablarch.framework</groupId>
-      <artifactId>nablarch-common-date</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.nablarch.framework</groupId>
-      <artifactId>nablarch-common-idgenerator-jdbc</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.nablarch.framework</groupId>
-      <artifactId>nablarch-mail-sender</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.nablarch.framework</groupId>
-      <artifactId>nablarch-common-code-jdbc</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>jakarta.annotation</groupId>
-      <artifactId>jakarta.annotation-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>jakarta.mail</groupId>
-      <artifactId>jakarta.mail-api</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.nablarch.framework</groupId>
-      <artifactId>nablarch-testing-junit5</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.eclipse.angus</groupId>
-      <artifactId>pop3</artifactId>
-      <version>1.1.0</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.eclipse.angus</groupId>
-      <artifactId>smtp</artifactId>
-      <version>1.1.0</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.nablarch.dev</groupId>
-      <artifactId>nablarch-test-support</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- Jakarta RESTful Web Services -->
-    <dependency>
-      <groupId>jakarta.ws.rs</groupId>
-      <artifactId>jakarta.ws.rs-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>2.12.7.1</version>
-    </dependency>
-
-    <!-- JWTライブラリ -->
-    <dependency>
-      <groupId>com.auth0</groupId>
-      <artifactId>java-jwt</artifactId>
-      <version>4.2.2</version>
-    </dependency>
-    <dependency>
-      <groupId>com.auth0</groupId>
-      <artifactId>jwks-rsa</artifactId>
-      <version>0.21.3</version>
-    </dependency>
-
-    <!-- HTTPクライアント -->
-    <dependency>
-      <groupId>org.apache.httpcomponents.client5</groupId>
-      <artifactId>httpclient5</artifactId>
-      <version>5.2.1</version>
-    </dependency>
-
-    <!-- SLF4Jアダプタ -->
-    <dependency>
-      <groupId>com.nablarch.integration</groupId>
-      <artifactId>slf4j-nablarch-adaptor</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-
-    <!-- Logbook -->
-    <dependency>
-      <groupId>org.zalando</groupId>
-      <artifactId>logbook-core</artifactId>
-      <version>2.16.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.zalando</groupId>
-      <artifactId>logbook-jaxrs</artifactId>
-      <version>2.16.0</version>
-    </dependency>
-    <dependency>
-      <groupId>org.zalando</groupId>
-      <artifactId>logbook-json</artifactId>
-      <version>2.16.0</version>
-    </dependency>
-
-    <!-- Jersey -->
-    <dependency>
-      <groupId>org.glassfish.jersey.core</groupId>
-      <artifactId>jersey-client</artifactId>
-      <version>2.35</version>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.jersey.media</groupId>
-      <artifactId>jersey-media-json-jackson</artifactId>
-      <version>2.35</version>
-    </dependency>
-    <dependency>
-      <groupId>org.glassfish.jersey.inject</groupId>
-      <artifactId>jersey-hk2</artifactId>
-      <version>2.35</version>
-    </dependency>
-
-  </dependencies>
+  <modules>
+    <module>nablarch-password-authentication</module>
+    <module>nablarch-list-search-result</module>
+    <module>nablarch-formatter-extension</module>
+    <module>nablarch-db-file-management</module>
+    <module>nablarch-html-mail</module>
+    <module>nablarch-smime-integration</module>
+    <module>nablarch-statistics-report</module>
+    <module>nablarch-messaging-simulator</module>
+    <module>nablarch-oidc/backend</module>
+    <module>nablarch-logbook</module>
+  </modules>
 </project>
