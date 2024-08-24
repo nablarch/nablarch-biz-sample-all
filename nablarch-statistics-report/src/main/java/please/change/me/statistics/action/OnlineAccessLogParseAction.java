@@ -207,7 +207,7 @@ public class OnlineAccessLogParseAction extends NoInputDataBatchAction {
     /**
      * 起動プロセス名を抽出する。
      *
-     * プロセス名がログから取得できない場合には、空文字列を返却する。
+     * <p>プロセス名がログから取得できない場合には、空文字列を返却する。
      *
      * @param line 抽出対象の行
      * @return 起動プロセス名

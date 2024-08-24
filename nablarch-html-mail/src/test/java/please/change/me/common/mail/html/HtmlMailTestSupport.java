@@ -17,7 +17,7 @@ import org.junit.BeforeClass;
  *
  * @author tani takanori
  */
-public class HtmlMailTestSupport {
+public abstract class HtmlMailTestSupport {
 
     private final SimpleDbTransactionManager transactionManager = SystemRepository.get("dbManager-default");
 

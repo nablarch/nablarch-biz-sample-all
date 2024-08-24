@@ -642,10 +642,10 @@ public class MessageReadSupportTest {
      * 正常系のテスト。
      * 1行だけテストデータが記述されたExcelについて、値を3回取得しても同じ値が返ってくる事を確認する。
      * (キャッシュが有効であることを確認するために繰り返し読みこむ)
-     * @throws UnsupportedEncodingException 
+     * @throws Exception 例外
      */
     @Test
-    public void testGetMessageForMom() throws UnsupportedEncodingException {
+    public void testGetMessageForMom() throws Exception {
         DiContainer container = null;
         container = new DiContainer(new XmlComponentDefinitionLoader("incoming-mom-simulator-component-configuration.xml"));
         SystemRepository.load(container);
@@ -685,13 +685,13 @@ public class MessageReadSupportTest {
     /**
      * 正常系のテスト。
      * Excelファイルにフレームワーク制御ヘッダ部分が記載されていない場合。
-     * 
-     * 1行だけテストデータが記述されたExcelについて、値を3回取得しても同じ値が返ってくる事を確認する。
+     *
+     * <p>1行だけテストデータが記述されたExcelについて、値を3回取得しても同じ値が返ってくる事を確認する。
      * (キャッシュが有効であることを確認するために繰り返し読みこむ)
-     * @throws UnsupportedEncodingException 
+     * @throws Exception 例外
      */
     @Test
-    public void testGetMessageForMomLessHeader() throws UnsupportedEncodingException {
+    public void testGetMessageForMomLessHeader() throws Exception {
         DiContainer container = null;
         container = new DiContainer(new XmlComponentDefinitionLoader("incoming-mom-simulator-component-configuration.xml"));
         SystemRepository.load(container);
@@ -731,10 +731,10 @@ public class MessageReadSupportTest {
      * 正常系のテスト。
      * 2行だけテストデータが記述されたExcelについて、値を6回取得した際に、1行目、2行目、1行目、2行目、1行目、2行目の順で値が返ってくる事を確認する。
      * (キャッシュが有効であることを確認するために繰り返し読みこむ)
-     * @throws UnsupportedEncodingException 
+     * @throws Exception 例外
      */
     @Test
-    public void testGetMessageForMomTwoRow() throws UnsupportedEncodingException {
+    public void testGetMessageForMomTwoRow() throws Exception {
         DiContainer container = null;
         container = new DiContainer(new XmlComponentDefinitionLoader("incoming-mom-simulator-component-configuration.xml"));
         SystemRepository.load(container);
@@ -794,10 +794,10 @@ public class MessageReadSupportTest {
      * 正常系のテスト。
      * 1行だけテストデータが記述されたExcelについて、値を3回取得しても同じ値が返ってくる事を確認する。
      * (キャッシュが有効であることを確認するために繰り返し読みこむ)
-     * @throws UnsupportedEncodingException 
+     * @throws Exception 例外
      */
     @Test
-    public void testGetMessageForMomMixReqId() throws UnsupportedEncodingException {
+    public void testGetMessageForMomMixReqId() throws Exception {
         DiContainer container = null;
         container = new DiContainer(new XmlComponentDefinitionLoader("incoming-mom-simulator-component-configuration.xml"));
         SystemRepository.load(container);

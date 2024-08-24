@@ -68,7 +68,7 @@ public class SMIMESignedMailSenderTest extends MailTestSupport {
      * テスト用のメールフォルダをクリーニングする。
      *
      * @param account クリーニング対象のメールアカウント
-     * @throws Exception
+     * @throws Exception 例外
      */
     private void cleanupMail(final String account) throws Exception {
         Session session = Session.getInstance(MAIL_SESSION_PROPERTIES, new Authenticator() {
@@ -402,7 +402,7 @@ public class SMIMESignedMailSenderTest extends MailTestSupport {
     /**
      * 添付ファイルのcontentTypeを空文字列にした場合。
      *
-     * 電子署名生成でエラーになること。
+     * <p>電子署名生成でエラーになること。
      */
     @Test
     public void testAttachedFileContextTypeNull() throws Exception {
@@ -447,7 +447,7 @@ public class SMIMESignedMailSenderTest extends MailTestSupport {
     /**
      * 添付ファイルのcontentTypeを空文字列にした場合。
      *
-     * 電子署名生成でエラーになること。
+     * <p>電子署名生成でエラーになること。
      */
     @Test
     public void testNoCertificatePatternId() throws Exception {

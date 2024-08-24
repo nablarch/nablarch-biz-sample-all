@@ -134,8 +134,6 @@ public class HtmlMailTestDbSupport {
 
     /**
      * メールテンプレートを削除する。
-     *
-     * @throws SQLException
      */
     protected void deleteTemplate() {
         VariousDbTestHelper.delete(MailTemplate.class);
@@ -169,7 +167,7 @@ public class HtmlMailTestDbSupport {
     /**
      * 添付ファイルテーブルの情報を取得する。
      *
-     * @return
+     * @return 取得結果
      */
     protected SqlResultSet findAttachedFile() {
         return getAppConnection().prepareStatement(SELECT_ATTACHED_FILE).retrieve();

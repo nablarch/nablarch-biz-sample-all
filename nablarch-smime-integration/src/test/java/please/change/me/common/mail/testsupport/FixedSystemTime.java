@@ -39,8 +39,8 @@ public class FixedSystemTime implements SystemTimeProvider {
 
     /**
      * テストで使用する日付を設定する。
-     * @param timestampStr
-     * @throws ParseException
+     * @param timestampStr 日付文字列
+     * @throws ParseException 変換に失敗した場合
      */
     public static void setTimestamp(String timestampStr) throws ParseException {
         timestamp = new Timestamp(DATE_FORMAT.parse(timestampStr).getTime());

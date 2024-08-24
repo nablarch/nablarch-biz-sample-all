@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * 繰り返し同じデータを読み込む{@link DataReader}実装クラス。
  *
- * 本クラスはスレッドである。
+ * <p>本クラスはスレッドである。
  *
  * @author T.Kawasaki
  * @since 1.4.2

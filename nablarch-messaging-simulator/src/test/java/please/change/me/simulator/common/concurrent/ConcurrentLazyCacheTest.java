@@ -104,11 +104,10 @@ public class ConcurrentLazyCacheTest {
     /**
      * マルチスレッド下で動作することを確認する。
      *
-     * @throws InterruptedException
-     * @throws ExecutionException
+     * @throws Exception 例外
      */
     @Test
-    public void testMultiThread() throws InterruptedException, ExecutionException {
+    public void testMultiThread() throws Exception {
 
         service = Executors.newFixedThreadPool(100);
 

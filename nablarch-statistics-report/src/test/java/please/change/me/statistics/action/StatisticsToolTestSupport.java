@@ -14,17 +14,11 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 
-import nablarch.core.db.connection.AppDbConnection;
-import nablarch.core.db.statement.SqlPStatement;
-import nablarch.core.db.statement.exception.SqlStatementException;
-import nablarch.core.db.transaction.SimpleDbTransactionExecutor;
-import nablarch.core.db.transaction.SimpleDbTransactionManager;
 import nablarch.core.repository.SystemRepository;
 import nablarch.core.repository.di.ComponentDefinitionLoader;
 import nablarch.core.repository.di.DiContainer;
 import nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader;
 import nablarch.core.util.FileUtil;
-import nablarch.core.util.ObjectUtil;
 import nablarch.fw.launcher.CommandLine;
 import nablarch.fw.launcher.Main;
 import please.change.me.statistics.MemoryLogWriter;
@@ -34,7 +28,7 @@ import please.change.me.statistics.MemoryLogWriter;
  *
  * @author hisaaki sioiri
  */
-public class StatisticsToolTestSupport {
+public abstract class StatisticsToolTestSupport {
 
     /** システムプロパティのバックアップ */
     private Properties systemProperties;

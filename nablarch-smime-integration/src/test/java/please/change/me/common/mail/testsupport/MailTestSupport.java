@@ -36,7 +36,7 @@ import org.junit.ClassRule;
  *
  * @author hisaaki sioiri
  */
-public class MailTestSupport {
+public abstract class MailTestSupport {
 
     @ClassRule
     public static final SystemRepositoryResource RESOURCE = new SystemRepositoryResource(
