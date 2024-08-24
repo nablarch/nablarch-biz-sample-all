@@ -71,49 +71,6 @@
               </dependency>
             </dependencies>
           </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-install-plugin</artifactId>
-            <version>${version.plugins.install}</version>
-            <executions>
-              <!-- gsp-dba-maven-pluginで生成したdumpファイルをinstallするための設定 -->
-              <execution>
-                <id>default-cli</id>
-                <goals>
-                  <goal>install-file</goal>
-                </goals>
-                <configuration>
-                  <file>${dba.gsp-target-dir}/output/${dba.testDataArtifactId}-${dba.dump.version}.jar</file>
-                  <groupId>${project.groupId}</groupId>
-                  <version>${dba.dump.version}</version>
-                  <artifactId>${dba.testDataArtifactId}</artifactId>
-                  <packaging>jar</packaging>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-deploy-plugin</artifactId>
-            <version>${version.plugins.deploy}</version>
-            <executions>
-              <!-- gsp-dba-maven-pluginで生成したdumpファイルをdeployするための設定 -->
-              <execution>
-                <id>default-cli</id>
-                <goals>
-                  <goal>deploy-file</goal>
-                </goals>
-                <configuration>
-                  <file>${dba.gsp-target-dir}/output/${dba.testDataArtifactId}-${dba.dump.version}.jar</file>
-                  <groupId>${project.groupId}</groupId>
-                  <version>${dba.dump.version}</version>
-                  <artifactId>${dba.testDataArtifactId}</artifactId>
-                  <repositoryId>${project.distributionManagement.repository.id}</repositoryId>
-                  <url>${project.distributionManagement.repository.url}</url>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
         </plugins>
       </build>
     </profile>
@@ -195,13 +152,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.glassfish.web</groupId>
-      <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-      <version>3.0.0</version>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <version>2.2.220</version>
@@ -279,21 +229,6 @@
           <httpConnector>
             <port>9080</port>
           </httpConnector>
-        </configuration>
-      </plugin>
-      <!--
-      NablarchのテスティングフレームワークがJSPのコンパイル結果を格納するディレクトリを、
-      mvn clean時に削除するように設定。
-      -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-clean-plugin</artifactId>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>work/jsp</directory>
-            </fileset>
-          </filesets>
         </configuration>
       </plugin>
       <!-- gsp-dba-maven-pluginで自動生成したソースをビルド時に使用するための設定 -->
