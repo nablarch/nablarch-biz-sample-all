@@ -3,39 +3,16 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.nablarch.archetype</groupId>
-    <artifactId>nablarch-archetype-parent</artifactId>
+    <groupId>com.nablarch.applib</groupId>
+    <artifactId>nablarch-biz-sample-all</artifactId>
     <version>6-NEXT-SNAPSHOT</version>
   </parent>
 
   <artifactId>nablarch-logbook</artifactId>
-
-  <groupId>com.nablarch.tool</groupId>
-  <version>6-NEXT-SNAPSHOT</version>
   <packaging>war</packaging>
-
-  <properties>
-    <!-- ソース及びclassファイルが準拠するJavaのバージョン-->
-    <java.version>17</java.version>
-
-  </properties>
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>com.nablarch.profile</groupId>
-        <artifactId>nablarch-bom</artifactId>
-        <version>6-NEXT-SNAPSHOT</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>jakarta.platform</groupId>
-        <artifactId>jakarta.jakartaee-bom</artifactId>
-        <version>10.0.0</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
       <dependency>
         <groupId>org.zalando</groupId>
         <artifactId>logbook-bom</artifactId>

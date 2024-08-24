@@ -3,21 +3,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.nablarch.archetype</groupId>
-    <artifactId>nablarch-archetype-parent</artifactId>
+    <groupId>com.nablarch.applib</groupId>
+    <artifactId>nablarch-biz-sample-all</artifactId>
     <version>6-NEXT-SNAPSHOT</version>
   </parent>
 
   <artifactId>nablarch-db-file-management</artifactId>
-
-  <groupId>com.nablarch.tool</groupId>
-  <version>6-NEXT-SNAPSHOT</version>
   <packaging>war</packaging>
 
   <properties>
-    <!-- ソース及びclassファイルが準拠するJavaのバージョン-->
-    <java.version>17</java.version>
-
     <!-- gsp-dba-maven-pluginが使用するデータベース設定 -->
     <nablarch.db.jdbcDriver>org.h2.Driver</nablarch.db.jdbcDriver>
     <nablarch.db.url>jdbc:h2:./h2/db/SAMPLE</nablarch.db.url>
@@ -128,34 +122,12 @@
   <dependencyManagement>
     <dependencies>
       <dependency>
-        <groupId>com.nablarch.profile</groupId>
-        <artifactId>nablarch-bom</artifactId>
-        <version>6-NEXT-SNAPSHOT</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.junit</groupId>
-        <artifactId>junit-bom</artifactId>
-        <version>5.11.0</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>jakarta.platform</groupId>
-        <artifactId>jakarta.jakartaee-bom</artifactId>
-        <version>10.0.0</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
         <version>2.0.11</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
-
 
   <dependencies>
     <dependency>
@@ -328,6 +300,18 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.9.1</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals><goal>add-source</goal></goals>
+            <configuration>
+              <sources>
+                <source>${dba.entity.javaFileDestDir}</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
