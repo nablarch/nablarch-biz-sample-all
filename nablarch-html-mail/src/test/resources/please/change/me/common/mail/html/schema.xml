@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-メール送信に関するテーブルのスキーマ定義ファイル
--->
 <component-configuration
-    xmlns="http://tis.co.jp/nablarch/component-configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../../Nablarch/resources/component-configuration.xsd">
+        xmlns="http://tis.co.jp/nablarch/component-configuration"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration https://nablarch.github.io/schema/component-configuration.xsd">
 
     <!-- メール送信要求管理テーブルのスキーマ情報 -->
     <component name="mailRequestTable" class="nablarch.common.mail.MailRequestTable">
