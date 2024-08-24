@@ -1,7 +1,8 @@
 package please.change.me.common.mail.html;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 import nablarch.fw.launcher.CommandLine;
 import nablarch.fw.launcher.Main;
 

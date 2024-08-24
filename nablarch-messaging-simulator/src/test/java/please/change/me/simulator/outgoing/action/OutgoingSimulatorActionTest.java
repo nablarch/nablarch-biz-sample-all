@@ -21,8 +21,8 @@ import please.change.me.simulator.outgoing.CyclicDataReader;
 import java.nio.charset.Charset;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
 
 /**
  * {@link OutgoingSimulatorAction}のテスト。

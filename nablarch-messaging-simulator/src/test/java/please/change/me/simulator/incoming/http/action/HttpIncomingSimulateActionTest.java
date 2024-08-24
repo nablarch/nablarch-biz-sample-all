@@ -8,7 +8,7 @@ import org.junit.Test;
 import please.change.me.simulator.incoming.http.launcher.HttpIncomingSimulatorLauncher;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * {@link HttpIncomingSimulateAction}のテスト。
