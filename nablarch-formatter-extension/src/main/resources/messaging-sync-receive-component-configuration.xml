@@ -45,7 +45,7 @@
   <component name="messageReplyHandler" class="nablarch.fw.messaging.handler.MessageReplyHandler" />
 
   <component name="messagingProvider"
-      class="com.nablarch.example.sample.mom.EmbeddedMessagingProvider">
+      class="please.change.me.EmbeddedMessagingProvider">
     <property name="url"  value="tcp://localhost:61616" />
     <!-- キュー定義 -->
     <property name="queueNames">

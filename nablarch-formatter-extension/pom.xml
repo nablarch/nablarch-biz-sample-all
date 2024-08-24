@@ -28,13 +28,6 @@
   <dependencies>
 
     <dependency>
-      <groupId>com.nablarch.example</groupId>
-      <artifactId>nablarch-example-mom-testing-common</artifactId>
-      <version>6-NEXT-SNAPSHOT</version>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
       <groupId>com.nablarch.profile</groupId>
       <artifactId>nablarch-batch</artifactId>
     </dependency>
