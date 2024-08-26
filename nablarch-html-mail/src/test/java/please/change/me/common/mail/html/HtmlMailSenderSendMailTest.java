@@ -120,7 +120,7 @@ public class HtmlMailSenderSendMailTest {
             Session session = Session.getInstance(props, new Authenticator() {
                 @Override
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(account, PASSWORD);
+                    return new PasswordAuthentication(account.split("@")[0], PASSWORD);
                 }
             });
             session.setDebug(debug);
