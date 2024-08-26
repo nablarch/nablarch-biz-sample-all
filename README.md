@@ -1,2 +1,1 @@
 # nablarch-biz-sample-all
-

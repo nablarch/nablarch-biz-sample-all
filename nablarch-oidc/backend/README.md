@@ -1,10 +1,5 @@
 # OIDCを用いて認証するサンプルアプリケーションのバックエンド
 
-## 動作確認の環境
-
-* Java : 17
-* Maven : 3.9.8
-
 ## 主な技術スタック
 
 - [Nablarch](https://nablarch.github.io/docs/LATEST/doc/)

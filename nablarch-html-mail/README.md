@@ -1,22 +1,17 @@
 # HTMLメール送信機能サンプル
 
-## 前提
+## 動作確認方法
 
-動作確認は以下の環境で行っています。
+テストでは実際にメールを送信するため、メールサーバとして[GreenMail](https://greenmail-mail-test.github.io/greenmail/)を使用します。
 
-* Java : 17
-* Maven : 3.9.6
-* Docker : 24.0.7
+GreenMailのDockerコンテナを起動するため、以下のコマンドを実行します。
 
-## テストの実施方法
+```
+$ docker compose up -d
+```
 
-テストでは実際にメールを送信するため、メールサーバが必要になります。
-メールサーバにはGreenMailを使用しているため、以下の手順で実行してください。
+テストコードで動作確認するため、以下のコマンドを実行します。
 
-### 1. GreenMailのDockerコンテナを起動
-
-    $ docker compose up -d
-
-### 2. テストを実行
-
-    $ mvn test
+```
+$ mvn test
+```
