@@ -142,10 +142,7 @@ public class CertificateWrapper implements Initializable {
             }
             certificates = keyStore.getCertificateChain(alias);
             privateKey = (PrivateKey) keyStore.getKey(alias, keyPassword.toCharArray());
-        } catch (GeneralSecurityException e) {
-            throw new IllegalArgumentException(
-                    "Certificate file access error. fileName = [" + certificateFileName + ']', e);
-        } catch (IOException e) {
+        } catch (GeneralSecurityException | IOException e) {
             throw new IllegalArgumentException(
                     "Certificate file access error. fileName = [" + certificateFileName + ']', e);
         } finally {

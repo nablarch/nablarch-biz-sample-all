@@ -361,14 +361,12 @@ public class FormUrlEncodedDataRecordFormatter extends DataRecordFormatterSuppor
      */
     @SuppressWarnings("rawtypes")
     private boolean writeField(List<Object> list, FieldDefinition field, boolean isWroteBefore)
-        throws IOException {
+            throws IOException {
         
         Charset encoding = getDefaultEncoding();
         String fieldName = field.getName();
-        
-        for (int i = 0; i < list.size(); i++) {
-            Object obj = list.get(i);
-            
+
+        for (Object obj : list) {
             String outData;
             try {
                 // コンバータを実行する
@@ -403,7 +401,7 @@ public class FormUrlEncodedDataRecordFormatter extends DataRecordFormatterSuppor
                 writer.write(fieldName);
                 writer.write(KEY_VALUE_SEPARATOR);
                 writer.write(URLEncoder.encode(outData, encoding.name()));
-                
+
                 isWroteBefore = true;
             }
         }

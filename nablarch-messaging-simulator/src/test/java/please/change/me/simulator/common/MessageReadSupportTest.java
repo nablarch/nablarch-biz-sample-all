@@ -36,7 +36,7 @@ import org.junit.Test;
 public class MessageReadSupportTest {
 
     /** テスト対象 */
-    private MessageReadSupport messageReadSupport = new MessageReadSupport();
+    private final MessageReadSupport messageReadSupport = new MessageReadSupport();
 
 
     @AfterClass
@@ -431,20 +431,15 @@ public class MessageReadSupportTest {
         ExecutorService service = Executors.newFixedThreadPool(300);
 
         final int methodCallCount = 50000;
-        List<Future<HttpResponse>> results = new ArrayList<Future<HttpResponse>>(methodCallCount);
+        List<Future<HttpResponse>> results = new ArrayList<>(methodCallCount);
         for (int i = 0; i < methodCallCount; i++) {
-            results.add(service.submit(new Callable<HttpResponse>() {
-                @Override
-                public HttpResponse call() throws Exception {
-                    return messageReadSupport.getResponseForHttp("RM11AC0313");
-                }
-            }));
+            results.add(service.submit(() -> messageReadSupport.getResponseForHttp("RM11AC0313")));
         }
         service.shutdown();
 
         assertThat(results.size(), is(methodCallCount));
 
-        FrequencyCounter<String> counter = new FrequencyCounter<String>();
+        FrequencyCounter<String> counter = new FrequencyCounter<>();
         for (Future<HttpResponse> result : results) {
             HttpResponse httpResponse = result.get();
             String body = httpResponse.getBodyString();
@@ -481,33 +476,22 @@ public class MessageReadSupportTest {
         final int methodCallCount = 100;
         long start = System.currentTimeMillis();
 
-        List<Callable<HttpResponse>> callables = new ArrayList<Callable<HttpResponse>>(methodCallCount);
+        List<Callable<HttpResponse>> callables = new ArrayList<>(methodCallCount);
 
         for (int i = 0; i < methodCallCount; i++) {
-            final String reqId;
-            switch (i % 2) {
-                case 0:
-                    reqId = "RM11AC0303";
-                    break;
-                case 1:
-                    reqId = "RM11AC0323";
-                    break;
-                default:
-                    throw new IllegalStateException();
-            }
-            callables.add(new Callable<HttpResponse>() {
-                @Override
-                public HttpResponse call() throws Exception {
-                    return messageReadSupport.getResponseForHttp(reqId);
-                }
-            });
+            final String reqId = switch (i % 2) {
+                case 0 -> "RM11AC0303";
+                case 1 -> "RM11AC0323";
+                default -> throw new IllegalStateException();
+            };
+            callables.add(() -> messageReadSupport.getResponseForHttp(reqId));
         }
 
         List<Future<HttpResponse>> results = service.invokeAll(callables);
         service.shutdown();
         assertThat(results.size(), is(methodCallCount));
 
-        FrequencyCounter<String> counter = new FrequencyCounter<String>();
+        FrequencyCounter<String> counter = new FrequencyCounter<>();
         for (Future<HttpResponse> result : results) {
             HttpResponse httpResponse = result.get();
             String body = httpResponse.getBodyString();
@@ -605,7 +589,6 @@ public class MessageReadSupportTest {
         SystemRepository.load(container);
 
         String contentType = null;
-        //MessageReadSupport messageReadSupport = new MessageReadSupport();
         HttpResponse responseForHttp = null;
 
         //Excelから値を読み込めたか確認

@@ -103,13 +103,8 @@ public class SMIMESignedMailSender extends MailSender {
                 smimeBody.setContent(multiPart);
                 mimeMessage.setContent(smimeSignedGenerator.generate(smimeBody));
             }
-        } catch (OperatorCreationException e) {
-            throw createProcessAbnormalEnd(e, mailRequest);
-        } catch (CertificateEncodingException e) {
-            throw createProcessAbnormalEnd(e, mailRequest);
-        } catch (CertificateParsingException e) {
-            throw createProcessAbnormalEnd(e, mailRequest);
-        } catch (SMIMEException e) {
+        } catch (OperatorCreationException | CertificateEncodingException | CertificateParsingException |
+                 SMIMEException e) {
             throw createProcessAbnormalEnd(e, mailRequest);
         }
     }
@@ -202,8 +197,8 @@ public class SMIMESignedMailSender extends MailSender {
      * @return 指定された証明書を持つ {@link Store} オブジェクト
      * @throws CertificateEncodingException {@link Store}生成時に失敗した場合
      */
-    private Store createStore(CertificateWrapper certificateWrapper) throws CertificateEncodingException {
-        List<X509Certificate> certificateList = new ArrayList<X509Certificate>();
+    private JcaCertStore createStore(CertificateWrapper certificateWrapper) throws CertificateEncodingException {
+        List<X509Certificate> certificateList = new ArrayList<>();
         Certificate[] certificates = certificateWrapper.getCertificates();
         for (Certificate certificate : certificates) {
             certificateList.add((X509Certificate) certificate);

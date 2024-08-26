@@ -159,8 +159,8 @@ public class HtmlMailSenderSendMailTest {
             System.out.println("account " + account + ": " + messages.length
                     + " messages will be deleted.");
 
-            for (int i = 0; i < messages.length; i++) {
-                messages[i].setFlag(Flags.Flag.DELETED, true);
+            for (Message message : messages) {
+                message.setFlag(Flags.Flag.DELETED, true);
             }
             folder.close(true);
             store.close();

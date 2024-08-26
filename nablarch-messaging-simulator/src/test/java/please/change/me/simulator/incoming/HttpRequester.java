@@ -145,7 +145,7 @@ class HttpRequester {
      * @throws InterruptedException 待機中に現在のスレッドで割込みが発生した場合
      */
     private <V> List<V> gatherResult(List<Future<V>> futures) throws ExecutionException, InterruptedException {
-        List<V> result = new ArrayList<V>(execCount);
+        List<V> result = new ArrayList<>(execCount);
         for (Future<V> future : futures) {
             V s = future.get();
             result.add(s);
@@ -160,7 +160,7 @@ class HttpRequester {
      * @return {@link Callable}インスタンス。
      */
     private List<Callable<String>> createCallables(URL url) {
-        List<Callable<String>> callables = new ArrayList<Callable<String>>(execCount);
+        List<Callable<String>> callables = new ArrayList<>(execCount);
         for (int i = 0; i < execCount; i++) {
             callables.add(new Client(url));
         }

@@ -39,11 +39,10 @@ public class HtmlMailRequester extends MailRequester {
      */
     @Override
     public String requestToSend(TemplateMailContext ctx) {
-        if (!(ctx instanceof TemplateHtmlMailContext)) {
+        if (!(ctx instanceof TemplateHtmlMailContext htmlCtx)) {
             return super.requestToSend(ctx);
         }
 
-        TemplateHtmlMailContext htmlCtx = (TemplateHtmlMailContext) ctx;
         /*
          * ContextTypeがPLAINの場合、ctx.getMailBody()にてalternativeTextをmailBodyとして利用するため
          * super.requestToSend(ctx)を呼び出す前に、あらかじめ代替テキストを設定しておく。

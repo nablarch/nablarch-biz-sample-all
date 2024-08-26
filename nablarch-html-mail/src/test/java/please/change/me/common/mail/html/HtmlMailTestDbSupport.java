@@ -240,9 +240,7 @@ public class HtmlMailTestDbSupport {
     private void insertAttachedFile(String mailRequestId, FileData... files) throws SQLException, IOException {
         for (int i = 0; i < files.length; i++) {
             FileData file = files[i];
-            InputStream stream = null;
-            try {
-                stream = new FileInputStream(file.file);
+            try (InputStream stream = new FileInputStream(file.file)) {
                 Blob blob = new SerialBlob(BinaryUtil.toByteArray(stream));
                 VariousDbTestHelper.insert(new MailAttachedFile(
                         mailRequestId,
@@ -251,10 +249,6 @@ public class HtmlMailTestDbSupport {
                         file.contentType,
                         blob
                 ));
-            } finally {
-                if (stream != null) {
-                    stream.close();
-                }
             }
         }
     }

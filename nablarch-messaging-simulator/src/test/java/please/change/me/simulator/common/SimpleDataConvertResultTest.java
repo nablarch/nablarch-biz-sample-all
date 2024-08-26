@@ -18,7 +18,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 public class SimpleDataConvertResultTest {
 
-    private Map<String, ?> resultMap = new HashMap<String, Object>();
+    private Map<String, ?> resultMap = new HashMap<>();
 
     @Test
     public void testAccessor() {

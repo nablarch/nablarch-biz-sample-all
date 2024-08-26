@@ -14,8 +14,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @since 1.4.2
  */
 public class CyclicIteratorTest {
-    private CyclicIterator<Integer> target = new CyclicIterator<Integer>(
-            Arrays.asList(1,2,3));
+    private CyclicIterator<Integer> target = new CyclicIterator<>(
+            Arrays.asList(1, 2, 3));
 
     /** nextのテスト */     
     @Test

@@ -97,7 +97,7 @@ public class HtmlMailSenderTest extends HtmlMailTestSupport {
 
         MailRequest mailRequest = requestTable.getMailRequest(requestDatas.get(0));
 
-        new HtmlMailSender().addBodyContent(message, mailRequest, new ArrayList<MailAttachedFile>(), new ExecutionContext());
+        new HtmlMailSender().addBodyContent(message, mailRequest, new ArrayList<>(), new ExecutionContext());
         message.saveChanges();
         assertThat(message.getContentType(), containsString("text/plain"));
         assertThat(message.getContent(), instanceOf(String.class));

@@ -3,7 +3,6 @@ package please.change.me.simulator.common.concurrent;
 import org.junit.After;
 import org.junit.Test;
 import please.change.me.simulator.common.concurrent.ConcurrentLazyCache.CachingValueFactory;
-import please.change.me.simulator.common.concurrent.ConcurrentLazyCache.ValueFactory;
 import please.change.me.simulator.common.concurrent.ConcurrentLazyCache.ValueFactoryBuilder;
 
 import java.util.ArrayList;
@@ -28,8 +27,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ConcurrentLazyCacheTest {
 
     /** テスト対象インスタンス */
-    private final ConcurrentLazyCache<String, MyValue> target = new ConcurrentLazyCache<String,
-            MyValue>(new MyBuilder());
+    private final ConcurrentLazyCache<String, MyValue> target = new ConcurrentLazyCache<>(new MyBuilder());
 
     /** 呼び出し回数を数えるためのカウンタ */
     private final AtomicInteger callCount = new AtomicInteger(0); //マルチスレッドでカウントできるようにAtomicInteger
@@ -40,7 +38,7 @@ public class ConcurrentLazyCacheTest {
         /** {@inheritDoc} */
         @Override
         public ConcurrentLazyCache.ValueFactory<MyValue> newInstance(String key) {
-            return new CachingValueFactory<String, MyValue>(key) {
+            return new CachingValueFactory<>(key) {
                 @Override
                 public MyValue getValueOf(String key) {
                     // 呼び出し回数を記録
@@ -84,7 +82,7 @@ public class ConcurrentLazyCacheTest {
     public void testSingleThread() {
         for (int i = 0; i < 3; i++) {
             final int cnt = 10000;
-            List<MyValue> ret = new ArrayList<MyValue>(cnt);
+            List<MyValue> ret = new ArrayList<>(cnt);
             for (int j = 0; j < cnt; j++) {
                 String key = String.valueOf(j);
                 MyValue o = target.get(key);
@@ -92,7 +90,7 @@ public class ConcurrentLazyCacheTest {
             }
             assertThat(ret.size(), is(10000));
             // 重複がないこと
-            assertThat(new HashSet<MyValue>(ret).size(), is(10000));
+            assertThat(new HashSet<>(ret).size(), is(10000));
             // 呼び出し回数分カウントアップされていること。
             assertThat(callCount.get(), is(10000));
         }
@@ -111,16 +109,13 @@ public class ConcurrentLazyCacheTest {
         service = Executors.newFixedThreadPool(100);
 
         final int cnt = 100000;
-        List<Callable<MyValue>> callables = new ArrayList<Callable<MyValue>>(cnt);
+        List<Callable<MyValue>> callables = new ArrayList<>(cnt);
 
         for (int i = 0; i < cnt; i++) {
-            final String key = new String("aaa");   // 敢えて別インスタンスを生成する。
-            callables.add(new Callable<MyValue>() {
-                @Override
-                public MyValue call() throws Exception {
-                    // 全スレッドで同じキー"aaa"をgetする。
-                    return target.get(key);
-                }
+            final String key = "aaa";   // 敢えて別インスタンスを生成する。
+            callables.add(() -> {
+                // 全スレッドで同じキー"aaa"をgetする。
+                return target.get(key);
             });
         }
 
@@ -133,7 +128,7 @@ public class ConcurrentLazyCacheTest {
         // 結果の種類をまとめる。
         // MyObjはequalsをオーバーライドしていないので、
         // インスタンスが同じでないと等価とみなされない。
-        Set<MyValue> results = new HashSet<MyValue>();
+        Set<MyValue> results = new HashSet<>();
         for (Future<MyValue> future : futures) {
             results.add(future.get());
         }
@@ -157,17 +152,12 @@ public class ConcurrentLazyCacheTest {
     public void testInvalidFactory() {
 
         ConcurrentLazyCache<String, String> target
-                = new ConcurrentLazyCache<String, String>(new ValueFactoryBuilder<String, String>() {
-            @Override
-            public ValueFactory<String> newInstance(String key) {
-                return new CachingValueFactory<String, String>("key") {
+                = new ConcurrentLazyCache<>(key -> new CachingValueFactory<>("key") {
                     @Override
                     protected String getValueOf(String key) {
                         return null;
                     }
-                };
-            }
-        });
+                });
         target.get("will cause exception..");
     }
 

@@ -29,7 +29,7 @@ public class ConcurrentLazyCache<K, V> {
      */
     public ConcurrentLazyCache(ValueFactoryBuilder<K, V> builder) {
         this.builder = builder;
-        this.container = new ConcurrentHashMap<K, ValueFactory<V>>();
+        this.container = new ConcurrentHashMap<>();
     }
 
     /**
@@ -39,7 +39,7 @@ public class ConcurrentLazyCache<K, V> {
      * @return キャッシュしている値
      */
     public List<V> values() {
-        List<V> values = new ArrayList<V>(container.size());
+        List<V> values = new ArrayList<>(container.size());
         for (ValueFactory<V> e : container.values()) {
             values.add(e.getValue());
         }

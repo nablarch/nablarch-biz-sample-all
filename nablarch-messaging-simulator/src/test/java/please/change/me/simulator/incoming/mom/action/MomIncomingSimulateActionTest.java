@@ -1,6 +1,5 @@
 package please.change.me.simulator.incoming.mom.action;
 
-import nablarch.core.repository.ObjectLoader;
 import nablarch.core.repository.SystemRepository;
 import nablarch.core.repository.di.DiContainer;
 import nablarch.core.repository.di.config.xml.XmlComponentDefinitionLoader;
@@ -42,13 +41,10 @@ public class MomIncomingSimulateActionTest {
         SystemRepository.load(new DiContainer(loader));
 
         SystemRepository.load(new DiContainer(new XmlComponentDefinitionLoader("unit-test.xml")));
-        SystemRepository.load(new ObjectLoader() {
-            @Override
-            public Map<String, Object> load() {
-                Map<String, Object> m = new HashMap<String, Object>();
-                m.put("request-id", REQUEST_ID);
-                return m;
-            }
+        SystemRepository.load(() -> {
+            Map<String, Object> m = new HashMap<>();
+            m.put("request-id", REQUEST_ID);
+            return m;
         });
     }
 

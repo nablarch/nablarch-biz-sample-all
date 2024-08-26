@@ -106,7 +106,7 @@ public abstract class StatisticsToolTestSupport {
      * @return ファイル内用を比較するMatcher
      */
     protected TypeSafeMatcher<File> sameFile(final String expected) {
-        return new TypeSafeMatcher<File>() {
+        return new TypeSafeMatcher<>() {
             private int lineNo;
 
             @Override

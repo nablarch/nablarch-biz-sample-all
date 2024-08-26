@@ -144,7 +144,7 @@ public class OutgoingSimulatorAction  extends FileBatchActionBase<DataRecord>
         reader.setDataFile(getDataFileDirName(), getDataFileName())
               .setLayoutFile(getFormatFileDirName(), getFormatFileName());
 
-        List<DataRecord> dataRecords = new ArrayList<DataRecord>();
+        List<DataRecord> dataRecords = new ArrayList<>();
         while (reader.hasNext(ctx)) {
             DataRecord read = reader.read(ctx);
             dataRecords.add(read);

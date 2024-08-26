@@ -9,7 +9,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import nablarch.core.dataformat.DataRecord;
-import nablarch.core.repository.ObjectLoader;
 import nablarch.core.repository.SystemRepository;
 import nablarch.core.util.FilePathSetting;
 import nablarch.fw.ExecutionContext;
@@ -29,20 +28,18 @@ public class MultiFileRecordReaderTest {
     @BeforeClass
     public static void setupClass() {
         final FilePathSetting filePathSetting = new FilePathSetting();
-        HashMap<String, String> basePathSettings = new HashMap<String, String>();
+        HashMap<String, String> basePathSettings = new HashMap<>();
         basePathSettings.put("input", "classpath:please/change/me/statistics/reader/data");
         basePathSettings.put("format", "classpath:please/change/me/statistics/reader/data");
         filePathSetting.setBasePathSettings(basePathSettings);
 
-        HashMap<String, String> extensions = new HashMap<String, String>();
+        HashMap<String, String> extensions = new HashMap<>();
         extensions.put("format", "fmt");
         filePathSetting.setFileExtensions(extensions);
-        SystemRepository.load(new ObjectLoader() {
-            public Map<String, Object> load() {
-                Map<String, Object> data = new HashMap<String, Object>();
-                data.put("filePathSetting", filePathSetting);
-                return data;
-            }
+        SystemRepository.load(() -> {
+            Map<String, Object> data = new HashMap<>();
+            data.put("filePathSetting", filePathSetting);
+            return data;
         });
     }
 
@@ -75,7 +72,7 @@ public class MultiFileRecordReaderTest {
         ExecutionContext context = new ExecutionContext();
         MultiFileRecordReader reader = new MultiFileRecordReader();
 
-        List<String> fileSet = new ArrayList<String>();
+        List<String> fileSet = new ArrayList<>();
         reader.setFileList(fileSet);
         reader.setLayoutFile("format", "layout1");
 
@@ -94,7 +91,7 @@ public class MultiFileRecordReaderTest {
         ExecutionContext context = new ExecutionContext();
         MultiFileRecordReader reader = new MultiFileRecordReader();
 
-        List<String> fileSet = new ArrayList<String>();
+        List<String> fileSet = new ArrayList<>();
         fileSet.add("test1.csv");
         reader.setFileList(fileSet);
         reader.setLayoutFile("layout1");
@@ -131,7 +128,7 @@ public class MultiFileRecordReaderTest {
         ExecutionContext context = new ExecutionContext();
         MultiFileRecordReader reader = new MultiFileRecordReader();
 
-        List<String> fileSet = new ArrayList<String>();
+        List<String> fileSet = new ArrayList<>();
         fileSet.add("test2.csv");
         fileSet.add("test1.csv");
         reader.setFileList("input", fileSet);
@@ -166,7 +163,7 @@ public class MultiFileRecordReaderTest {
         ExecutionContext context = new ExecutionContext();
         MultiFileRecordReader reader = new MultiFileRecordReader();
 
-        List<String> fileSet = new ArrayList<String>();
+        List<String> fileSet = new ArrayList<>();
         fileSet.add("test2.csv");
         fileSet.add("test1.csv");
         reader.setFileList(fileSet);

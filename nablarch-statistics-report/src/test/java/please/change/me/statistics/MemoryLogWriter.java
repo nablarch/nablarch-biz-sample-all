@@ -7,7 +7,7 @@ import nablarch.core.log.basic.LogWriterSupport;
 
 public class MemoryLogWriter extends LogWriterSupport {
 
-    public static List<String> outputs = new ArrayList<String>();
+    public static List<String> outputs = new ArrayList<>();
 
     @Override
     protected void onWrite(String formattedMessage) {

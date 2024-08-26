@@ -74,7 +74,7 @@ public class MultiFileRecordReader implements DataReader<DataRecord> {
             throw new IllegalStateException("data file name was blank. data file name must not be blank.");
         }
 
-        List<DataReader<DataRecord>> readers = new ArrayList<DataReader<DataRecord>>();
+        List<DataReader<DataRecord>> readers = new ArrayList<>();
         for (String file : fileList) {
             FileDataReader fileDataReader = new FileDataReader();
             if (StringUtil.hasValue(layoutFileBasePathName)) {

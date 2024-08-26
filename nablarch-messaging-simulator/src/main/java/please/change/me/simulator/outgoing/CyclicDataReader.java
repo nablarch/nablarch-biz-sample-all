@@ -33,7 +33,7 @@ public class CyclicDataReader implements DataReader<DataRecord> {
      * @param repeatLimitCnt 繰り返し上限回数
      */
     public CyclicDataReader(List<DataRecord> src, int repeatLimitCnt) {
-        this.itr = new CyclicIterator<DataRecord>(src);
+        this.itr = new CyclicIterator<>(src);
         this.limit = repeatLimitCnt;
     }
 
