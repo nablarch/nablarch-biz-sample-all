@@ -59,9 +59,9 @@ public class SMIMESignedMailSenderTest extends MailTestSupport {
 
     @Before
     public void setupTestCase() throws Exception {
-        cleanupMail("to1@localhost");
-        cleanupMail("cc1@localhost");
-        cleanupMail("bcc1@localhost");
+        cleanupMail("to1");
+        cleanupMail("cc1");
+        cleanupMail("bcc1");
     }
 
     /**
@@ -149,9 +149,9 @@ public class SMIMESignedMailSenderTest extends MailTestSupport {
         assertLog("メール送信完了。メールリクエストID 101");
 
         // 送信したメッセージの確認
-        Message[] toMessages = getMailMessage("to1@localhost");
-        Message[] ccMessages = getMailMessage("cc1@localhost");
-        Message[] bccMessages = getMailMessage("bcc1@localhost");
+        Message[] toMessages = getMailMessage("to1");
+        Message[] ccMessages = getMailMessage("cc1");
+        Message[] bccMessages = getMailMessage("bcc1");
 
         // メッセージが1つう送信されていること
         assertThat(toMessages, is(notNullValue()));
@@ -235,9 +235,9 @@ public class SMIMESignedMailSenderTest extends MailTestSupport {
         assertLog("メール送信完了。メールリクエストID 101");
 
         // 送信したメッセージの確認
-        Message[] toMessages = getMailMessage("to1@localhost");
-        Message[] ccMessages = getMailMessage("cc1@localhost");
-        Message[] bccMessages = getMailMessage("bcc1@localhost");
+        Message[] toMessages = getMailMessage("to1");
+        Message[] ccMessages = getMailMessage("cc1");
+        Message[] bccMessages = getMailMessage("bcc1");
 
         // メッセージが1つう送信されていること
         assertThat(toMessages, is(notNullValue()));
@@ -334,9 +334,9 @@ public class SMIMESignedMailSenderTest extends MailTestSupport {
         assertLog("メール送信完了。メールリクエストID 101");
 
         // 送信したメッセージの確認
-        Message[] toMessages = getMailMessage("to1@localhost");
-        Message[] ccMessages = getMailMessage("cc1@localhost");
-        Message[] bccMessages = getMailMessage("bcc1@localhost");
+        Message[] toMessages = getMailMessage("to1");
+        Message[] ccMessages = getMailMessage("cc1");
+        Message[] bccMessages = getMailMessage("bcc1");
 
         // メッセージが1つう送信されていること
         assertThat(toMessages, is(notNullValue()));
