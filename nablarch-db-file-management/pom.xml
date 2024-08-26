@@ -22,59 +22,6 @@
     <nablarch.db.schema>PUBLIC</nablarch.db.schema>
   </properties>
 
-  <profiles>
-    <profile>
-      <id>gsp</id>
-      <activation>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>jp.co.tis.gsp</groupId>
-            <artifactId>gsp-dba-maven-plugin</artifactId>
-            <configuration>
-              <driver>${nablarch.db.jdbcDriver}</driver>
-              <url>${nablarch.db.url}</url>
-              <adminUser>${nablarch.db.adminUser}</adminUser>
-              <adminPassword>${nablarch.db.adminPassword}</adminPassword>
-              <user>${nablarch.db.user}</user>
-              <password>${nablarch.db.password}</password>
-              <schema>${nablarch.db.schema}</schema>
-              <useAccessor>true</useAccessor>
-              <rootPackage>please.change.me</rootPackage>
-              <entityPackageName>entity</entityPackageName>
-              <dataDirectory>src/test/resources/data/h2</dataDirectory>
-              <erdFile>src/main/resources/entity/data-model.edm</erdFile>
-              <extraDdlDirectory>src/main/resources/extraDdl/h2</extraDdlDirectory>
-            </configuration>
-            <executions>
-              <execution>
-                <id>default-cli</id>
-                <phase>generate-resources</phase>
-                <goals>
-                  <goal>generate-ddl</goal>
-                  <goal>execute-ddl</goal>
-                  <goal>generate-entity</goal>
-                  <goal>load-data</goal>
-                  <goal>export-schema</goal>
-                </goals>
-              </execution>
-            </executions>
-            <dependencies>
-              <!-- プロジェクトで使用するDB製品にあわせたJDBCドライバに上書きする -->
-              <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>2.2.220</version>
-                <scope>runtime</scope>
-              </dependency>
-            </dependencies>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
-
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -229,6 +176,47 @@
             <port>9080</port>
           </httpConnector>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>jp.co.tis.gsp</groupId>
+        <artifactId>gsp-dba-maven-plugin</artifactId>
+        <configuration>
+          <driver>${nablarch.db.jdbcDriver}</driver>
+          <url>${nablarch.db.url}</url>
+          <adminUser>${nablarch.db.adminUser}</adminUser>
+          <adminPassword>${nablarch.db.adminPassword}</adminPassword>
+          <user>${nablarch.db.user}</user>
+          <password>${nablarch.db.password}</password>
+          <schema>${nablarch.db.schema}</schema>
+          <useAccessor>true</useAccessor>
+          <rootPackage>please.change.me</rootPackage>
+          <entityPackageName>entity</entityPackageName>
+          <dataDirectory>src/test/resources/data/h2</dataDirectory>
+          <erdFile>src/main/resources/entity/data-model.edm</erdFile>
+          <extraDdlDirectory>src/main/resources/extraDdl/h2</extraDdlDirectory>
+        </configuration>
+        <executions>
+          <execution>
+            <id>default-cli</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>generate-ddl</goal>
+              <goal>execute-ddl</goal>
+              <goal>generate-entity</goal>
+              <goal>load-data</goal>
+              <goal>export-schema</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <!-- プロジェクトで使用するDB製品にあわせたJDBCドライバに上書きする -->
+          <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.2.220</version>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
       </plugin>
       <!-- gsp-dba-maven-pluginで自動生成したソースをビルド時に使用するための設定 -->
       <plugin>
