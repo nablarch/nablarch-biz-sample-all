@@ -54,7 +54,7 @@ public class SMIMESignedMailSenderTest extends MailTestSupport {
         MAIL_SESSION_PROPERTIES.setProperty("mail.smtp.host", "localhost");
         MAIL_SESSION_PROPERTIES.setProperty("mail.host", "localhost");
         MAIL_SESSION_PROPERTIES.setProperty("mail.pop3.host", "localhost");
-        MAIL_SESSION_PROPERTIES.setProperty("mail.pop3.port", "3110");
+        MAIL_SESSION_PROPERTIES.setProperty("mail.pop3.port", "10110");
     }
 
     @Before
