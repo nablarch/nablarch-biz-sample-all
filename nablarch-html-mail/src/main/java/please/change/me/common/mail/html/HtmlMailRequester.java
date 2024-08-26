@@ -80,7 +80,7 @@ public class HtmlMailRequester extends MailRequester {
             throw new IllegalArgumentException(String.format("alternative text template is not found. templateId = %s, lang = %s",
                                                              ctx.getTemplateId(), ctx.getLang()));
         }
-        ctx.setAlternativeText(replaceTemplateString(ctx.getReplaceKeyValue(), template.getString("alternativeText")));
+        ctx.setAlternativeText(replaceTemplateString(ctx.getVariables(), template.getString("alternativeText")));
     }
 
     /**
@@ -90,9 +90,9 @@ public class HtmlMailRequester extends MailRequester {
      * @param targetStr 置換対象文字列
      * @return 置換後の文字列
      */
-    private String replaceTemplateString(Map<String, String> replaceKeyValue, String targetStr) {
-        for (Entry<String, String> entry : replaceKeyValue.entrySet()) {
-            targetStr = targetStr.replace('{' + entry.getKey() + '}', entry.getValue());
+    private String replaceTemplateString(Map<String, Object> replaceKeyValue, String targetStr) {
+        for (Entry<String, Object> entry : replaceKeyValue.entrySet()) {
+            targetStr = targetStr.replace('{' + entry.getKey() + '}', entry.getValue().toString());
         }
         return targetStr;
     }
