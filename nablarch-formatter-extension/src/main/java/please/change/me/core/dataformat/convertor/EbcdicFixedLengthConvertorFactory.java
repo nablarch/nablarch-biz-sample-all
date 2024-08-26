@@ -15,8 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class EbcdicFixedLengthConvertorFactory extends FixedLengthConvertorFactory {
     @Override
     protected Map<String, Class<?>> getDefaultConvertorTable() {
-        final Map<String, Class<?>> defaultConvertorTable = new CaseInsensitiveMap<Class<?>>(
-                new ConcurrentHashMap<String, Class<?>>(super.getDefaultConvertorTable()));
+        final Map<String, Class<?>> defaultConvertorTable = new CaseInsensitiveMap<>(
+                new ConcurrentHashMap<>(super.getDefaultConvertorTable()));
         // EBCDIC(CP930)用のデータタイプ ESN, EN を追加する
         defaultConvertorTable.put("ESN", EbcdicDoubleByteCharacterString.class);
         defaultConvertorTable.put("EN", EbcdicNoShiftCodeDoubleByteCharacterString.class);

@@ -5,7 +5,7 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * {@link CyclicIterator}のテストクラス。
@@ -14,8 +14,8 @@ import static org.junit.Assert.assertThat;
  * @since 1.4.2
  */
 public class CyclicIteratorTest {
-    private CyclicIterator<Integer> target = new CyclicIterator<Integer>(
-            Arrays.asList(1,2,3));
+    private CyclicIterator<Integer> target = new CyclicIterator<>(
+            Arrays.asList(1, 2, 3));
 
     /** nextのテスト */     
     @Test

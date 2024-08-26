@@ -15,7 +15,7 @@ import nablarch.core.repository.SystemRepository;
 public class FormUrlEncodedDataConvertorSetting implements ConvertorSetting {
 
     /** コンバータのファクトリクラス */
-    private static FormUrlEncodedDataConvertorFactory factory = new FormUrlEncodedDataConvertorFactory();
+    private static final FormUrlEncodedDataConvertorFactory factory = new FormUrlEncodedDataConvertorFactory();
 
     /** システムリポジトリ上の登録名 */
     private static final String REPOSITORY_KEY =  "formUrlEncodedDataConvertorSetting";

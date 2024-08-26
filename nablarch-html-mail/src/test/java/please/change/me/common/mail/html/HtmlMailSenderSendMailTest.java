@@ -5,8 +5,8 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
 import java.util.Properties;
 
@@ -159,8 +159,8 @@ public class HtmlMailSenderSendMailTest {
             System.out.println("account " + account + ": " + messages.length
                     + " messages will be deleted.");
 
-            for (int i = 0; i < messages.length; i++) {
-                messages[i].setFlag(Flags.Flag.DELETED, true);
+            for (Message message : messages) {
+                message.setFlag(Flags.Flag.DELETED, true);
             }
             folder.close(true);
             store.close();

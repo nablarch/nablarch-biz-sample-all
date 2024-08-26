@@ -70,7 +70,7 @@ public class MessageReadSupport {
         rawHeaderRecord = support.getResponseMessageByRequestId(DataType.EXPECTED_REQUEST_HEADER_MESSAGES,
                                                                 requestId);
 
-        Map<String, Object> headerRecord = new HashMap<String, Object>(rawHeaderRecord);
+        Map<String, Object> headerRecord = new HashMap<>(rawHeaderRecord);
         //必ず付与される何番目のレコードか？を表す値を除去する。
         headerRecord.remove("DataFileFragment:firstFieldKey");
 
@@ -106,7 +106,7 @@ public class MessageReadSupport {
         // Excelファイルから要求電文のヘッダを取得する
         rawHeaderRecord = support.getResponseMessageByRequestId(DataType.EXPECTED_REQUEST_HEADER_MESSAGES, requestId);
 
-        Map<String, Object> headerRecord = new HashMap<String, Object>(rawHeaderRecord);
+        Map<String, Object> headerRecord = new HashMap<>(rawHeaderRecord);
         //必ず付与される何番目のレコードか？を表す値を除去する。
         headerRecord.remove("DataFileFragment:firstFieldKey");
 
@@ -148,7 +148,7 @@ public class MessageReadSupport {
         // Excelファイルから応答電文のヘッダを取得する
         rawHeaderRecord = support.getResponseMessageByRequestId(DataType.RESPONSE_HEADER_MESSAGES, requestId);
 
-        Map<String, Object> headerRecord = new HashMap<String, Object>(rawHeaderRecord);
+        Map<String, Object> headerRecord = new HashMap<>(rawHeaderRecord);
 
         //ステータスコードをヘッダから読み取る(ヘッダから取得できなかった場合の初期として200を設定している)
         Integer statusCode = Integer.valueOf(200);

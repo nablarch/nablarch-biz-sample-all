@@ -18,17 +18,19 @@ $ docker compose up -d
 $ mvn compile jetty:run
 ```
 
-モックサーバ、アプリケーションの両方が起動したら、ブラウザで http://localhost:8080/logbook/get にアクセスする。
+モックサーバ、アプリケーションの両方が起動したら、ブラウザで http://localhost:8080/logbook/get にアクセスします。
 
-アプリケーションでは、以下のREST APIを定義している。
+## REST API一覧
+
+アプリケーションでは、以下のREST APIを定義しています。
 
 - GET /logbook/get
-  - デフォルト設定のLogbookで、GETリクエストのログを出力する
+  - デフォルト設定のLogbookで、GETリクエストのログを出力します
 - GET /logbook/get/mask
-  - マスクを設定したLogbookで、GETリクエストのログを出力する
+  - マスクを設定したLogbookで、GETリクエストのログを出力します
 - POST /logbook/post
-  - デフォルト設定のLogbookで、POSTリクエストのログを出力する
+  - デフォルト設定のLogbookで、POSTリクエストのログを出力します
 - POST /logbook/post/mask
-  - マスクを設定したLogbookで、POSTリクエストのログを出力する
+  - マスクを設定したLogbookで、POSTリクエストのログを出力します
 
 

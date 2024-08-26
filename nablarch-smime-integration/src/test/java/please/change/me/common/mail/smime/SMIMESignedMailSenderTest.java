@@ -68,7 +68,7 @@ public class SMIMESignedMailSenderTest extends MailTestSupport {
      * テスト用のメールフォルダをクリーニングする。
      *
      * @param account クリーニング対象のメールアカウント
-     * @throws Exception
+     * @throws Exception 例外
      */
     private void cleanupMail(final String account) throws Exception {
         Session session = Session.getInstance(MAIL_SESSION_PROPERTIES, new Authenticator() {
@@ -83,8 +83,8 @@ public class SMIMESignedMailSenderTest extends MailTestSupport {
         folder.open(Folder.READ_WRITE);
         Message[] messages = folder.getMessages();
         System.out.println("account " + account + ": " + messages.length + " messages will be deleted.");
-        for (int i = 0; i < messages.length; i++) {
-            messages[i].setFlag(Flags.Flag.DELETED, true);
+        for (Message message : messages) {
+            message.setFlag(Flags.Flag.DELETED, true);
         }
         folder.close(true);
         store.close();
@@ -402,7 +402,7 @@ public class SMIMESignedMailSenderTest extends MailTestSupport {
     /**
      * 添付ファイルのcontentTypeを空文字列にした場合。
      *
-     * 電子署名生成でエラーになること。
+     * <p>電子署名生成でエラーになること。
      */
     @Test
     public void testAttachedFileContextTypeNull() throws Exception {
@@ -447,7 +447,7 @@ public class SMIMESignedMailSenderTest extends MailTestSupport {
     /**
      * 添付ファイルのcontentTypeを空文字列にした場合。
      *
-     * 電子署名生成でエラーになること。
+     * <p>電子署名生成でエラーになること。
      */
     @Test
     public void testNoCertificatePatternId() throws Exception {

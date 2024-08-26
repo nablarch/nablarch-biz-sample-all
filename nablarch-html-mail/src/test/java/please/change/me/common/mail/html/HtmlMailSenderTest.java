@@ -3,7 +3,7 @@ package please.change.me.common.mail.html;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -97,7 +97,7 @@ public class HtmlMailSenderTest extends HtmlMailTestSupport {
 
         MailRequest mailRequest = requestTable.getMailRequest(requestDatas.get(0));
 
-        new HtmlMailSender().addBodyContent(message, mailRequest, new ArrayList<MailAttachedFile>(), new ExecutionContext());
+        new HtmlMailSender().addBodyContent(message, mailRequest, new ArrayList<>(), new ExecutionContext());
         message.saveChanges();
         assertThat(message.getContentType(), containsString("text/plain"));
         assertThat(message.getContent(), instanceOf(String.class));

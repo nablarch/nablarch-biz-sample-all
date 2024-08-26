@@ -84,8 +84,8 @@ public class TemplateHtmlMailContext extends TemplateMailContext {
      * このメソッドでは、置き換え前にhtmlエスケープを行う。<br />
      */
     @Override
-    public void setReplaceKeyValue(String key, String value) {
-        super.setReplaceKeyValue(key, escapeHtml(value));
+    public void setVariable(String key, Object value) {
+        super.setVariable(key, escapeHtml(value));
     }
 
     /**

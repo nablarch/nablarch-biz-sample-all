@@ -141,11 +141,11 @@ class HttpRequester {
      *
      * @param futures {@link Future}
      * @return 実行結果
-     * @throws ExecutionException
-     * @throws InterruptedException
+     * @throws ExecutionException 実行で例外が創出された場合
+     * @throws InterruptedException 待機中に現在のスレッドで割込みが発生した場合
      */
     private <V> List<V> gatherResult(List<Future<V>> futures) throws ExecutionException, InterruptedException {
-        List<V> result = new ArrayList<V>(execCount);
+        List<V> result = new ArrayList<>(execCount);
         for (Future<V> future : futures) {
             V s = future.get();
             result.add(s);
@@ -160,7 +160,7 @@ class HttpRequester {
      * @return {@link Callable}インスタンス。
      */
     private List<Callable<String>> createCallables(URL url) {
-        List<Callable<String>> callables = new ArrayList<Callable<String>>(execCount);
+        List<Callable<String>> callables = new ArrayList<>(execCount);
         for (int i = 0; i < execCount; i++) {
             callables.add(new Client(url));
         }
@@ -221,7 +221,7 @@ class HttpRequester {
          *
          * @param in 読み取り元入力ストリーム
          * @return 読み取った文字列
-         * @throws IOException
+         * @throws IOException 入出力エラーが発生した場合
          */
         private String readAll(InputStream in, Charset charset) throws IOException {
             StringBuilder ret = new StringBuilder();

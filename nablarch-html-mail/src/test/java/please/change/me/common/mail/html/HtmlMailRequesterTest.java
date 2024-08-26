@@ -2,7 +2,7 @@ package please.change.me.common.mail.html;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -62,8 +62,8 @@ public class HtmlMailRequesterTest extends HtmlMailTestSupport {
         ctx.setReturnPath("return.path");
         ctx.setReplyTo("reply.to");
         ctx.setTemplateId("1");
-        ctx.setReplaceKeyValue("key", "case1");
-        ctx.setReplaceKeyValue("name", "user");
+        ctx.setVariable("key", "case1");
+        ctx.setVariable("name", "user");
         String mailRequestId = target.requestToSend(ctx);
         commit();
 
@@ -98,8 +98,8 @@ public class HtmlMailRequesterTest extends HtmlMailTestSupport {
         ctx.setReturnPath("return.path");
         ctx.setReplyTo("reply.to");
         ctx.setTemplateId("1");
-        ctx.setReplaceKeyValue("key", "case2");
-        ctx.setReplaceKeyValue("name", "user");
+        ctx.setVariable("key", "case2");
+        ctx.setVariable("name", "user");
         ctx.setContentType(ContentType.HTML);
         String mailRequestId = target.requestToSend(ctx);
         commit();
@@ -138,8 +138,8 @@ public class HtmlMailRequesterTest extends HtmlMailTestSupport {
         ctx.setReturnPath("return.path");
         ctx.setReplyTo("reply.to");
         ctx.setTemplateId("1");
-        ctx.setReplaceKeyValue("key", "switch");
-        ctx.setReplaceKeyValue("name", "user");
+        ctx.setVariable("key", "switch");
+        ctx.setVariable("name", "user");
         ctx.setContentType(ContentType.PLAIN);
         String mailRequestId = target.requestToSend(ctx);
         commit();
@@ -172,8 +172,8 @@ public class HtmlMailRequesterTest extends HtmlMailTestSupport {
         ctx.setReturnPath("return.path");
         ctx.setReplyTo("reply.to");
         ctx.setTemplateId("1");
-        ctx.setReplaceKeyValue("key", "case_lang");
-        ctx.setReplaceKeyValue("name", "user");
+        ctx.setVariable("key", "case_lang");
+        ctx.setVariable("name", "user");
         String mailRequestId = target.requestToSend(ctx);
         commit();
 
@@ -210,8 +210,8 @@ public class HtmlMailRequesterTest extends HtmlMailTestSupport {
         ctx.setReturnPath("return.path");
         ctx.setReplyTo("reply.to");
         ctx.setTemplateId(templateId);
-        ctx.setReplaceKeyValue("key", "case3");
-        ctx.setReplaceKeyValue("name", "user");
+        ctx.setVariable("key", "case3");
+        ctx.setVariable("name", "user");
         try {
             target.requestToSend(ctx);
             fail("指定したテンプレートがなければ例外が発生する。");
@@ -239,8 +239,8 @@ public class HtmlMailRequesterTest extends HtmlMailTestSupport {
         ctx.setReturnPath("return.path");
         ctx.setReplyTo("reply.to");
         ctx.setTemplateId(templateId);
-        ctx.setReplaceKeyValue("key", "case3");
-        ctx.setReplaceKeyValue("name", "user");
+        ctx.setVariable("key", "case3");
+        ctx.setVariable("name", "user");
         ctx.setContentType(ContentType.PLAIN);
         try {
             target.requestToSend(ctx);

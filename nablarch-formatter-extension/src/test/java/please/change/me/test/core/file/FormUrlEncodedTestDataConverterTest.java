@@ -2,7 +2,7 @@ package please.change.me.test.core.file;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import nablarch.core.dataformat.DataRecord;
@@ -33,9 +33,9 @@ public class FormUrlEncodedTestDataConverterTest {
         FormUrlEncodedTestDataConverter converter = new FormUrlEncodedTestDataConverter();
         LayoutDefinition defaultDefinition = createExcelLayoutDefinition();
         DataRecord currentData = createTestDataRecord();
-        DataRecord convertedRecord = converter.convertData(defaultDefinition, currentData, Charset.forName("UTF-8"));
+        DataRecord convertedRecord = converter.convertData(defaultDefinition, currentData, StandardCharsets.UTF_8);
 
-        LayoutDefinition createdDefinition = converter.createDefinition(defaultDefinition, convertedRecord, Charset.forName("UTF-8"));
+        LayoutDefinition createdDefinition = converter.createDefinition(defaultDefinition, convertedRecord, StandardCharsets.UTF_8);
         
         List<RecordDefinition> rdList = createdDefinition.getRecords();
         assertEquals(1, rdList.size());
@@ -62,7 +62,7 @@ public class FormUrlEncodedTestDataConverterTest {
         FormUrlEncodedTestDataConverter converter = new FormUrlEncodedTestDataConverter();
         LayoutDefinition defaultDefinition = createExcelLayoutDefinition();
         try {
-            converter.createDefinition(defaultDefinition, null, Charset.forName("UTF-8"));
+            converter.createDefinition(defaultDefinition, null, StandardCharsets.UTF_8);
             fail();
         } catch (IllegalArgumentException e) {
             assertTrue(e.getMessage().contains("data is null"));
@@ -79,7 +79,7 @@ public class FormUrlEncodedTestDataConverterTest {
         FormUrlEncodedTestDataConverter converter = new FormUrlEncodedTestDataConverter();
         LayoutDefinition defaultDefinition = createExcelLayoutDefinition();
         try {
-            converter.createDefinition(defaultDefinition, new DataRecord(), Charset.forName("UTF-8"));
+            converter.createDefinition(defaultDefinition, new DataRecord(), StandardCharsets.UTF_8);
             fail();
         } catch (IllegalArgumentException e) {
             assertTrue(e.getMessage().contains("data is not contains dummy column. key=[DUMMY]"));
@@ -97,7 +97,7 @@ public class FormUrlEncodedTestDataConverterTest {
         LayoutDefinition defaultDefinition = createExcelLayoutDefinition();
         DataRecord currentData = createTestDataRecord();
         
-        DataRecord convertedRecord = converter.convertData(defaultDefinition, currentData, Charset.forName("UTF-8"));
+        DataRecord convertedRecord = converter.convertData(defaultDefinition, currentData, StandardCharsets.UTF_8);
         
         String urlEncodedTestData = createUrlEncodedTestData();
         
@@ -117,7 +117,7 @@ public class FormUrlEncodedTestDataConverterTest {
         currentData.put("漢字名", null);
 
         try {
-            converter.convertData(defaultDefinition, currentData, Charset.forName("UTF-8"));
+            converter.convertData(defaultDefinition, currentData, StandardCharsets.UTF_8);
             fail();
         } catch (IllegalArgumentException e) {
             assertTrue(e.getMessage().contains("record contains not 'key=value' format data. col=漢字名"));
@@ -137,7 +137,7 @@ public class FormUrlEncodedTestDataConverterTest {
         currentData.put("カナ名", "ヤマダタロウ");
         
         try {
-            converter.convertData(defaultDefinition, currentData, Charset.forName("UTF-8"));
+            converter.convertData(defaultDefinition, currentData, StandardCharsets.UTF_8);
             fail();
         } catch (IllegalArgumentException e) {
             assertTrue(e.getMessage().contains("record contains not 'key=value' format data. col=カナ名"));
@@ -162,9 +162,9 @@ public class FormUrlEncodedTestDataConverterTest {
      * @return URLエンコード済テストデータ
      */
     private String createUrlEncodedTestData() throws UnsupportedEncodingException {
-        return "kanjiName=" + URLEncoder.encode("山田=太郎", "UTF-8") + "&"
-                + "kanaName=" + URLEncoder.encode("ヤマダ=タロウ", "UTF-8")+ "&"
-                + "mailAddr=" + URLEncoder.encode("yamada.taro@mail.com", "UTF-8");
+        return "kanjiName=" + URLEncoder.encode("山田=太郎", StandardCharsets.UTF_8) + "&"
+                + "kanaName=" + URLEncoder.encode("ヤマダ=タロウ", StandardCharsets.UTF_8)+ "&"
+                + "mailAddr=" + URLEncoder.encode("yamada.taro@mail.com", StandardCharsets.UTF_8);
     }
     
     /**

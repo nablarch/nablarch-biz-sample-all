@@ -2,7 +2,7 @@ package please.change.me.common.mail.html;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.fail;
 
 import org.junit.Test;
@@ -29,10 +29,10 @@ public class TemplateHtmlMailContextTest {
         target.setContentType("dummy");
         assertThat(target.getContentType(), is("dummy"));
 
-        assertThat(target.getReplaceKeyValue().size(), is(0));
-        target.setReplaceKeyValue("key", "value");
-        assertThat(target.getReplaceKeyValue().containsKey("key"), is(true));
-        assertThat(target.getReplaceKeyValue().get("key"), is("value"));
+        assertThat(target.getVariables().size(), is(0));
+        target.setVariable("key", "value");
+        assertThat(target.getVariables().containsKey("key"), is(true));
+        assertThat(target.getVariables().get("key"), is("value"));
     }
 
     /**
@@ -80,16 +80,16 @@ public class TemplateHtmlMailContextTest {
     @Test
     public void testEscapeHtmlInSetReplaceValue() {
         TemplateHtmlMailContext ctx = new TemplateHtmlMailContext();
-        assertThat(ctx.getReplaceKeyValue().isEmpty(), is(true));
+        assertThat(ctx.getVariables().isEmpty(), is(true));
 
-        ctx.setReplaceKeyValue("notEscape white space", "value has white space");
-        assertThat(ctx.getReplaceKeyValue().get("notEscape white space"), is("value has white space"));
+        ctx.setVariable("notEscape white space", "value has white space");
+        assertThat(ctx.getVariables().get("notEscape white space"), is("value has white space"));
 
-        ctx.setReplaceKeyValue("escape start tag", "<img");
-        assertThat(ctx.getReplaceKeyValue().get("escape start tag"), is("&lt;img"));
+        ctx.setVariable("escape start tag", "<img");
+        assertThat(ctx.getVariables().get("escape start tag"), is("&lt;img"));
 
-        ctx.setReplaceKeyValue("holder in tag attr", "< may escaped");
-        assertThat("エスケープ用のやつを利用しているのでエスケープされる。", ctx.getReplaceKeyValue().get("holder in tag attr"), is("&lt; may escaped"));
+        ctx.setVariable("holder in tag attr", "< may escaped");
+        assertThat("エスケープ用のやつを利用しているのでエスケープされる。", ctx.getVariables().get("holder in tag attr"), is("&lt; may escaped"));
 
     }
 

@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <component-configuration
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://tis.co.jp/nablarch/component-configuration"
-    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  https://nablarch.github.io/schema/component-configuration.xsd">
+        xmlns="http://tis.co.jp/nablarch/component-configuration"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  https://nablarch.github.io/schema/component-configuration.xsd">
 
   <!-- テーブル定義 -->
   <import file="nablarch/schema-config.xml" />
 
   <!-- 精査に使用する文字集合定義 -->
   <import file="nablarch/core/validation/charset-definition.xml"/>
-
-  <!-- DomainManager 実装クラス設定 -->
-  <component name="domainManager" class="please.change.me.domain.SampleDomainManager"/>
 
   <!-- BeanValidation実装クラス -->
   <component name="validationStrategy" class="nablarch.common.web.validator.BeanValidationStrategy" />
@@ -30,13 +27,8 @@
 
   <!-- web固有設定の読み込み -->
   <!-- データベース設定 -->
-  <!--
-  下記設定ファイルを使用することで、JNDIを用いてコネクションがルックアップされる
-  ルックアップに使用する名前は、configファイル中で、「nablarch.connectionFactory.jndiResourceName」というプレースホルダーに設定する。
-
-  ローカルのデータソースからコネクションを取得したい場合は、アーキタイプから生成した直後のプロジェクトに含まれるdb-for-webui_dev.xmlを参考に設定すること。
-  -->
-  <import file="nablarch/webui/db-for-webui.xml"/>
+  <import file="nablarch/core/db-base.xml" />
+  <import file="data-source.xml" />
 
   <!-- エラーページ設定 -->
   <import file="nablarch/webui/error-page-for-webui.xml" />
@@ -75,18 +67,10 @@
 
   <!-- セッションストア機能 -->
   <import file="nablarch/webui/session-store.xml" />
-  <!-- TODO: アプリケーションサーバが冗長化されている場合は、HIDDENストアの暗号化に使用するコンポーネントのプロパティに明示的に暗号化/復号のキーを設定する。-->
-  <!--
-  <component name="hiddenStoreEncryptor" class="nablarch.common.encryption.AesEncryptor">
-    <property name="key" value="1234567890123456" />
-    <property name="iv" value="6543210987654321" />
-  </component>
-  -->
 
   <component name="httpErrorHandler" class="nablarch.fw.web.handler.HttpErrorHandler" >
     <property name="defaultPages">
       <map>
-        <!-- TODO: 適切なエラー画面作成して設定してください。設定の際は、あわせてweb.xmlも修正してください -->
         <entry key="4.." value="/WEB-INF/errorPages/USER_ERROR.jsp" />
         <entry key="403" value="/WEB-INF/errorPages/PERMISSION-ERROR.jsp" />
         <entry key="404" value="/WEB-INF/errorPages/PAGE_NOT_FOUND_ERROR.jsp" />
@@ -96,10 +80,6 @@
       </map>
     </property>
   </component>
-
-  <!-- ダイアレクト設定 -->
-  <!-- TODO:使用するDBに合わせてダイアレクトを設定すること -->
-  <component name="dialect" class="nablarch.core.db.dialect.H2Dialect" />
 
   <!-- CSRF対策 -->
   <component name="csrfTokenVerificationHandler"

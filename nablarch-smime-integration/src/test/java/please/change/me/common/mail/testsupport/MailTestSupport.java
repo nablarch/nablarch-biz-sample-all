@@ -36,7 +36,7 @@ import org.junit.ClassRule;
  *
  * @author hisaaki sioiri
  */
-public class MailTestSupport {
+public abstract class MailTestSupport {
 
     @ClassRule
     public static final SystemRepositoryResource RESOURCE = new SystemRepositoryResource(
@@ -100,8 +100,8 @@ public class MailTestSupport {
      *
      * @param classes クラス一覧
      */
-    private void cleaningTable(Class... classes) {
-        for (Class clazz : classes) {
+    private void cleaningTable(Class<?>... classes) {
+        for (Class<?> clazz : classes) {
             VariousDbTestHelper.delete(clazz);
         }
     }
@@ -154,7 +154,7 @@ public class MailTestSupport {
         boolean writeLog = false;
         for (String logMessage : log) {
             String str = logMessage.replaceAll("\\r|\\n", "");
-            if (str.indexOf(message) >= 0) {
+            if (str.contains(message)) {
                 writeLog = true;
             }
         }

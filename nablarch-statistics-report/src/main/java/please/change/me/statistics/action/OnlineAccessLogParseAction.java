@@ -10,8 +10,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -151,7 +149,7 @@ public class OnlineAccessLogParseAction extends NoInputDataBatchAction {
                     continue;
                 }
 
-                Map<String, Object> outputData = new HashMap<String, Object>();
+                Map<String, Object> outputData = new HashMap<>();
                 outputData.put("requestId", requestId);
                 Calendar dateTime = findLogOutputDateTime(line);
                 outputData.put("year", dateTime.get(Calendar.YEAR));
@@ -207,7 +205,7 @@ public class OnlineAccessLogParseAction extends NoInputDataBatchAction {
     /**
      * 起動プロセス名を抽出する。
      *
-     * プロセス名がログから取得できない場合には、空文字列を返却する。
+     * <p>プロセス名がログから取得できない場合には、空文字列を返却する。
      *
      * @param line 抽出対象の行
      * @return 起動プロセス名
@@ -287,7 +285,7 @@ public class OnlineAccessLogParseAction extends NoInputDataBatchAction {
      */
     private File[] listFiles(String dir) {
         File[] files = FileUtil.listFiles(dir, logParseDefinition.getAccessLogFileNamePattern());
-        List<File> fileList = new ArrayList<File>();
+        List<File> fileList = new ArrayList<>();
         for (File file : files) {
             if (file.isFile()) {
                 fileList.add(file);
@@ -295,16 +293,14 @@ public class OnlineAccessLogParseAction extends NoInputDataBatchAction {
         }
 
         // 最終更新日時でソートする。
-        Collections.sort(fileList, new Comparator<File>() {
-            public int compare(File o1, File o2) {
-                String name1 = o1.getName();
-                String name2 = o2.getName();
-                if (name1.length() == name2.length()) {
-                    return name1.compareTo(name2);
-                } else {
-                    // 短いファイル名は最新ファイルとして、判断する。
-                    return name2.length() - name1.length();
-                }
+        fileList.sort((o1, o2) -> {
+            String name1 = o1.getName();
+            String name2 = o2.getName();
+            if (name1.length() == name2.length()) {
+                return name1.compareTo(name2);
+            } else {
+                // 短いファイル名は最新ファイルとして、判断する。
+                return name2.length() - name1.length();
             }
         });
         return fileList.toArray(new File[fileList.size()]);

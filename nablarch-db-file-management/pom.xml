@@ -3,24 +3,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>com.nablarch.archetype</groupId>
-    <artifactId>nablarch-archetype-parent</artifactId>
+    <groupId>com.nablarch.applib</groupId>
+    <artifactId>nablarch-biz-sample-all</artifactId>
     <version>6-NEXT-SNAPSHOT</version>
   </parent>
 
   <artifactId>nablarch-db-file-management</artifactId>
-
-  <groupId>com.nablarch.tool</groupId>
-  <version>6-NEXT-SNAPSHOT</version>
   <packaging>war</packaging>
 
   <properties>
-    <!-- ソース及びclassファイルが準拠するJavaのバージョン-->
-    <java.version>17</java.version>
-
-    <!-- 環境ごとのリソースディレクトリ(プロファイルにより切り替わる) -->
-    <env.resources>${project.basedir}/src/env/${env.dir}/resources</env.resources>
-
     <!-- gsp-dba-maven-pluginが使用するデータベース設定 -->
     <nablarch.db.jdbcDriver>org.h2.Driver</nablarch.db.jdbcDriver>
     <nablarch.db.url>jdbc:h2:./h2/db/SAMPLE</nablarch.db.url>
@@ -31,214 +22,8 @@
     <nablarch.db.schema>PUBLIC</nablarch.db.schema>
   </properties>
 
-  <!--
-    このプロファイルは環境を指定するものであり、相互に排他的である。
-    複数のプロファイルを同時に指定してはならない。
-  -->
-  <profiles>
-    <!-- 開発環境 -->
-    <profile>
-      <id>development</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <properties>
-        <env.name>開発環境</env.name>
-        <!-- Mavenの環境別リソースのディレクトリ名 -->
-        <env.dir>dev</env.dir>
-        <env.classifier>dev</env.classifier>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>com.nablarch.framework</groupId>
-          <artifactId>nablarch-fw-web-hotdeploy</artifactId>
-        </dependency>
-        <!-- TODO: プロジェクトで使用するDB製品にあわせたJDBCドライバに修正してください。 -->
-        <dependency>
-          <groupId>com.h2database</groupId>
-          <artifactId>h2</artifactId>
-          <version>2.2.220</version>
-          <scope>runtime</scope>
-        </dependency>
-        <dependency>
-          <groupId>com.zaxxer</groupId>
-          <artifactId>HikariCP</artifactId>
-          <version>3.3.1</version>
-          <scope>runtime</scope>
-        </dependency>
-        <dependency>
-          <groupId>com.nablarch.integration</groupId>
-          <artifactId>slf4j-nablarch-adaptor</artifactId>
-          <scope>runtime</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-
-    <!--
-    Nablarchのマスタデータ復旧機能用にデータを格納する際に使用するプロファイル。
-    使用の際は、以下を参照すること。
-    https://github.com/coastland/gsp-dba-maven-plugin/blob/master/recipe/backupToDifferentSchema.md
-
-    gsp-dba-pluginでは、H2の場合はデフォルトスキーマのPUBLICしか扱えないためバックアップスキーマ名にPUBLICを指定しています。
-    gsp-dba-pluginで任意のスキーマ名を指定出来るDBの場合は、バックアップスキーマ名を指定して下さい。
-    -->
-    <profile>
-      <id>BACKUP</id>
-      <properties>
-        <env.dir>dev</env.dir>
-        <nablarch.db.schema>PUBLIC</nablarch.db.schema>
-      </properties>
-      <build>
-        <directory>${dba.gsp-target-dir}</directory>
-        <plugins>
-          <plugin>
-            <groupId>jp.co.tis.gsp</groupId>
-            <artifactId>gsp-dba-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>default-cli</id>
-                <phase>generate-resources</phase>
-                <goals>
-                  <goal>generate-ddl</goal>
-                  <goal>execute-ddl</goal>
-                  <goal>load-data</goal>
-                </goals>
-              </execution>
-            </executions>
-            <dependencies>
-              <!-- プロジェクトで使用するDB製品にあわせたJDBCドライバに上書きする -->
-              <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>2.2.220</version>
-                <scope>runtime</scope>
-              </dependency>
-            </dependencies>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <!-- gsp-dba-plugin -->
-    <profile>
-      <id>gsp</id>
-      <activation>
-      </activation>
-      <build>
-        <directory>${dba.gsp-target-dir}</directory>
-        <plugins>
-          <plugin>
-            <groupId>jp.co.tis.gsp</groupId>
-            <artifactId>gsp-dba-maven-plugin</artifactId>
-            <configuration>
-              <driver>org.h2.Driver</driver>
-              <url>${nablarch.db.url}</url>
-              <adminUser>${nablarch.db.adminUser}</adminUser>
-              <adminPassword>${nablarch.db.adminUser}</adminPassword>
-              <user>${nablarch.db.user}</user>
-              <password>${nablarch.db.user}</password>
-              <schema>PUBLIC</schema>
-              <useAccessor>true</useAccessor>
-              <rootPackage>please.change.me</rootPackage>
-              <entityPackageName>entity</entityPackageName>
-              <dataDirectory>src/test/resources/data/h2</dataDirectory>
-              <erdFile>src/main/resources/entity/data-model.edm</erdFile>
-              <extraDdlDirectory>src/main/resources/extraDdl/h2</extraDdlDirectory>
-            </configuration>
-            <executions>
-              <execution>
-                <id>default-cli</id>
-                <phase>generate-resources</phase>
-                <goals>
-                  <goal>generate-ddl</goal>
-                  <goal>execute-ddl</goal>
-                  <goal>generate-entity</goal>
-                  <goal>load-data</goal>
-                  <goal>export-schema</goal>
-                </goals>
-              </execution>
-            </executions>
-            <dependencies>
-              <!-- プロジェクトで使用するDB製品にあわせたJDBCドライバに上書きする -->
-              <dependency>
-                <groupId>com.h2database</groupId>
-                <artifactId>h2</artifactId>
-                <version>2.2.220</version>
-                <scope>runtime</scope>
-              </dependency>
-            </dependencies>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-install-plugin</artifactId>
-            <version>${version.plugins.install}</version>
-            <executions>
-              <!-- gsp-dba-maven-pluginで生成したdumpファイルをinstallするための設定 -->
-              <execution>
-                <id>default-cli</id>
-                <goals>
-                  <goal>install-file</goal>
-                </goals>
-                <configuration>
-                  <file>${dba.gsp-target-dir}/output/${dba.testDataArtifactId}-${dba.dump.version}.jar</file>
-                  <groupId>${project.groupId}</groupId>
-                  <version>${dba.dump.version}</version>
-                  <artifactId>${dba.testDataArtifactId}</artifactId>
-                  <packaging>jar</packaging>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-deploy-plugin</artifactId>
-            <version>${version.plugins.deploy}</version>
-            <executions>
-              <!-- gsp-dba-maven-pluginで生成したdumpファイルをdeployするための設定 -->
-              <execution>
-                <id>default-cli</id>
-                <goals>
-                  <goal>deploy-file</goal>
-                </goals>
-                <configuration>
-                  <file>${dba.gsp-target-dir}/output/${dba.testDataArtifactId}-${dba.dump.version}.jar</file>
-                  <groupId>${project.groupId}</groupId>
-                  <version>${dba.dump.version}</version>
-                  <artifactId>${dba.testDataArtifactId}</artifactId>
-                  <repositoryId>${project.distributionManagement.repository.id}</repositoryId>
-                  <url>${project.distributionManagement.repository.url}</url>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
-
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>com.nablarch.profile</groupId>
-        <artifactId>nablarch-bom</artifactId>
-        <version>6-NEXT-SNAPSHOT</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.junit</groupId>
-        <artifactId>junit-bom</artifactId>
-        <version>5.8.2</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>jakarta.platform</groupId>
-        <artifactId>jakarta.jakartaee-bom</artifactId>
-        <version>10.0.0</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
@@ -246,7 +31,6 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
 
   <dependencies>
     <dependency>
@@ -263,15 +47,6 @@
       <groupId>com.nablarch.framework</groupId>
       <artifactId>nablarch-testing</artifactId>
       <scope>test</scope>
-      <!--NablarchのテスティングフレームワークがJSPのビルド時に使用するコンパイラを差し替えるために、
-      依存関係からデフォルトのecjを除去。
-      -->
-      <exclusions>
-        <exclusion>
-          <groupId>org.eclipse.jdt.core.compiler</groupId>
-          <artifactId>ecj</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -279,17 +54,6 @@
       <artifactId>nablarch-testing-jetty12</artifactId>
       <scope>test</scope>
     </dependency>
-
-    <!--
-    NablarchのテスティングフレームワークがJSPのビルド時に使用するコンパイラを差し替え。
-    -->
-    <dependency>
-      <groupId>org.eclipse.jdt.core.compiler</groupId>
-      <artifactId>ecj</artifactId>
-      <version>4.5.1</version>
-      <scope>test</scope>
-    </dependency>
-
 
     <dependency>
       <groupId>com.nablarch.configuration</groupId>
@@ -334,9 +98,20 @@
     </dependency>
 
     <dependency>
-      <groupId>org.glassfish.web</groupId>
-      <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-      <version>3.0.0</version>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>2.2.220</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+      <version>3.3.1</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.nablarch.integration</groupId>
+      <artifactId>slf4j-nablarch-adaptor</artifactId>
       <scope>runtime</scope>
     </dependency>
 
@@ -374,9 +149,6 @@
   <build>
     <resources>
       <resource>
-        <directory>${env.resources}</directory>
-      </resource>
-      <resource>
         <directory>src/main/resources</directory>
       </resource>
       <resource>
@@ -406,37 +178,62 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
+        <groupId>jp.co.tis.gsp</groupId>
+        <artifactId>gsp-dba-maven-plugin</artifactId>
         <configuration>
-          <webXml>${webxml.path}</webXml>
-          <classifier>${env.classifier}</classifier>
-          <archive>
-            <manifestEntries>
-              <Target-Environment>${env.name}</Target-Environment>
-            </manifestEntries>
-          </archive>
+          <driver>${nablarch.db.jdbcDriver}</driver>
+          <url>${nablarch.db.url}</url>
+          <adminUser>${nablarch.db.adminUser}</adminUser>
+          <adminPassword>${nablarch.db.adminPassword}</adminPassword>
+          <user>${nablarch.db.user}</user>
+          <password>${nablarch.db.password}</password>
+          <schema>${nablarch.db.schema}</schema>
+          <useAccessor>true</useAccessor>
+          <rootPackage>please.change.me</rootPackage>
+          <entityPackageName>entity</entityPackageName>
+          <dataDirectory>src/test/resources/data/h2</dataDirectory>
+          <erdFile>src/main/resources/entity/data-model.edm</erdFile>
+          <extraDdlDirectory>src/main/resources/extraDdl/h2</extraDdlDirectory>
         </configuration>
-      </plugin>
-      <!--
-      NablarchのテスティングフレームワークがJSPのコンパイル結果を格納するディレクトリを、
-      mvn clean時に削除するように設定。
-      -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-clean-plugin</artifactId>
-        <configuration>
-          <filesets>
-            <fileset>
-              <directory>work/jsp</directory>
-            </fileset>
-          </filesets>
-        </configuration>
+        <executions>
+          <execution>
+            <id>default-cli</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>generate-ddl</goal>
+              <goal>execute-ddl</goal>
+              <goal>generate-entity</goal>
+              <goal>load-data</goal>
+              <goal>export-schema</goal>
+            </goals>
+          </execution>
+        </executions>
+        <dependencies>
+          <!-- プロジェクトで使用するDB製品にあわせたJDBCドライバに上書きする -->
+          <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>2.2.220</version>
+            <scope>runtime</scope>
+          </dependency>
+        </dependencies>
       </plugin>
       <!-- gsp-dba-maven-pluginで自動生成したソースをビルド時に使用するための設定 -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.9.1</version>
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals><goal>add-source</goal></goals>
+            <configuration>
+              <sources>
+                <source>${project.build.directory}/generated-sources/entity</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

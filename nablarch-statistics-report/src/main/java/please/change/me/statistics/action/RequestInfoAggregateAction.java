@@ -87,13 +87,13 @@ public class RequestInfoAggregateAction extends BatchAction<DataRecord> {
     private static final String MAX = "max";
 
     /** 日、時間単位の集計結果を保持するMapオブジェクト */
-    private final Map<AggregateKey, Aggregator> aggregateResultHolder = new TreeMap<AggregateKey, Aggregator>();
+    private final Map<AggregateKey, Aggregator> aggregateResultHolder = new TreeMap<>();
 
     /** 年月集計結果を保持するMapオブジェクト */
-    private final Map<AggregateKey, Aggregator> ymAggregateResultHolder = new TreeMap<AggregateKey, Aggregator>();
+    private final Map<AggregateKey, Aggregator> ymAggregateResultHolder = new TreeMap<>();
 
     /** プロセス名一覧 */
-    private final Set<String> processNames = new HashSet<String>();
+    private final Set<String> processNames = new HashSet<>();
 
     /** オンラインアクセスログ解析処理の設定値 */
     private OnlineStatisticsDefinition logParseDefinition;
@@ -227,7 +227,7 @@ public class RequestInfoAggregateAction extends BatchAction<DataRecord> {
                 logParseDefinition.getRequestInfoSummaryFormatName());
 
         // CSVタイトルの出力
-        Map<String, String> title = new HashMap<String, String>();
+        Map<String, String> title = new HashMap<>();
         title.put(REQUEST_ID, "リクエストID");
         title.put(AGGREGATE_UNIT_VALUE, aggregateUnitValue);
         title.put(PROCESS_NAME, "プロセス名");
@@ -248,7 +248,7 @@ public class RequestInfoAggregateAction extends BatchAction<DataRecord> {
     private void write(AggregateKey aggregateKey,
             Aggregator aggregator) {
 
-        Map<String, Object> data = new HashMap<String, Object>();
+        Map<String, Object> data = new HashMap<>();
         data.put(REQUEST_ID, aggregateKey.requestId);
         data.put(AGGREGATE_UNIT_VALUE, aggregateKey.aggregateUnitValue);
         data.put(PROCESS_NAME, aggregateKey.processName);
@@ -285,7 +285,7 @@ public class RequestInfoAggregateAction extends BatchAction<DataRecord> {
         String systemDate = SystemTimeUtil.getDateString();
         String startDate = DateUtil.addMonth(systemDate, logParseDefinition.getAggregatePeriod() * -1);
 
-        List<String> inputFiles = new ArrayList<String>();
+        List<String> inputFiles = new ArrayList<>();
         File[] files = FileUtil.listFiles(directory.getAbsolutePath(), "REQUEST_INFO_*");
         for (File file : files) {
             String name = file.getName();
@@ -404,7 +404,7 @@ public class RequestInfoAggregateAction extends BatchAction<DataRecord> {
         private int thresholdOverCount;
 
         /** 処理時間のリスト */
-        private final List<Integer> executionTimeList = new ArrayList<Integer>();
+        private final List<Integer> executionTimeList = new ArrayList<>();
 
         /** リクエスト数 */
         private int requestCount;

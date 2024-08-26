@@ -16,9 +16,8 @@
   <component name="requestThreadLoopHandler" class="nablarch.test.NopHandler" />
 
   <!-- テスト用のフォーマットファクトリ -->
-  <component name="formatterFactory" class="nablarch.core.dataformat.FormatterFactory">
-    <property name="cacheLayoutFileDefinition" value="false" />
-  </component>
+  <component name="formatterFactory"
+             class="please.change.me.core.dataformat.FormUrlEncodedDataFormatterFactory"/>
 
   <!-- フレームワーク制御ヘッダー定義(テスト用) -->
   <component name="fwHeaderDefinition"
@@ -39,7 +38,6 @@
     </property>
   </component>
 
-  <component name="formatterFactory" class="please.change.me.core.dataformat.FormUrlEncodedDataFormatterFactory"/>
 
   <!-- 初期化が必要なコンポーネント -->
   <component name="initializer"

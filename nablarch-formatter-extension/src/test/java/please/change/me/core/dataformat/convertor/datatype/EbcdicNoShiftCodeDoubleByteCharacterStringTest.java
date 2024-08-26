@@ -64,7 +64,7 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
      * @param str 変換対象文字列
      * @param size 出力サイズ
      * @return EBCDICバイト列
-     * @throws IOException
+     * @throws IOException I/O例外
      */
     private byte[] getEbcdicBytesWithoutShiftCode(String str, int size) throws IOException {
         byte[] bytes = str.getBytes("CP930");
@@ -81,7 +81,7 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
      * @param str 変換対象文字列
      * @param size 出力サイズ
      * @return EBCDICバイト列
-     * @throws IOException
+     * @throws IOException I/O例外
      */
     private byte[] getEbcdicBytes(String str, int size) throws IOException {
         byte[] bytes = str.getBytes("CP930");
@@ -108,7 +108,7 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
     
     /**
      * フォーマット定義ファイル名を取得します
-     * @return
+     * @return フォーマット定義ファイル名
      */
     protected String getFormatFileName() {
         FilePathSetting fps = FilePathSetting.getInstance()
@@ -155,6 +155,7 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
      * @return 作成したファイル
      * @throws IOException ファイル出力に失敗した場合
      */
+    @SuppressWarnings("UnusedReturnValue")
     private File createTempFile(String filename, List<String> data) throws IOException {
         File file = new File(filename);
         file.deleteOnExit();
@@ -261,7 +262,7 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
     @Test
     public void testFormatDef() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"Fixed\"");
                 add("text-encoding: \"CP930\"");
@@ -279,8 +280,8 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
         targetBuff.put(getEbcdicBytesWithoutShiftCode("あいうえお", 10));
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", "abcde");
                     put("key2", "あいうえお");
                 }}
@@ -290,8 +291,8 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
 
         // 書き込みテスト
         // 変換対象Map
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "abcde");
                     put("key2", "あいうえお");
                 }}
@@ -310,7 +311,7 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
     @Test
     public void testPadding() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"Fixed\"");
                 add("text-encoding: \"CP930\"");
@@ -323,8 +324,8 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
 
         // 書き込みテスト
         // 変換対象Map
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "abcde");
                     put("key2", "あいう");
                 }}
@@ -343,7 +344,7 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
     @Test
     public void testPadding2() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"Fixed\"");
                 add("text-encoding: \"CP930\"");
@@ -356,8 +357,8 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
         
         // 書き込みテスト
         // 変換対象Map
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "abcde");
                     put("key2", "あいう");
                 }}
@@ -376,7 +377,7 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
     @Test
     public void testTrim() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"Fixed\"");
                 add("text-encoding: \"CP930\"");
@@ -394,8 +395,8 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
         targetBuff.put(getEbcdicBytesWithoutShiftCode("あいう　　", 10));
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", "abcde");
                     put("key2", "あいう");  // 全角スペースでトリムされる
                 }}
@@ -410,7 +411,7 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
     @Test
     public void testTrim2() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"Fixed\"");
                 add("text-encoding: \"CP930\"");
@@ -428,8 +429,8 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
         targetBuff.put(getEbcdicBytesWithoutShiftCode("あいう＿＿", 10));
         
         // 期待結果Map
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", "abcde");
                     put("key2", "あいう");  // "＿"でトリムされる
                 }}
@@ -444,7 +445,7 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
     @Test
     public void testHalfchar() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"Fixed\"");
                 add("text-encoding: \"CP930\"");
@@ -466,8 +467,8 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
         key2ExpectBuff.put((byte)0x0E);
         key2ExpectBuff.put(getEbcdicBytes("0123456789", 10));
         key2ExpectBuff.put((byte)0x0F);
-        Map<String, Object> expectedMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> expectedMap =
+                new HashMap<>() {{
                     put("key1", "abcde");
                     put("key2", new String(key2ExpectBuff.array(), "CP930"));// シフトコードが付加され不正なマルチバイト文字になる("�����")
                 }}
@@ -477,8 +478,8 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
 
         // 書き込みテスト
         // 変換対象Map
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "abcde");
                     put("key2", "0123456789");
                 }}
@@ -502,7 +503,7 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
     @Test
     public void testWriteEmptyString() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"Fixed\"");
                 add("text-encoding: \"CP930\"");
@@ -515,8 +516,8 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
         
         // 書き込みテスト
         // 変換対象Map
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "");
                     put("key2", "");
                 }}
@@ -535,7 +536,7 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
     @Test
     public void testWriteNullString() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"Fixed\"");
                 add("text-encoding: \"CP930\"");
@@ -548,8 +549,8 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
         
         // 書き込みテスト
         // 変換対象Map
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "");
                     put("key2", null);
                 }}
@@ -568,7 +569,7 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
     @Test
     public void testWriteLargeString() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"Fixed\"");
                 add("text-encoding: \"CP930\"");
@@ -581,8 +582,8 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
         
         // 書き込みテスト
         // 変換対象Map
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "abcde");
                     put("key2", "あいうえおかきくけこ");
                 }}
@@ -606,7 +607,7 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
     @Test
     public void testWriteHalfAndFullcharString() throws Exception {
         // フォーマット定義ファイル
-        createTempFile(getFormatFileName(), new ArrayList<String>() {
+        createTempFile(getFormatFileName(), new ArrayList<>() {
             {
                 add("file-type:     \"Fixed\"");
                 add("text-encoding: \"CP930\"");
@@ -619,8 +620,8 @@ public class EbcdicNoShiftCodeDoubleByteCharacterStringTest {
         
         // 書き込みテスト
         // 変換対象Map
-        Map<String, Object> targetMap = 
-                new HashMap<String, Object>() {{
+        Map<String, Object> targetMap =
+                new HashMap<>() {{
                     put("key1", "abcde");
                     put("key2", "あiうeお");
                 }}

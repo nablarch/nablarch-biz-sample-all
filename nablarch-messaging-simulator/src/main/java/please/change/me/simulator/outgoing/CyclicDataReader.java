@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * 繰り返し同じデータを読み込む{@link DataReader}実装クラス。
  *
- * 本クラスはスレッドである。
+ * <p>本クラスはスレッドである。
  *
  * @author T.Kawasaki
  * @since 1.4.2
@@ -33,7 +33,7 @@ public class CyclicDataReader implements DataReader<DataRecord> {
      * @param repeatLimitCnt 繰り返し上限回数
      */
     public CyclicDataReader(List<DataRecord> src, int repeatLimitCnt) {
-        this.itr = new CyclicIterator<DataRecord>(src);
+        this.itr = new CyclicIterator<>(src);
         this.limit = repeatLimitCnt;
     }
 

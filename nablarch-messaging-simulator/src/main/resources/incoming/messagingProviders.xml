@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- MOMメッセージング受信のメッセージングプロバイダ定義 -->
-<!-- 打鍵テスト用のメッセージングプロバイダ -->
 <component-configuration
-    xmlns="http://tis.co.jp/nablarch/component-configuration"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  ../component-configuration.xsd">
+        xmlns="http://tis.co.jp/nablarch/component-configuration"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration  https://nablarch.github.io/schema/component-configuration.xsd">
+
   <!-- 設定ファイル -->
   <config-file file="incoming/messagingProviders.config" />
 

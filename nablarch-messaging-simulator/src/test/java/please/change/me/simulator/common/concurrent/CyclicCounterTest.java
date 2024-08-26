@@ -6,14 +6,13 @@ import please.change.me.simulator.common.FrequencyCounter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * {@link CyclicCounter}のテストクラス。
@@ -59,21 +58,16 @@ public class CyclicCounterTest {
         // 0～99が10000回採番されるように呼び出し回数を設定
         int repeat = 10000;
         final int methodCallCount = (cntMax + 1) * repeat;
-        List<Future<Integer>> results = new ArrayList<Future<Integer>>(methodCallCount);
+        List<Future<Integer>> results = new ArrayList<>(methodCallCount);
         for (int i = 0; i < methodCallCount; i++) {
-            results.add(service.submit(new Callable<Integer>() {
-                @Override
-                public Integer call() throws Exception {
-                    return target.getAndIncrement();
-                }
-            }));
+            results.add(service.submit(target::getAndIncrement));
         }
         service.shutdown();
         // 呼び出し回数分だけ採番されていること
         assertThat(results.size(), is(methodCallCount));
 
         // 採番された数値の出現頻度を集計する。
-        FrequencyCounter<Integer> counter = new FrequencyCounter<Integer>();
+        FrequencyCounter<Integer> counter = new FrequencyCounter<>();
         for (Future<Integer> e : results) {
             Integer no = e.get();
             counter.count(no);

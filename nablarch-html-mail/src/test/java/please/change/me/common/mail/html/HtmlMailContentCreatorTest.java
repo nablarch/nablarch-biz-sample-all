@@ -3,7 +3,7 @@ package please.change.me.common.mail.html;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class HtmlMailContentCreatorTest {
         String mailBody = "<p>mailBody</p>";
         String charset = "utf-8";
         String alternativeText = "alternativeText";
-        List<MailAttachedFile> empty = new ArrayList<MailAttachedFile>();
+        List<MailAttachedFile> empty = new ArrayList<>();
         Multipart actual = HtmlMailContentCreator.create(mailBody, charset, alternativeText, empty);
         assertThat("コンテンツはalternative", actual.getContentType(), containsString("multipart/alternative"));
         assertThat("TEXTとHTMLの二つがふくまれる", actual.getCount(), is(2));
@@ -68,7 +68,7 @@ public class HtmlMailContentCreatorTest {
         String mailBody = "mailBody";
         String charset = "utf-8";
         String alternativeText = "alternativeText";
-        List<MailAttachedFile> attachedFiles = new ArrayList<MailAttachedFile>();
+        List<MailAttachedFile> attachedFiles = new ArrayList<>();
         attachedFiles.add(toMockData("1", "test.txt", "text/hoge", "これはテスト"));
         Multipart actual = HtmlMailContentCreator.create(mailBody, charset, alternativeText, attachedFiles);
 
@@ -108,7 +108,7 @@ public class HtmlMailContentCreatorTest {
        String mailBody = "mailBody";
        String charset = "utf-8";
        String alternativeText = "alternativeText";
-       List<MailAttachedFile> attachedFiles = new ArrayList<MailAttachedFile>();
+       List<MailAttachedFile> attachedFiles = new ArrayList<>();
        attachedFiles.add(toMockData("1", "test.txt", "text/hoge", "これはテスト"));
        attachedFiles.add(toMockData("1", "nablarch.txt", "text/fuga", "これはテスト"));
 
@@ -153,7 +153,7 @@ public class HtmlMailContentCreatorTest {
      * @return モックの添付ファイル情報
      */
     private MailAttachedFile toMockData(String number, String fileName, String contentType, String dummyData) {
-        Map<String, String> data = new HashMap<String, String>();
+        Map<String, String> data = new HashMap<>();
         data.put("number", number);
         data.put("fileName", fileName);
         data.put("contentType", contentType);

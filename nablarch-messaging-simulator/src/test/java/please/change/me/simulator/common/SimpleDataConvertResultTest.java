@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * {@link SimpleDataConvertResult}のテスト。
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertThat;
  */
 public class SimpleDataConvertResultTest {
 
-    private Map<String, ?> resultMap = new HashMap<String, Object>();
+    private Map<String, ?> resultMap = new HashMap<>();
 
     @Test
     public void testAccessor() {

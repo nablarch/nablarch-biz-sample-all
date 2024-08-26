@@ -2,9 +2,10 @@ package please.change.me.test.core.file;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import nablarch.core.dataformat.DataRecord;
@@ -23,7 +24,7 @@ import org.junit.Test;
 public class HierarchyStructureTestDataConverterTest {
 
     /** テスト対象オブジェクト */
-    private HierarchyStructureTestDataConverter sut = new HierarchyStructureTestDataConverter();
+    private final HierarchyStructureTestDataConverter sut = new HierarchyStructureTestDataConverter();
 
     /**
      * utf-8エンコーディングのデータの場合の
@@ -42,7 +43,7 @@ public class HierarchyStructureTestDataConverterTest {
         //*********************************************************************
         // execute
         //*********************************************************************
-        Charset encoding = Charset.forName("utf-8");
+        Charset encoding = StandardCharsets.UTF_8;
         LayoutDefinition definition = sut.createDefinition(
                 createLayoutDefinition(encoding), record, encoding);
 
@@ -165,7 +166,7 @@ public class HierarchyStructureTestDataConverterTest {
         //*********************************************************************
         // execute:no1
         //*********************************************************************
-        Charset encoding = Charset.forName("utf-8");
+        Charset encoding = StandardCharsets.UTF_8;
         LayoutDefinition definition = sut.createDefinition(
                 createLayoutDefinition(encoding), record, encoding);
 
@@ -284,7 +285,7 @@ public class HierarchyStructureTestDataConverterTest {
     /**
      * レコード情報がnullの場合は、nullがそのまま返却されること。
      *
-     * @throws Exception
+     * @throws Exception 例外
      */
     @Test
     public void testConvertData_recordNull() throws Exception {
@@ -321,7 +322,7 @@ public class HierarchyStructureTestDataConverterTest {
                 .addConvertorSetting("X", new Object[]{100})
                 .setName("data1");
         ByteStreamDataString type = new ByteStreamDataString();
-        type.init(fd1, new Object[]{100});
+        type.init(fd1, 100);
         fd1.setDataType(type);
 
         FieldDefinition fd2 = new FieldDefinition()
@@ -330,7 +331,7 @@ public class HierarchyStructureTestDataConverterTest {
                 .addConvertorSetting("XN", new Object[]{200})
                 .setName("data2");
         type = new ByteStreamDataString();
-        type.init(fd1, new Object[]{200});
+        type.init(fd1, 200);
         fd2.setDataType(type);
 
         FieldDefinition fd3 = new FieldDefinition()
@@ -339,7 +340,7 @@ public class HierarchyStructureTestDataConverterTest {
                 .addConvertorSetting("X", new Object[]{300})
                 .setName("data3");
         type = new ByteStreamDataString();
-        type.init(fd1, new Object[]{500});
+        type.init(fd1, 500);
         fd3.setDataType(type);
 
         // レコード定義

@@ -45,11 +45,11 @@ public final class SendSyncSupportWrapperConcurrent implements SendSyncSupportWr
 
     /** Excelから読み取ったメッセージのキャッシュ。 */
     private final ConcurrentLazyCache<CacheKey, CyclicIterator<DataRecord>> records
-            = new ConcurrentLazyCache<CacheKey, CyclicIterator<DataRecord>>(new DataRecordFactoryBuilder());
+            = new ConcurrentLazyCache<>(new DataRecordFactoryBuilder());
 
     /** Excelから読み取ったメッセージのキャッシュ。 */
     private final ConcurrentLazyCache<CacheKey, CyclicIterator<byte[]>> bytesMap
-            = new ConcurrentLazyCache<CacheKey, CyclicIterator<byte[]>>(new BytesFactoryBuilder());
+            = new ConcurrentLazyCache<>(new BytesFactoryBuilder());
 
 
     /** {@inheritDoc} */
@@ -114,14 +114,14 @@ public final class SendSyncSupportWrapperConcurrent implements SendSyncSupportWr
             /** {@inheritDoc} */
             @Override
             protected CyclicIterator<DataRecord> getValueOf(CacheKey key) {
-                Reader<DataRecord> reader = new Reader<DataRecord>(key) {
+                Reader<DataRecord> reader = new Reader<>(key) {
                     @Override
                     DataRecord readRecord(DataType dataRecord, String requestId) {
                         return support.getResponseMessageByRequestId(dataRecord, requestId);
                     }
                 };
                 List<DataRecord> dataRecords = reader.readAll();
-                return new CyclicIterator<DataRecord>(dataRecords);
+                return new CyclicIterator<>(dataRecords);
             }
         }
     }
@@ -153,7 +153,7 @@ public final class SendSyncSupportWrapperConcurrent implements SendSyncSupportWr
             /** {@inheritDoc} */
             @Override
             protected CyclicIterator<byte[]> getValueOf(CacheKey key) {
-                Reader<byte[]> reader = new Reader<byte[]>(key) {
+                Reader<byte[]> reader = new Reader<>(key) {
                     @Override
                     byte[] readRecord(DataType dataType, String requestId) {
                         return support.getResponseMessageBinaryByRequestId(
@@ -162,7 +162,7 @@ public final class SendSyncSupportWrapperConcurrent implements SendSyncSupportWr
                     }
                 };
                 List<byte[]> bytes = reader.readAll();
-                return new CyclicIterator<byte[]>(bytes);
+                return new CyclicIterator<>(bytes);
             }
         }
     }
@@ -206,7 +206,7 @@ public final class SendSyncSupportWrapperConcurrent implements SendSyncSupportWr
          */
         List<T> readAll() {
 
-            List<T> all = new ArrayList<T>();
+            List<T> all = new ArrayList<>();
             // 読み込みはデータ種類につき1回かぎりなのでsyncronizedでも性能に影響しない。
             synchronized (Reader.class) {
                 while (true) {
@@ -232,10 +232,10 @@ public final class SendSyncSupportWrapperConcurrent implements SendSyncSupportWr
      * （テスト用）
      */
     public void reset() {
-        for (CyclicIterator itr : records.values()) {
+        for (CyclicIterator<?> itr : records.values()) {
             itr.reset();
         }
-        for (CyclicIterator itr : bytesMap.values()) {
+        for (CyclicIterator<?> itr : bytesMap.values()) {
             itr.reset();
         }
     }

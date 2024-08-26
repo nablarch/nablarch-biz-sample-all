@@ -27,7 +27,7 @@ public class OnlineStatisticsDefinition {
     private Pattern endLogPattern;
 
     /** 抽出対象のリクエストID一覧 */
-    private List<String> includeRequestIdList = new ArrayList<String>();
+    private List<String> includeRequestIdList = new ArrayList<>();
 
     /** 終了ログからリクエストIDを抽出するための正規表現 */
     private Pattern findRequestIdPattern;
