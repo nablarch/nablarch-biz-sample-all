@@ -58,7 +58,7 @@ public class EmbeddedMessagingProvider extends JmsMessagingProvider implements I
         List<QueueConfiguration> queueConfigs = queueList.stream()
                 .map(ActiveMQQueue::getQueueName)
                 .map(name -> {
-                    QueueConfiguration queueConfig = new QueueConfiguration(name);
+                    QueueConfiguration queueConfig = QueueConfiguration.of(name);
                     queueConfig.setRoutingType(RoutingType.ANYCAST);
                     return queueConfig;
                 })
