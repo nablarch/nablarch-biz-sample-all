@@ -3,6 +3,8 @@ services:
     image: greenmail/standalone:2.0.1
     container_name: greenmail
     ports:
-      - "3025:3025" # SMTP
-      - "3110:3110" # POP3
+      - "10025:3025" # SMTP
+      - "10110:3110" # POP3
       - "8080:8080" # API
+    environment:
+      - JAVA_OPTS=-Dgreenmail.users=to1:to1@localhost,cc1:cc1@localhost,bcc1:bcc1@localhost

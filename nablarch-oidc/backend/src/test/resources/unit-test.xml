@@ -38,4 +38,20 @@
     <property name="checkHtml" value="false" />
   </component>
 
+  <!-- テスト時に公開鍵プロバイダの初期化は必要ないため、初期化対象から外すため上書きする -->
+  <component name="initializer" class="nablarch.core.repository.initialization.BasicApplicationInitializer">
+    <property name="initializeList">
+      <list>
+        <!-- パッケージマッピング -->
+        <component-ref name="packageMapping" />
+        <!-- コードのローダ -->
+        <component-ref name="codeLoader" />
+        <!-- コードのキャッシュ -->
+        <component-ref name="codeCache" />
+        <!-- リソースのキャッシュ -->
+        <component-ref name="stringResourceCache" />
+      </list>
+    </property>
+  </component>
+
 </component-configuration>
