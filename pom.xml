@@ -6,7 +6,7 @@
 
   <groupId>com.nablarch.applib</groupId>
   <artifactId>nablarch-biz-sample-all</artifactId>
-  <version>6-NEXT-SNAPSHOT</version>
+  <version>3.1.0</version>
   <packaging>pom</packaging>
 
   <properties>
@@ -22,7 +22,7 @@
       <dependency>
         <groupId>com.nablarch.profile</groupId>
         <artifactId>nablarch-bom</artifactId>
-        <version>6-NEXT-SNAPSHOT</version>
+        <version>6u3</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
