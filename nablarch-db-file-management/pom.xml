@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.nablarch.applib</groupId>
     <artifactId>nablarch-biz-sample-all</artifactId>
-    <version>3.0.0</version>
+    <version>3.1.0</version>
   </parent>
 
   <artifactId>nablarch-db-file-management</artifactId>
@@ -180,6 +180,7 @@
       <plugin>
         <groupId>jp.co.tis.gsp</groupId>
         <artifactId>gsp-dba-maven-plugin</artifactId>
+        <version>5.1.0</version>
         <configuration>
           <driver>${nablarch.db.jdbcDriver}</driver>
           <url>${nablarch.db.url}</url>
