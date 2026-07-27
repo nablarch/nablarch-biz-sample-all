@@ -1,7 +1,7 @@
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 
 type Props = {
-  claims: { [id: string]: any }
+  claims: { [id: string]: unknown }
 };
 
 function TokenClaimsTable({ claims }: Props) {

@@ -9,7 +9,7 @@ import BackendSignInButton from './BackendSignInButton';
 // claimsの型定義はCognito側の実装に合わせておく
 type IdToken = {
   jwt: string;
-  claims: { [id: string]: any };
+  claims: { [id: string]: unknown };
 };
 
 // 環境情報の設定項目についてはガイドを参照する
@@ -58,12 +58,12 @@ function Content() {
       //   https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-react/docs/hooks.md#usemsal-hook
       instance.acquireTokenSilent({ account: accounts[0], ...loginRequest })
         .then((response) => {
-          setIdToken({ jwt: response.idToken, claims: response.idTokenClaims });
+          setIdToken({ jwt: response.idToken, claims: response.idTokenClaims as { [id: string]: unknown } });
         })
     } else {
       setIdToken(null);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, accounts, instance]);
 
   const signIn = () => {
     // ポップアップ表示するための関数もあるが、Cognitog泡に合わせてリダイレクトにしておく

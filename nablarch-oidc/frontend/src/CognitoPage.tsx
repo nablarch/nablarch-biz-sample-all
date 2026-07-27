@@ -45,10 +45,11 @@ function CognitoPage() {
     //   https://docs.amplify.aws/gen1/javascript/prev/build-a-backend/auth/auth-events/
     Hub.listen('auth', async (data) => {
       switch (data.payload.event) {
-        case 'cognitoHostedUI':
+        case 'cognitoHostedUI': {
           const session = await Auth.currentSession();
           setIdToken(session.getIdToken());
           break;
+        }
         case 'signOut':
           setIdToken(null);
           break;
